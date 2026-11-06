@@ -793,16 +793,59 @@ footer{color:#8495a1}
 
 
 .dua-request{margin:12px auto 0;max-width:720px;padding:10px 14px;border:1px solid #d9c18b;border-radius:14px;background:#ffffffd9;color:#31536f;font-size:15px;font-weight:700;line-height:1.8;text-align:center;box-shadow:0 4px 14px #203f5c12}
+
+/* شريط مواقيت الصلاة الأفقي أعلى الأقسام */
+.home-prayer-card{
+ width:100%;max-width:none;min-height:0;height:auto;
+ margin:0;padding:10px clamp(10px,2.5vw,26px) 9px;
+ border-radius:0 0 17px 17px;
+ display:grid;grid-template-columns:minmax(150px,1.05fr) minmax(190px,1.2fr) minmax(300px,2.6fr) minmax(145px,1.1fr);
+ grid-template-rows:auto auto;align-items:center;column-gap:14px;row-gap:5px;
+ box-shadow:0 5px 16px #203f5c12;
+}
+.home-prayer-head{grid-column:1;grid-row:1;min-width:0}
+.home-prayer-head h2{font-size:17px!important;margin:0!important}
+.home-prayer-head p{font-size:11px!important;white-space:nowrap}
+.home-eyebrow{font-size:10px!important}
+.mosque-mark{font-size:25px}
+.home-prayer-city{grid-column:2;grid-row:1;margin:0!important;gap:5px!important;flex-wrap:nowrap;font-size:12px!important}
+.home-prayer-city label{white-space:nowrap;color:#fff!important}
+.home-prayer-city select{min-width:0;width:100%;padding:6px 7px!important;font-size:12px!important;color:#fff!important;background:#315f91!important;border:1px solid #ffffffa8!important}
+.home-prayer-city select option{color:#203f5c;background:#fff}
+.home-prayer-list{grid-column:3;grid-row:1;gap:5px!important}
+.home-prayer-list>div{padding:5px 2px!important;border-radius:9px!important}
+.home-prayer-list .prayer-icon{width:25px!important;height:25px!important;font-size:14px!important;margin-bottom:2px!important}
+.home-prayer-list span{font-size:10px!important;margin:0!important}
+.home-prayer-list b{font-size:13px!important}
+.home-next-prayer{grid-column:4;grid-row:1;margin:0!important;padding:8px 10px!important;font-size:11px!important;gap:4px}
+.home-next-prayer strong{font-size:15px!important}
+.home-prayer-note{grid-column:1/4;grid-row:2;margin:0!important;font-size:9px!important}
+.home-prayer-more{grid-column:4;grid-row:2;margin:0!important;padding:0!important;font-size:10px!important}
+@media(max-width:760px){
+ .home-prayer-card{grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;padding:9px 9px 8px;gap:6px}
+ .home-prayer-head{grid-column:1;grid-row:1}
+ .home-prayer-city{grid-column:2;grid-row:1;justify-content:flex-end}
+ .home-prayer-list{grid-column:1/3;grid-row:2}
+ .home-next-prayer{grid-column:1/3;grid-row:3;padding:6px 9px!important}
+ .home-prayer-note{grid-column:1/2;grid-row:4}
+ .home-prayer-more{grid-column:2;grid-row:4;text-align:left}
+}
+@media(max-width:390px){
+ .home-prayer-card{padding:8px 6px}
+ .home-prayer-city{gap:3px!important;font-size:10px!important}
+ .home-prayer-city select{padding:5px 4px!important;font-size:10px!important}
+ .home-prayer-list{gap:3px!important}
+ .home-prayer-list>div{padding:4px 1px!important}
+ .home-prayer-list .prayer-icon{width:22px!important;height:22px!important;font-size:12px!important}
+ .home-prayer-list span{font-size:9px!important}
+ .home-prayer-list b{font-size:12px!important}
+}
+
 </style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
 <header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
-<nav class="nav" aria-label="أقسام الموقع">
-<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button><button data-page="calendar">الرزنامة</button>
-</nav>
-<main>
-<section class="view active" id="home">
 <div class="home-prayer-card">
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة • تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div><span class="mosque-mark">۞</span></div>
  <div class="home-prayer-city"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div>
@@ -812,6 +855,11 @@ footer{color:#8495a1}
  <button class="home-prayer-more" type="button" data-go="prayer-times">عرض المواقيت بالتفصيل ←</button>
  </div>
 
+<nav class="nav" aria-label="أقسام الموقع">
+<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button><button data-page="calendar">الرزنامة</button>
+</nav>
+<main>
+<section class="view active" id="home">
 <div class="tiles home-shortcuts"><div class="tile" data-go="morning"><span class="shortcut-icon">☀️</span><span>أذكار الصباح</span></div><div class="tile" data-go="evening"><span class="shortcut-icon">🌙</span><span>أذكار المساء</span></div><div class="tile" data-go="prayer"><span class="shortcut-icon">۞</span><span>بعد الصلاة</span></div><div class="tile" data-go="sleep"><span class="shortcut-icon">🌙</span><span>قبل النوم</span></div><div class="tile" data-go="duas"><span class="shortcut-icon">🤲</span><span>الأدعية</span></div><div class="tile" data-go="names"><span class="shortcut-icon">✨</span><span>الأسماء الحسنى</span></div><div class="tile" data-go="tasbeeh"><span class="shortcut-icon">📿</span><span>التسبيح</span></div><div class="tile" data-go="tracker"><span class="shortcut-icon">📊</span><span>متابعتي</span></div><div class="tile" data-go="prayer-times"><span class="shortcut-icon">🕌</span><span>المواقيت</span></div><div class="tile" data-go="quran"><span class="shortcut-icon">📖</span><span>القرآن الكريم</span></div><div class="tile" data-go="qibla"><span class="shortcut-icon">🧭</span><span>القبلة</span></div><div class="tile" data-go="khatma"><span class="shortcut-icon">🌙</span><span>الختمة</span></div><div class="tile" data-go="calendar"><span class="shortcut-icon">📅</span><span>الرزنامة</span></div></div>
 <div class="card"><h2>آية اليوم</h2><p class="verse">﴿فَسَبِّحْ بِحَمْدِ رَبِّكَ وَكُن مِّنَ السَّاجِدِينَ﴾</p><p class="ref">سورة الحجر: 98</p></div>
 <div class="card"><h2>ابدأ بخير اليوم</h2><p>اجعل لك ورداً من الذكر والقرآن، وحافظ على الصلاة، ولو بالقليل الدائم.</p></div>
