@@ -940,6 +940,37 @@ body.zad-font-medium .arabic{font-size:25px}body.zad-font-medium .card h2{font-s
 body.zad-font-large .arabic{font-size:30px}body.zad-font-large .card h2{font-size:27px}body.zad-font-large .muted{font-size:16px}body.zad-font-large .tile{font-size:18px}
 @media(max-width:480px){body.zad-font-small .arabic{font-size:19px}body.zad-font-medium .arabic{font-size:23px}body.zad-font-large .arabic{font-size:27px}}
 </style>
+
+<style id="zad-font-size-fix">
+/* إصلاح تغيير حجم الكتابة: أولوية هذه القواعد أعلى من تنسيقات الواجهة القديمة */
+body.zad-font-small{font-size:15px!important}
+body.zad-font-small .arabic{font-size:20px!important;line-height:1.9!important}
+body.zad-font-small .verse{font-size:20px!important}
+body.zad-font-small .card h2{font-size:19px!important}
+body.zad-font-small .muted,body.zad-font-small .dhikr .muted{font-size:12px!important}
+body.zad-font-small .tile{font-size:14px!important}
+body.zad-font-small .view p:not(.muted),body.zad-font-small .view li{font-size:14px!important}
+body.zad-font-medium{font-size:17px!important}
+body.zad-font-medium .arabic{font-size:25px!important;line-height:2!important}
+body.zad-font-medium .verse{font-size:24px!important}
+body.zad-font-medium .card h2{font-size:23px!important}
+body.zad-font-medium .muted,body.zad-font-medium .dhikr .muted{font-size:14px!important}
+body.zad-font-medium .tile{font-size:16px!important}
+body.zad-font-medium .view p:not(.muted),body.zad-font-medium .view li{font-size:16px!important}
+body.zad-font-large{font-size:19px!important}
+body.zad-font-large .arabic{font-size:30px!important;line-height:2.1!important}
+body.zad-font-large .verse{font-size:29px!important}
+body.zad-font-large .card h2{font-size:27px!important}
+body.zad-font-large .muted,body.zad-font-large .dhikr .muted{font-size:16px!important}
+body.zad-font-large .tile{font-size:18px!important}
+body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:18px!important}
+@media(max-width:480px){
+ body.zad-font-small .arabic{font-size:18px!important}
+ body.zad-font-medium .arabic{font-size:23px!important}
+ body.zad-font-large .arabic{font-size:27px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
