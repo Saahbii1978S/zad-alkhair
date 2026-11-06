@@ -711,9 +711,18 @@ footer{color:#8495a1}
 }
 @media(min-width:760px){.home-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr))}}
 
+
+/* ساعة رقمية حيّة وثابتة أعلى التطبيق */
+.live-clock-bar{position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:9px 12px;background:linear-gradient(120deg,#071d35,#123e5a 58%,#0b574f);color:#fff;box-shadow:0 5px 18px #071d3533;border-bottom:1px solid #d4b36a66;direction:rtl}
+.live-clock-label{font-size:12px;font-weight:700;color:#d9e9f5;letter-spacing:.3px}
+.live-clock-time{direction:ltr;unicode-bidi:isolate;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:clamp(23px,5vw,31px);font-weight:900;letter-spacing:2px;color:#fff;text-shadow:0 0 14px #8dd8e866;font-variant-numeric:tabular-nums}
+.live-clock-date{font-size:12px;color:#e4edf4;font-weight:600}
+@media(max-width:390px){.live-clock-bar{gap:7px;padding:7px 8px}.live-clock-label,.live-clock-date{font-size:10px}.live-clock-time{font-size:23px;letter-spacing:1px}}
+
 </style>
 </head>
 <body>
+<div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
 <header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request">من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
 <nav class="nav" aria-label="أقسام الموقع">
 <button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button>
@@ -1183,6 +1192,20 @@ $('#khatma-cloud-refresh').onclick=()=>cloudLoadAssignments().catch(e=>cloudMess
 
 /* تسجيل نسخة قابلة للتثبيت والحفظ الأساسي دون إنترنت */
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+
+
+/* ساعة رقمية مباشرة بتوقيت تونس، تتجدد كل ثانية وتبقى ظاهرة أثناء التنقل */
+function updateZadLiveClock(){
+ const now=new Date();
+ const time=document.getElementById('zad-live-clock');
+ const date=document.getElementById('zad-live-date');
+ if(!time||!date)return;
+ time.textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Tunis',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+ date.textContent=new Intl.DateTimeFormat('ar-TN',{timeZone:'Africa/Tunis',weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
+}
+updateZadLiveClock();
+setInterval(updateZadLiveClock,1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateZadLiveClock()});
 
 loadPrayerTimes();
 
