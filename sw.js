@@ -1,4 +1,4 @@
-const CACHE='zad-alkhair-shell-v3';
+const CACHE='zad-alkhair-shell-v4';
 const QURAN_TEXT='zad-quran-text-v1';
 const QURAN_AUDIO='zad-quran-audio-v2';
 const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./supabase-config.js'];
@@ -13,6 +13,13 @@ self.addEventListener('fetch',event=>{
  if(request.method!=='GET')return;
  const url=new URL(request.url);
  if(url.origin===self.location.origin){
+  if(request.mode==='navigate'){
+   event.respondWith(fetch(request,{cache:'no-store'}).then(response=>{
+    if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put('./index.html',copy))}
+    return response;
+   }).catch(()=>caches.match('./index.html')));
+   return;
+  }
   event.respondWith(caches.match(request).then(hit=>hit||fetch(request).then(response=>{
    if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(request,copy))}
    return response;
