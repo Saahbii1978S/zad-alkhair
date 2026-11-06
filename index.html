@@ -55,7 +55,7 @@ footer{padding:28px 16px 38px}
 .home-prayer-note{font-size:10px;color:#c6d8cf;margin:8px 0 0}.home-prayer-more{display:block;margin:10px auto 0;border:0;background:transparent;color:#f0d99e;font:700 12px Tajawal;cursor:pointer}
 @media(max-width:390px){.home-prayer-card{padding:14px}.home-prayer-list{gap:4px}.home-prayer-list>div{padding:8px 1px}.home-prayer-list b{font-size:11px}.home-prayer-list span{font-size:10px}.home-prayer-head h2{font-size:20px}}
 
-.arabic{font-size:25px;line-height:2.15}.dhikr{padding:18px 10px}.dhikr .muted:first-child{font-size:14px;font-weight:800;color:#92743e}.dhikr .muted:last-child{font-size:14px;color:#557065}.card h2{font-size:22px}.muted{font-size:14px}@media(max-width:480px){.arabic{font-size:23px;line-height:2.1}.dhikr{padding:16px 8px}.dhikr .muted{font-size:13px}.card h2{font-size:21px}}\n</style>
+.arabic{font-size:25px;line-height:2.15}.dhikr{padding:18px 10px}.dhikr .muted:first-child{font-size:14px;font-weight:800;color:#92743e}.dhikr .muted:last-child{font-size:14px;color:#557065}.card h2{font-size:22px}.muted{font-size:14px}@media(max-width:480px){.arabic{font-size:23px;line-height:2.1}.dhikr{padding:16px 8px}.dhikr .muted{font-size:13px}.card h2{font-size:21px}}\n.dhikr-count-progress{display:inline-block;margin-top:7px;padding:4px 10px;border-radius:20px;background:#edf3ed;color:#315c49;font:700 12px Tajawal}\n</style>
 </head>
 <body>
 <header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p></header>
@@ -92,15 +92,49 @@ footer{padding:28px 16px 38px}
 (()=>{const $=s=>document.querySelector(s);let count=Number(localStorage.getItem('zad-count')||0),names=['سبحان الله','الحمد لله','الله أكبر','أستغفر الله'];let ni=0;function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));history.replaceState(null,'','#'+id);window.scrollTo(0,0)}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));function paint(){$('#count').textContent=count;localStorage.setItem('zad-count',count)}$('#add').onclick=()=>{count++;paint()};$('#minus').onclick=()=>{count=Math.max(0,count-1);paint()};$('#reset').onclick=()=>{count=0;paint()};$('#change').onclick=()=>{$('#zikrLabel').textContent=names[++ni%names.length]};document.querySelectorAll('[data-task]').forEach(c=>{c.checked=localStorage.getItem('zad-task-'+c.dataset.task)==='1';c.onchange=()=>localStorage.setItem('zad-task-'+c.dataset.task,c.checked?'1':'0')});
 function setupDhikr(id){
  const root=document.getElementById(id),items=[...root.querySelectorAll('.dhikr-tap')];
- const key='zad-'+id+'-done-v2',saved=()=>{try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return []}};
- let done=saved(),showDone=false;
+ const key='zad-'+id+'-counts-v3';
+ const saved=()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return {}}};
+ let counts=saved(),showDone=false;
  const doneEl=document.getElementById(id+'-done'),totalEl=document.getElementById(id+'-total'),bar=document.getElementById(id+'-bar'),showBtn=document.getElementById(id+'-show');
+ const required=items.map(el=>{
+   const label=el.querySelector('.muted:last-child')?.textContent||'';
+   if(/مئة مرة/.test(label))return 100;
+   if(/عشر مرات/.test(label))return 10;
+   if(/سبع مرات/.test(label))return 7;
+   if(/أربع مرات/.test(label))return 4;
+   if(/ثلاث مرات/.test(label))return 3;
+   if(/مرتين/.test(label))return 2;
+   return 1;
+ });
  totalEl.textContent=items.length;
- function render(){items.forEach((el,i)=>{const complete=done.includes(i);el.classList.toggle('done',complete&&!showDone);el.style.opacity=complete?'0.55':'1';el.setAttribute('aria-pressed',complete?'true':'false')});doneEl.textContent=done.length;bar.style.width=(items.length?done.length/items.length*100:0)+'%';showBtn.textContent=showDone?'إخفاء المكتمل':'إظهار المكتمل';}
- function toggle(el){const i=items.indexOf(el);if(i<0)return;if(done.includes(i))done=done.filter(x=>x!==i);else done.push(i);localStorage.setItem(key,JSON.stringify(done));render();}
- items.forEach(el=>{el.addEventListener('click',()=>toggle(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(el)}})});
+ function render(){
+   let completed=0;
+   items.forEach((el,i)=>{
+     const n=Math.min(required[i],Math.max(0,Number(counts[i]||0))),complete=n>=required[i];
+     if(complete)completed++;
+     el.classList.toggle('done',complete&&!showDone);
+     el.style.opacity=complete?'0.58':'1';
+     el.setAttribute('aria-pressed',complete?'true':'false');
+     let progress=el.querySelector('.dhikr-count-progress');
+     if(required[i]>1){
+       if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}
+       progress.textContent='التكرار: '+n+' / '+required[i];
+     } else if(progress) progress.remove();
+   });
+   doneEl.textContent=completed;bar.style.width=(items.length?completed/items.length*100:0)+'%';
+   showBtn.textContent=showDone?'إخفاء المكتمل':'إظهار المكتمل';
+ }
+ function increment(el){
+   const i=items.indexOf(el);if(i<0)return;
+   counts[i]=Math.min(required[i],Number(counts[i]||0)+1);
+   localStorage.setItem(key,JSON.stringify(counts));render();
+ }
+ items.forEach(el=>{
+   el.addEventListener('click',()=>increment(el));
+   el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}});
+ });
  showBtn.onclick=()=>{showDone=!showDone;render()};
- document.getElementById(id+'-reset').onclick=()=>{done=[];localStorage.removeItem(key);showDone=false;render()};
+ document.getElementById(id+'-reset').onclick=()=>{counts={};localStorage.removeItem(key);showDone=false;render()};
  render();
 }
 setupDhikr('morning');setupDhikr('evening');const citySel=$('#prayer-city'),prayerNames={Fajr:'الفجر',Dhuhr:'الظهر',Asr:'العصر',Maghrib:'المغرب',Isha:'العشاء'};let prayerTimes=null,prayerTicker=null;citySel.value=localStorage.getItem('zad-prayer-city')||'Sfax';const homeCity=$('#home-prayer-city');homeCity.value=citySel.value;homeCity.onchange=()=>{citySel.value=homeCity.value;loadPrayerTimes()};async function loadPrayerTimes(){const city=citySel.value;localStorage.setItem('zad-prayer-city',city);$('#prayer-date').textContent='جاري تحميل المواقيت...';try{const res=await fetch('https://api.aladhan.com/v1/timingsByCity?city='+encodeURIComponent(city)+'&country=Tunisia&method=3');if(!res.ok)throw new Error('network');const json=await res.json();if(json.code!==200)throw new Error('api');prayerTimes=json.data.timings;const dateLabel=citySel.options[citySel.selectedIndex].text+' • '+json.data.date.readable+' • '+json.data.date.hijri.date+' هـ';$('#prayer-date').textContent=dateLabel;$('#home-prayer-date').textContent=dateLabel;const keys=['Fajr','Dhuhr','Asr','Maghrib','Isha'];$('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item"><span>'+prayerNames[k]+'</span><span>'+prayerTimes[k]+'</span></div>').join('');$('#home-prayer-list').innerHTML=keys.map(k=>'<div><span>'+prayerNames[k]+'</span><b>'+prayerTimes[k]+'</b></div>').join('');tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000)}catch(e){$('#prayer-date').textContent='تعذّر تحميل المواقيت. تثبّت من الإنترنت وحاول من جديد.';$('#prayer-list').innerHTML='';$('#next-prayer-name').textContent='—';$('#next-prayer-countdown').textContent='—'}}function tickPrayer(){if(!prayerTimes)return;const now=new Date(),keys=['Fajr','Dhuhr','Asr','Maghrib','Isha'];let next='',target=null;for(const k of keys){const p=prayerTimes[k].split(':').map(Number),d=new Date(now);d.setHours(p[0],p[1],0,0);if(d>now){next=k;target=d;break}}if(!target){next='Fajr';target=new Date(now);target.setDate(target.getDate()+1);const p=prayerTimes.Fajr.split(':').map(Number);target.setHours(p[0],p[1],0,0)}const n=Math.max(0,Math.floor((target-now)/1000)),h=Math.floor(n/3600),m=Math.floor(n%3600/60),sec=n%60;$('#next-prayer-name').textContent=prayerNames[next];$('#next-prayer-countdown').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':');$('#home-next-name').textContent=prayerNames[next];$('#home-next-countdown').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':')}$('#prayer-refresh').onclick=loadPrayerTimes;citySel.onchange=()=>{homeCity.value=citySel.value;loadPrayerTimes()};homeCity.onchange=()=>{citySel.value=homeCity.value;loadPrayerTimes()};document.querySelector('[data-page="prayer-times"]').addEventListener('click',loadPrayerTimes);
