@@ -841,11 +841,23 @@ footer{color:#8495a1}
  .home-prayer-list b{font-size:12px!important}
 }
 
+
+/* أزرار مشاركة زاد الخير */
+.zad-share-bar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px 14px 4px;max-width:760px;margin:0 auto}
+.zad-share-bar button{border:1px solid #d8e4ef;border-radius:13px;padding:11px 18px;background:#eaf1f8;color:#315f91;font:700 15px Tajawal,Arial,sans-serif;cursor:pointer}
+.zad-share-bar button:first-child{background:#315f91;color:#fff;border-color:#315f91}
+.zad-share-bar button:active{transform:scale(.98)}
+@media(max-width:480px){.zad-share-bar{padding:10px 8px 2px}.zad-share-bar button{flex:1;min-width:135px;padding:10px 12px;font-size:14px}}
+
 </style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
 <header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
+<div class="zad-share-bar" aria-label="مشاركة زاد الخير">
+ <button type="button" id="zad-share-button">مشاركة التطبيق</button>
+ <button type="button" id="zad-copy-link">نسخ الرابط</button>
+</div>
 <div class="home-prayer-card">
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة • تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div><span class="mosque-mark">۞</span></div>
  <div class="home-prayer-city"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div>
@@ -1392,4 +1404,28 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
  }
 })();
 </script>
+
+<script>
+/* مشاركة زاد الخير ونسخ رابطه */
+(function(){
+ const appUrl='https://vocal-dasik-a6a2bf.netlify.app/';
+ const shareBtn=document.getElementById('zad-share-button');
+ const copyBtn=document.getElementById('zad-copy-link');
+ if(shareBtn)shareBtn.addEventListener('click',async function(){
+  const data={title:'زاد الخير',text:'زاد الخير — ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله',url:appUrl};
+  try{
+   if(navigator.share){await navigator.share(data)}
+   else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(appUrl);alert('تم نسخ رابط زاد الخير. ابعثه لأصحابك.')}
+   else{window.prompt('انسخ رابط زاد الخير:',appUrl)}
+  }catch(e){if(e&&e.name!=='AbortError')alert('تعذّرت المشاركة. جرّب زر نسخ الرابط.')}
+ });
+ if(copyBtn)copyBtn.addEventListener('click',async function(){
+  try{
+   if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(appUrl);alert('تم نسخ رابط زاد الخير بنجاح ❤️')}
+   else{window.prompt('انسخ رابط زاد الخير:',appUrl)}
+  }catch(e){window.prompt('انسخ رابط زاد الخير:',appUrl)}
+ });
+})();
+</script>
+
 </body></html>
