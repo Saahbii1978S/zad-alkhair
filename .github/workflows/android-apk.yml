@@ -47,7 +47,7 @@ jobs:
           p = Path('android/app/src/main/AndroidManifest.xml')
           s = p.read_text(encoding='utf-8')
           marker = '    <application'
-          permissions = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\\n'
+          permissions = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n'
           if 'android.permission.POST_NOTIFICATIONS' not in s:
               s = s.replace(marker, permissions + marker, 1)
           p.write_text(s, encoding='utf-8')
@@ -100,7 +100,7 @@ jobs:
           if 'signingConfig signingConfigs.release' not in s:
               start = s.index('buildTypes {')
               pos = s.index('release {', start)
-              s = s[:pos] + s[pos:].replace('release {', 'release {\\n            signingConfig signingConfigs.release', 1)
+              s = s[:pos] + s[pos:].replace('release {', 'release {\n            signingConfig signingConfigs.release', 1)
           p.write_text(s, encoding='utf-8')
           PY
           keytool -list -keystore "$ANDROID_KEYSTORE_PATH" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS" >/dev/null
