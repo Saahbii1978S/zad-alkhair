@@ -680,7 +680,7 @@ body{font-size:20px}
 <footer>زاد الخير • نسأل الله القبول والإخلاص • المحتوى قابل للمراجعة والتطوير</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.80.0/dist/umd/supabase.min.js"></script>
 <script src="./supabase-config.js"></script>
-<script type="module">import { LocalNotifications } from "https://esm.sh/@capacitor/local-notifications@8.0.0"; window.ZadLocalNotifications = LocalNotifications;</script>
+<script type="module">import { LocalNotifications } from "https://esm.sh/@capacitor/local-notifications@8.0.0"; import { registerPlugin } from "https://esm.sh/@capacitor/core@8.6.0"; window.ZadLocalNotifications = LocalNotifications; window.ZadPrayerAlarm = registerPlugin("PrayerAlarm");</script>
 <script>
 (()=>{const $=s=>document.querySelector(s);let count=Number(localStorage.getItem('zad-count')||0),names=['سبحان الله','الحمد لله','الله أكبر','أستغفر الله'];let ni=0;function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));history.replaceState(null,'','#'+id);window.scrollTo(0,0)}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));function paint(){$('#count').textContent=count;localStorage.setItem('zad-count',count)}$('#add').onclick=()=>{count++;paint()};$('#minus').onclick=()=>{count=Math.max(0,count-1);paint()};$('#reset').onclick=()=>{count=0;paint()};$('#change').onclick=()=>{$('#zikrLabel').textContent=names[++ni%names.length]};document.querySelectorAll('[data-task]').forEach(c=>{c.checked=localStorage.getItem('zad-task-'+c.dataset.task)==='1';c.onchange=()=>localStorage.setItem('zad-task-'+c.dataset.task,c.checked?'1':'0')});
 function setupDhikr(id){
@@ -780,18 +780,24 @@ async function scheduleNativePrayerAlerts(){
   await Local.createChannel({id:'zad-prayer-alerts',name:'تنبيهات مواقيت الصلاة',description:'تنبيه عند دخول وقت الصلاة',importance:5});
   const ids=[81001,81002,81003,81004,81005];
   await Local.cancel({notifications:ids.map(id=>({id}))});
-  const now=new Date(),alerts=[];
-  Object.keys(prayerNames).forEach((key,index)=>{
-   if(!adhanEnabled[key])return;
+  const times=Object.keys(prayerNames).map(key=>{
    const hm=String(prayerTimes[key]||'').slice(0,5).split(':').map(Number);
-   if(hm.length!==2||hm.some(Number.isNaN))return;
-   const at=cityLocalToDate(now.getFullYear(),now.getMonth()+1,now.getDate(),hm[0],hm[1]);
+   return {key,hour:hm[0],minute:hm[1],enabled:!!adhanEnabled[key]};
+  }).filter(x=>x.enabled&&Number.isInteger(x.hour)&&Number.isInteger(x.minute)&&x.hour>=0&&x.hour<24&&x.minute>=0&&x.minute<60);
+  if(adhanMode.value==='audio'&&window.ZadPrayerAlarm){
+   await window.ZadPrayerAlarm.schedule({times:JSON.stringify(times.map(x=>({hour:x.hour,minute:x.minute})))});
+   adhanMessage('تم ضبط الأذان الكامل في الخلفية للصلوات المفعّلة، مع إعادة ضبطه بعد إعادة تشغيل الهاتف.');
+   return;
+  }
+  const now=new Date(),alerts=[];
+  times.forEach((x,index)=>{
+   const at=cityLocalToDate(now.getFullYear(),now.getMonth()+1,now.getDate(),x.hour,x.minute);
    if(at<=now)return;
-   alerts.push({id:ids[index],title:'حان وقت صلاة '+prayerNames[key],body:'حيّ على الصلاة • زاد الخير',schedule:{at,allowWhileIdle:true},channelId:'zad-prayer-alerts',isExactNotification:true,extra:{prayer:key}});
+   alerts.push({id:ids[index],title:'حان وقت صلاة '+prayerNames[x.key],body:'حيّ على الصلاة • زاد الخير',schedule:{at,allowWhileIdle:true},channelId:'zad-prayer-alerts',isExactNotification:true,extra:{prayer:x.key}});
   });
   if(alerts.length)await Local.schedule({notifications:alerts});
-  adhanMessage(alerts.length?'تم ضبط تنبيهات الصلوات المتبقية اليوم على الهاتف.':'ما فماش صلاة متبقية اليوم لضبط تنبيهها.');
- }catch(e){adhanMessage('تعذّر ضبط تنبيهات أندرويد. تثبّت من إذن الإشعارات والمنبّه الدقيق.');}
+  adhanMessage(alerts.length?'تم ضبط إشعارات الصلوات المتبقية اليوم.':'ما فماش صلاة متبقية اليوم لضبط تنبيهها.');
+ }catch(e){adhanMessage('تعذّر ضبط الأذان أو التنبيهات. تثبّت من إذن الإشعارات والمنبّهات الدقيقة.');}
 }
 $('#adhan-permission').onclick=async()=>{
  try{
