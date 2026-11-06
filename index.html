@@ -2069,6 +2069,92 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
  const add=$('add');if(add)add.addEventListener('click',()=>{if(localStorage.getItem(keys.vibration)==='1'&&navigator.vibrate)navigator.vibrate(25)});
 })();
 </script>
+
+<style id="zad-header-redesign-v2">
+/* رأس موحّد: الساعة يساراً، الموقع يميناً، والعنوان في الوسط */
+header.hero{
+ position:relative!important;isolation:isolate!important;
+ min-height:252px!important;padding:94px 14px 24px!important;
+ display:flex!important;flex-direction:column!important;
+ align-items:center!important;justify-content:center!important;
+ text-align:center!important;overflow:hidden!important;
+ border-radius:0 0 24px 24px!important;
+ background-color:#102f28!important;
+ background-image:linear-gradient(180deg,rgba(3,24,19,.43),rgba(3,24,19,.53)),url("https://storage.googleapis.com/wp-static/wp-orphansinneed/2025/10/7441399c-kaaba12.jpg")!important;
+ background-repeat:no-repeat!important;
+ background-size:cover!important;background-position:center 48%!important;
+}
+header.hero .brand{
+ position:relative!important;z-index:2!important;width:100%!important;
+ margin:0!important;text-align:center!important;direction:rtl!important;
+ color:#f4d58c!important;font-family:Amiri,Tajawal,serif!important;
+ font-size:clamp(38px,7vw,52px)!important;font-weight:800!important;
+ line-height:1.35!important;text-shadow:0 3px 12px #061a16!important;
+}
+header.hero .tag{
+ position:relative!important;z-index:2!important;width:100%!important;
+ max-width:560px!important;margin:3px auto 0!important;
+ text-align:center!important;color:#fff!important;
+ font-size:clamp(14px,3.2vw,19px)!important;font-weight:700!important;
+ line-height:1.65!important;text-shadow:0 2px 8px #061a16!important;
+}
+header.hero .live-clock-bar,
+header.hero .home-prayer-city{
+ position:absolute!important;top:10px!important;z-index:4!important;
+ margin:0!important;border:1.5px solid #d9b66d!important;
+ border-radius:13px!important;
+ background:linear-gradient(145deg,rgba(8,55,41,.94),rgba(5,35,29,.94))!important;
+ box-shadow:inset 0 1px 3px #ffffff30,0 4px 12px #001b1680!important;
+ color:#fff!important;backdrop-filter:blur(3px)!important;
+}
+header.hero .live-clock-bar{
+ left:10px!important;right:auto!important;width:31%!important;max-width:220px!important;
+ min-width:0!important;padding:7px 8px!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:1px!important;direction:ltr!important;
+}
+header.hero .live-clock-label,
+header.hero .live-clock-date{font-size:11px!important;line-height:1.35!important;color:#fff!important}
+header.hero .live-clock-time{font-size:clamp(19px,3.4vw,25px)!important;line-height:1.25!important;color:#f5d991!important}
+header.hero .home-prayer-city{
+ right:10px!important;left:auto!important;width:31%!important;max-width:220px!important;
+ min-width:0!important;padding:6px 7px!important;
+ display:flex!important;flex-direction:column!important;gap:4px!important;
+}
+header.hero .home-prayer-field{
+ display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;
+ align-items:center!important;gap:4px!important;min-width:0!important;
+}
+header.hero .home-prayer-field label{
+ color:#f5d991!important;font-size:10px!important;font-weight:800!important;
+ white-space:nowrap!important;
+}
+header.hero .home-prayer-field select{
+ width:100%!important;min-width:0!important;height:27px!important;min-height:27px!important;
+ padding:2px 5px!important;border:1px solid #d9b66d!important;border-radius:7px!important;
+ background:#fff!important;color:#174332!important;font-size:11px!important;
+}
+@media(max-width:600px){
+ header.hero{min-height:222px!important;padding:91px 8px 20px!important;background-position:center 48%!important}
+ header.hero .live-clock-bar{left:7px!important;top:8px!important;width:39%!important;max-width:none!important;padding:6px 5px!important;border-radius:11px!important}
+ header.hero .home-prayer-city{right:7px!important;top:8px!important;width:39%!important;max-width:none!important;padding:5px!important;gap:3px!important;border-radius:11px!important}
+ header.hero .live-clock-label,header.hero .live-clock-date{font-size:9px!important}
+ header.hero .live-clock-time{font-size:18px!important}
+ header.hero .home-prayer-field{grid-template-columns:29px minmax(0,1fr)!important;gap:2px!important}
+ header.hero .home-prayer-field label{font-size:9px!important}
+ header.hero .home-prayer-field select{height:24px!important;min-height:24px!important;font-size:10px!important;padding:1px 3px!important}
+ header.hero .brand{font-size:35px!important}
+ header.hero .tag{font-size:14px!important;max-width:96%!important}
+}
+@media(max-width:360px){
+ header.hero{min-height:216px!important;padding-top:88px!important}
+ header.hero .live-clock-bar,header.hero .home-prayer-city{width:40%!important}
+ header.hero .home-prayer-field{grid-template-columns:25px minmax(0,1fr)!important}
+ header.hero .home-prayer-field label{font-size:8px!important}
+ header.hero .home-prayer-field select{font-size:9px!important}
+}
+</style>
+
 </body></html>
 <script>
 /* تثبيت الساعة والبلد والمدينة داخل رأس الواجهة */
