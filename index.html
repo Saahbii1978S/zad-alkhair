@@ -2246,3 +2246,45 @@ header.hero .tag{
 }
 </style>
 </body></html>
+
+
+<style id="zad-icons-elegant-v2">
+/* أيقونات هادئة بطابع إسلامي راقٍ */
+.home-shortcuts .shortcut-icon{
+ width:66px!important;height:66px!important;flex:0 0 66px!important;
+ display:grid!important;place-items:center!important;overflow:visible!important;
+ border-radius:19px!important;background:linear-gradient(145deg,#fffdf7,#f1eee3)!important;
+ border:1px solid #d8c79d!important;box-shadow:0 3px 10px #243b2d12!important;
+ font-size:0!important;
+}
+.home-shortcuts .shortcut-icon svg{width:82%!important;height:82%!important;display:block!important;filter:drop-shadow(0 1px 1px #9d895033)}
+.home-shortcuts .shortcut-icon svg .g{fill:none;stroke:#285b49;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.home-shortcuts .shortcut-icon svg .a{fill:none;stroke:#b18a45;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.home-shortcuts .shortcut-icon svg .f{fill:#d9bd7c;stroke:#98743b;stroke-width:1.1;stroke-linejoin:round}
+.home-shortcuts .shortcut-icon svg .p{fill:#e6eee5;stroke:#376b55;stroke-width:1.35;stroke-linejoin:round}
+@media(max-width:480px){.home-shortcuts .shortcut-icon{width:58px!important;height:58px!important;flex-basis:58px!important;border-radius:17px!important}}
+</style>
+<script id="zad-icons-elegant-script-v2">
+(function(){
+ const I={
+ morning:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="g" d="M9 48h46M14 48a18 18 0 0 1 36 0"/><path class="a" d="M32 7v7M12 17l5 5m30-5-5 5M6 34h8m36 0h8"/><circle class="f" cx="32" cy="34" r="7"/><path class="g" d="M19 48h26"/></svg>',
+ evening:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="f" d="M43 10a22 22 0 1 0 12 37A24 24 0 0 1 43 10Z"/><path class="a" d="m17 13 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z M48 8v5m-2.5-2.5h5"/><circle class="g" cx="13" cy="39" r="1.5"/></svg>',
+ prayer:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="p" d="M32 7 51 25 32 57 13 25Z"/><path class="a" d="M32 14 44 26 32 48 20 26Z"/><path class="g" d="M32 20v22m-7-15 7-7 7 7"/><circle class="f" cx="32" cy="31" r="3"/></svg>',
+ sleep:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="g" d="M11 43V29a5 5 0 0 1 10 0v5h31v9M11 37h41M16 43v5m31-5v5"/><path class="p" d="M21 34V24a5 5 0 0 1 5-5h9a7 7 0 0 1 7 7v8"/><path class="a" d="m47 10 1.5 4.5L53 16l-4.5 1.5L47 22l-1.5-4.5L41 16l4.5-1.5Z"/></svg>',
+ duas:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="p" d="M32 53S9 39 9 23c0-8 10-13 17-6l6 7 6-7c7-7 17-2 17 6 0 16-23 30-23 30Z"/><path class="a" d="M32 7v10m-5-5 5-5 5 5"/><path class="g" d="M20 32c4 5 8 8 12 11 4-3 8-6 12-11"/></svg>',
+ names:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="a" d="M32 6 38 20 53 21 42 32 45 48 32 40 19 48 22 32 11 21 26 20Z"/><path class="p" d="m32 17 4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1Z"/><circle class="f" cx="32" cy="31" r="4"/></svg>',
+ tasbeeh:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="g" d="M32 13c-13 0-22 9-22 21s9 21 22 21 22-9 22-21-9-21-22-21Z"/><path class="a" d="M32 13V6m-5 0h10"/><g fill="#bd9b58" stroke="#8e713d" stroke-width=".7"><circle cx="32" cy="13" r="3"/><circle cx="47" cy="20" r="3"/><circle cx="53" cy="34" r="3"/><circle cx="44" cy="48" r="3"/><circle cx="20" cy="48" r="3"/><circle cx="11" cy="34" r="3"/><circle cx="17" cy="20" r="3"/></g><circle class="p" cx="32" cy="34" r="7"/></svg>',
+ tracker:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="g" d="M10 10v44h46"/><path class="p" d="M17 43h8v11h-8zm13-13h8v24h-8zm13-12h8v36h-8z"/><path class="a" d="m16 34 13-12 9 5 14-15"/><path class="g" d="M45 12h7v7"/></svg>',
+ 'prayer-times':'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="p" d="M10 52h44V29L32 12 10 29Z"/><path class="g" d="M6 52h52M17 52V32l15-11 15 11v20M26 52V39h12v13"/><path class="a" d="M32 6v7m-6-2a6 6 0 0 1 12 0"/></svg>',
+ quran:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="p" d="M7 14c10-4 19-2 25 4 6-6 15-8 25-4v36c-10-4-19-2-25 4-6-6-15-8-25-4Z"/><path class="a" d="M32 18v36"/><path class="g" d="M14 23c6-2 11-1 14 2m-14 7c6-2 11-1 14 2m8-9c4-3 9-4 14-2m-14 11c4-3 9-4 14-2"/></svg>',
+ qibla:'<svg viewBox="0 0 64 64" aria-hidden="true"><circle class="g" cx="32" cy="33" r="23"/><circle class="a" cx="32" cy="33" r="17"/><path class="f" d="m32 12 7 25-7-5-7 5Z"/><path class="g" d="M32 32v15m-4-4 4 4 4-4"/></svg>',
+ khatma:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="p" d="M8 17c9-4 17-2 24 4 7-6 15-8 24-4v34c-9-4-17-2-24 4-7-6-15-8-24-4Z"/><path class="a" d="M32 21v34"/><path class="g" d="m20 34 7 7 16-17"/><path class="a" d="M15 12h34"/></svg>',
+ calendar:'<svg viewBox="0 0 64 64" aria-hidden="true"><rect class="p" x="9" y="14" width="46" height="40" rx="6"/><path class="g" d="M9 25h46M21 8v12m22-12v12"/><path class="a" d="M20 34h5m7 0h5m7 0h2M20 44h5m7 0h5m7 0h2"/></svg>',
+ settings:'<svg viewBox="0 0 64 64" aria-hidden="true"><path class="p" d="m27 7 10 0 2 7 6 3 7-2 5 9-5 5v7l5 5-5 9-7-2-6 3-2 7H27l-2-7-6-3-7 2-5-9 5-5v-7l-5-5 5-9 7 2 6-3Z"/><circle class="a" cx="32" cy="33" r="11"/><circle class="g" cx="32" cy="33" r="5"/></svg>'
+ };
+ document.querySelectorAll('.home-shortcuts .tile[data-go]').forEach(tile=>{
+  const icon=tile.querySelector('.shortcut-icon'),key=tile.getAttribute('data-go');
+  if(icon&&I[key])icon.innerHTML=I[key];
+ });
+})();
+</script>
