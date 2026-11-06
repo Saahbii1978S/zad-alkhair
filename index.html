@@ -545,6 +545,33 @@ body{font-size:20px}
   box-shadow:0 4px 12px #0006;
   border:2px solid #303b49;
 }
+#morning .dhikr-count-progress,
+#evening .dhikr-count-progress{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  width:72px;
+  height:72px;
+  margin:10px auto 2px;
+  border-radius:50%;
+  box-sizing:border-box;
+  background:#10151d;
+  color:#fff;
+  border:2px solid #465466;
+  box-shadow:0 4px 13px #0007;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.2;
+}
+#morning .dhikr-count-progress strong,
+#evening .dhikr-count-progress strong{
+  color:#fff;
+  font-size:17px;
+  font-weight:900;
+  direction:ltr;
+}
 #morning .dhikr,
 #evening .dhikr{padding:13px 9px}
 @media(max-width:480px){
@@ -552,6 +579,10 @@ body{font-size:20px}
   #evening .dhikr .arabic{font-size:16px;line-height:1.85}
   #morning .dhikr > .muted:last-child,
   #evening .dhikr > .muted:last-child{width:54px;height:54px;font-size:9px;padding:4px}
+  #morning .dhikr-count-progress,
+  #evening .dhikr-count-progress{width:66px;height:66px;font-size:10px}
+  #morning .dhikr-count-progress strong,
+  #evening .dhikr-count-progress strong{font-size:16px}
 }
 </style>
 </head>
@@ -679,8 +710,14 @@ function setupDhikr(id){
      let progress=el.querySelector('.dhikr-count-progress');
      if(required[i]>1){
        if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}
-       progress.textContent='التكرار: '+n+' / '+required[i];
-     } else if(progress) progress.remove();
+       progress.innerHTML='التكرار<br><strong>'+n+' / '+required[i]+'</strong>';
+       const repeatLabel=el.querySelector(':scope > .muted:last-of-type');
+       if(repeatLabel) repeatLabel.style.display='none';
+     } else {
+       if(progress) progress.remove();
+       const repeatLabel=el.querySelector(':scope > .muted:last-of-type');
+       if(repeatLabel) repeatLabel.style.display='';
+     }
    });
    doneEl.textContent=completed;bar.style.width=(items.length?completed/items.length*100:0)+'%';
    showBtn.textContent=showDone?'إخفاء المكتمل':'إظهار المكتمل';
