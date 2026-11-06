@@ -460,6 +460,24 @@ body{font-size:20px}
  .home-prayer-list b{font-size:10px}
 }
 
+
+
+/* وضوح أكبر للصفحة الرئيسية على الهاتف */
+.home-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0 22px}
+.home-shortcuts .tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:112px;padding:13px 6px;font-size:17px;font-weight:800;line-height:1.5;text-align:center;border-radius:18px}
+.home-shortcuts .shortcut-icon{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#eaf1f8;border:1px solid #d8e4ef;font-size:29px;line-height:1}
+.home-prayer-list .prayer-icon{width:39px;height:39px;font-size:21px}
+.home-prayer-list span{font-size:11px;font-weight:700}
+.home-prayer-list b{font-size:14px}
+.home-prayer-list>div{padding:9px 1px}
+@media(max-width:390px){
+ .home-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+ .home-shortcuts .tile{min-height:104px;padding:11px 3px;font-size:15px;gap:7px}
+ .home-shortcuts .shortcut-icon{width:46px;height:46px;font-size:26px}
+ .home-prayer-list .prayer-icon{width:34px;height:34px;font-size:18px}
+ .home-prayer-list span{font-size:9px}
+ .home-prayer-list b{font-size:11px}
+}
 </style>
 </head>
 <body>
@@ -478,7 +496,7 @@ body{font-size:20px}
  <button class="home-prayer-more" type="button" data-go="prayer-times">عرض المواقيت بالتفصيل ←</button>
  </div>
 
-<div class="tiles home-shortcuts"><div class="tile" data-go="morning">☀️ أذكار الصباح</div><div class="tile" data-go="evening">🌙 أذكار المساء</div><div class="tile" data-go="prayer">۞ بعد الصلاة</div><div class="tile" data-go="sleep">🌙 قبل النوم</div><div class="tile" data-go="duas">🤲 الأدعية</div><div class="tile" data-go="names">✨ الأسماء الحسنى</div><div class="tile" data-go="tasbeeh">📿 التسبيح</div><div class="tile" data-go="tracker">📊 متابعتي</div><div class="tile" data-go="prayer-times">🕌 المواقيت</div><div class="tile" data-go="quran">📖 القرآن</div><div class="tile" data-go="qibla">🧭 القبلة</div><div class="tile" data-go="khatma">🌙 الختمة</div></div>
+<div class="tiles home-shortcuts"><div class="tile" data-go="morning"><span class="shortcut-icon">☀️</span><span>أذكار الصباح</span></div><div class="tile" data-go="evening"><span class="shortcut-icon">🌙</span><span>أذكار المساء</span></div><div class="tile" data-go="prayer"><span class="shortcut-icon">۞</span><span>بعد الصلاة</span></div><div class="tile" data-go="sleep"><span class="shortcut-icon">🌙</span><span>قبل النوم</span></div><div class="tile" data-go="duas"><span class="shortcut-icon">🤲</span><span>الأدعية</span></div><div class="tile" data-go="names"><span class="shortcut-icon">✨</span><span>الأسماء الحسنى</span></div><div class="tile" data-go="tasbeeh"><span class="shortcut-icon">📿</span><span>التسبيح</span></div><div class="tile" data-go="tracker"><span class="shortcut-icon">📊</span><span>متابعتي</span></div><div class="tile" data-go="prayer-times"><span class="shortcut-icon">🕌</span><span>المواقيت</span></div><div class="tile" data-go="quran"><span class="shortcut-icon">📖</span><span>القرآن الكريم</span></div><div class="tile" data-go="qibla"><span class="shortcut-icon">🧭</span><span>القبلة</span></div><div class="tile" data-go="khatma"><span class="shortcut-icon">🌙</span><span>الختمة</span></div></div>
 <div class="card"><h2>آية اليوم</h2><p class="verse">﴿فَسَبِّحْ بِحَمْدِ رَبِّكَ وَكُن مِّنَ السَّاجِدِينَ﴾</p><p class="ref">سورة الحجر: 98</p></div>
 <div class="card"><h2>ابدأ بخير اليوم</h2><p>اجعل لك ورداً من الذكر والقرآن، وحافظ على الصلاة، ولو بالقليل الدائم.</p></div>
 </section>
