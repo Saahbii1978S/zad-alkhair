@@ -53,6 +53,9 @@ jobs:
           p.write_text(s, encoding='utf-8')
           PY
 
+      - name: Install native full adhan service
+        run: python3 scripts/install-android-adhan.py
+
       - name: Build debug APK
         run: |
           cd android
