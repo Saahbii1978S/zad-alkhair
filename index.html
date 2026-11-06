@@ -50,10 +50,10 @@ footer{padding:28px 16px 38px}
 .home-prayer-card{margin:2px 0 17px;padding:19px;border-radius:22px;background:linear-gradient(145deg,#103d32,#17634d);color:#fff;box-shadow:0 12px 28px #123d3026;overflow:hidden;position:relative}
 .home-prayer-head{display:flex;justify-content:space-between;align-items:center}.home-prayer-head h2{margin:3px 0;color:#fff;font-size:23px}.home-eyebrow{font-size:12px;color:#e2d0a0}.home-prayer-head p{font-size:12px;color:#d6e4dc;margin:0}.mosque-mark{font-size:45px;color:#d8bd7b;opacity:.9}
 .home-prayer-city{display:flex;align-items:center;gap:10px;margin:14px 0 12px;color:#e4eee8;font-size:13px}.home-prayer-city select{background:#ffffff18;border:1px solid #ffffff42;border-radius:10px;color:white;padding:7px 12px;font:700 13px Tajawal}.home-prayer-city option{color:#183d32}
-.home-prayer-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.home-prayer-list>div{background:#ffffff12;border:1px solid #ffffff1c;border-radius:12px;padding:9px 3px;text-align:center}.home-prayer-list b{display:block;color:#f0d99e;font-size:13px}.home-prayer-list span{display:block;color:#f5f8f5;font-size:11px;margin-bottom:3px}
+.home-prayer-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.home-prayer-list>div{background:#ffffff12;border:1px solid #ffffff1c;border-radius:12px;padding:9px 3px;text-align:center}.home-prayer-list b{display:block;color:#f0d99e;font-size:13px}.home-prayer-list span{display:block;color:#f5f8f5;font-size:11px;margin-bottom:3px}
 .home-next-prayer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:11px 13px;background:#092d26;border-radius:13px;color:#e5eee8;font-size:13px}.home-next-prayer b{color:#f0d99e;margin-right:5px}.home-next-prayer strong{font-size:18px;color:#f0d99e;direction:ltr}
 .home-prayer-note{font-size:10px;color:#c6d8cf;margin:8px 0 0}.home-prayer-more{display:block;margin:10px auto 0;border:0;background:transparent;color:#f0d99e;font:700 12px Tajawal;cursor:pointer}
-@media(max-width:390px){.home-prayer-card{padding:14px}.home-prayer-list{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.home-prayer-list>div{padding:8px 1px}.home-prayer-list b{font-size:11px}.home-prayer-list span{font-size:10px}.home-prayer-head h2{font-size:20px}}
+@media(max-width:390px){.home-prayer-card{padding:14px}.home-prayer-list{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}.home-prayer-list>div{padding:8px 1px}.home-prayer-list b{font-size:11px}.home-prayer-list span{font-size:10px}.home-prayer-head h2{font-size:20px}}
 
 .arabic{font-size:25px;line-height:2.15}.dhikr{padding:18px 10px}.dhikr .muted:first-child{font-size:14px;font-weight:800;color:#92743e}.dhikr .muted:last-child{font-size:14px;color:#557065}.card h2{font-size:22px}.muted{font-size:14px}@media(max-width:480px){.arabic{font-size:23px;line-height:2.1}.dhikr{padding:16px 8px}.dhikr .muted{font-size:13px}.card h2{font-size:21px}}\n.dhikr-count-progress{display:inline-block;margin-top:7px;padding:4px 10px;border-radius:20px;background:#edf3ed;color:#315c49;font:700 12px Tajawal}\n
 /* ألوان أهدأ وبطاقات الصلاة بأيقونات واضحة */
@@ -445,6 +445,20 @@ body{font-size:20px}
  .home-shortcuts .tile{min-height:70px;padding:8px 3px;font-size:13px}
 }
 @media(max-width:350px){.home-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* عرض الصلوات الخمس في صف واحد حتى على الهاتف */
+.home-prayer-list{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.home-prayer-list>div{min-width:0;padding:8px 1px}
+.home-prayer-list .prayer-icon{width:34px;height:34px;font-size:18px}
+.home-prayer-list span{font-size:10px;white-space:nowrap}
+.home-prayer-list b{font-size:12px;white-space:nowrap}
+@media(max-width:390px){
+ .home-prayer-list{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+ .home-prayer-list .prayer-icon{width:30px;height:30px;font-size:16px}
+ .home-prayer-list span{font-size:9px}
+ .home-prayer-list b{font-size:11px}
+}
 
 </style>
 </head>
