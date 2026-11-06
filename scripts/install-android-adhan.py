@@ -90,7 +90,7 @@ import android.os.*;
 public class AdhanPlaybackService extends Service {
  private MediaPlayer player;
  private static final String CHANNEL="zad-full-adhan";
- @Override public void onCreate(){super.onCreate();if(Build.VERSION.SDK_INT>=26){NotificationChannel ch=new NotificationChannel(CHANNEL,"أذان زاد الخير","عند دخول وقت الصلاة");ch.setDescription("تشغيل الأذان الكامل عند دخول وقت الصلاة");((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(ch);}}
+ @Override public void onCreate(){super.onCreate();if(Build.VERSION.SDK_INT>=26){NotificationChannel ch=new NotificationChannel(CHANNEL,"أذان زاد الخير",NotificationManager.IMPORTANCE_HIGH);ch.setDescription("تشغيل الأذان الكامل عند دخول وقت الصلاة");((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(ch);}}
  @Override public int onStartCommand(Intent intent,int flags,int startId){
   Intent open=getPackageManager().getLaunchIntentForPackage(getPackageName());
   PendingIntent pi=PendingIntent.getActivity(this,0,open,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
