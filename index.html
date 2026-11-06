@@ -754,7 +754,7 @@ async function cloudEnsureSession(){
  const signed=await client.auth.signInAnonymously();if(signed.error)throw signed.error;
  cloudUser=signed.data.user;return cloudUser;
 }
-async function cloudLoadGroups(){
+async function cloudLoadGroups(preferredId=null){
  if(!cloudUser)return;
  const {data:members,error:mErr}=await cloudClient.from('khatma_members').select('id,group_id,display_name').eq('user_id',cloudUser.id);
  if(mErr)throw mErr;
@@ -764,7 +764,8 @@ async function cloudLoadGroups(){
  if(gErr)throw gErr;
  cloudGroups=(groups||[]).map(g=>({...g,myMember:(members||[]).find(m=>m.group_id===g.id)}));
  cloudForms.hidden=false;cloudGroupArea.hidden=false;cloudRenderGroups();
- if(!cloudActive||!cloudGroups.some(g=>g.id===cloudActive.id))cloudActive=cloudGroups[0];
+ cloudActive=cloudGroups.find(g=>g.id===(preferredId||cloudActive?.id))||cloudGroups[0];
+ cloudInviteCode=localStorage.getItem('zad-khatma-invite-'+cloudActive.id)||cloudInviteCode;
  await cloudSelectGroup(cloudActive.id);
 }
 function cloudRenderGroups(){
@@ -783,7 +784,7 @@ async function cloudLoadAssignments(){
  if(!cloudActive)return;
  const {data:assignments,error}=await cloudClient.from('khatma_assignments').select('id,group_id,juz,member_id,completed_at,claimed_at').eq('group_id',cloudActive.id).order('juz');
  if(error)throw error;
- const {data:members,membersError}=await cloudClient.from('khatma_members').select('id,display_name,user_id').eq('group_id',cloudActive.id);
+ const {data:members,error:membersError}=await cloudClient.from('khatma_members').select('id,display_name,user_id').eq('group_id',cloudActive.id);
  if(membersError)throw membersError;
  cloudRenderAssignments(assignments||[],members||[]);
 }
@@ -824,7 +825,7 @@ $('#khatma-cloud-create').onclick=async()=>{
   if(title.length<2||!name)throw new Error('اكتب اسم الختمة واسمك قبل الإنشاء.');
   cloudMessage('جاري إنشاء الختمة...');
   const {data,error}=await cloudClient.rpc('create_khatma_group',{p_title:title,p_display_name:name});if(error)throw error;
-  cloudInviteCode=data.invite_code;await cloudLoadGroups();
+  cloudInviteCode=data.invite_code;localStorage.setItem('zad-khatma-invite-'+data.group_id,cloudInviteCode);await cloudLoadGroups(data.group_id);
   const area=$('#khatma-cloud-invite-area');area.hidden=false;area.textContent='رمز الدعوة الخاص بالمجموعة: ';
   const code=document.createElement('span');code.className='khatma-code';code.textContent=cloudInviteCode;area.append(code);
   cloudMessage('تم إنشاء الختمة. ابعث رمز الدعوة لأصحابك باش ينضمّوا.');
@@ -837,7 +838,7 @@ $('#khatma-cloud-join').onclick=async()=>{
   if(code.length!==12||!name)throw new Error('اكتب اسمك ورمز الدعوة الصحيح من 12 حرفاً.');
   cloudMessage('جاري الانضمام إلى الختمة...');
   const {data,error}=await cloudClient.rpc('join_khatma_group',{p_code:code,p_display_name:name});if(error)throw error;
-  cloudInviteCode=code;await cloudLoadGroups();cloudMessage('انضمّيت للختمة بنجاح. اختار جزءاً متاحاً للمشاركة.');
+  cloudInviteCode=code;localStorage.setItem('zad-khatma-invite-'+data.group_id,code);await cloudLoadGroups(data.group_id);cloudMessage('انضمّيت للختمة بنجاح. اختار جزءاً متاحاً للمشاركة.');
  }catch(e){cloudMessage(cloudError(e),true)}
 };
 $('#khatma-cloud-share').onclick=()=>{
