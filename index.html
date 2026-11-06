@@ -22,6 +22,30 @@ main{max-width:760px;padding:10px}.card{padding:13px;border-radius:13px;margin:9
 .prayer-controls{display:flex;gap:8px;align-items:center}.prayer-controls select{flex:1;padding:10px;border:1px solid #ddd;border-radius:10px;background:white;color:var(--green);font:700 14px Tajawal}.prayer-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.prayer-item{display:flex;justify-content:space-between;padding:11px;background:#f0f5f0;border-radius:10px;color:var(--green);font-weight:700}.next-prayer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:13px;background:var(--green);color:white;border-radius:12px}.next-prayer strong{color:#f4d995;font-size:19px}
 @media(max-width:480px){.brand{font-size:29px}.nav button{font-size:11px;padding:6px 9px}.arabic{font-size:19px}main{padding:8px}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* Redesign: premium, simple mobile-first interface */
+:root{--green:#123f35;--gold:#c8a45e;--paper:#f5f6f1;--ink:#20352e}
+body{background:#f5f7f3;color:var(--ink)}
+.hero{position:relative;text-align:right;padding:24px 22px 25px;background:linear-gradient(125deg,#0b3028,#17634d 72%,#24745a);border-radius:0 0 26px 26px;box-shadow:0 10px 28px #153e3020}
+.hero:after{content:"";position:absolute;left:8%;top:18px;width:76px;height:76px;border:1px solid #ffffff30;border-radius:50%;box-shadow:0 0 0 12px #ffffff0b,0 0 0 24px #ffffff08;pointer-events:none}
+.brand{font-size:36px}.tag{font-size:14px;color:#e4eee8}
+.nav{position:sticky;top:0;margin:12px auto 0;max-width:1000px;border:1px solid #e7ece6;border-radius:16px;padding:8px;background:#ffffffed;backdrop-filter:blur(12px);box-shadow:0 5px 20px #163d2b0d;scrollbar-width:none}
+.nav button{border-radius:11px;padding:9px 14px;background:transparent;color:#476357;font-size:13px}
+.nav button.active{background:#164b3b;color:white;box-shadow:0 3px 9px #164b3b25}
+main{max-width:980px;padding:16px 14px 36px}
+.card{border:1px solid #e8ece4;border-radius:19px;padding:20px;margin:13px 0;background:#fff;box-shadow:0 7px 24px #193c2d09}
+.card h2{font-size:20px;font-weight:800}
+.tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.tile{min-height:78px;display:flex;align-items:center;text-align:right;padding:15px;border:1px solid #e6ebe4;border-radius:16px;background:linear-gradient(145deg,#fff,#f8faf6);font-size:15px;box-shadow:0 4px 12px #1b3f2e08;transition:transform .18s,border-color .18s}
+.tile:active{transform:scale(.98);border-color:#c9b078}
+.view{animation:zadFade .2s ease}
+@keyframes zadFade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.dhikr{padding:15px 8px}.arabic{line-height:2.05}
+.dhikr-tools{border:1px solid #e6eee5}
+footer{padding:28px 16px 38px}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding:30px 5vw}}
+@media(max-width:480px){.hero{padding:18px 17px 20px;border-radius:0 0 20px 20px}.brand{font-size:30px}.nav{margin:9px 8px 0;border-radius:13px}.nav button{padding:8px 11px;font-size:12px}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile{min-height:72px;padding:11px 9px;font-size:13px}.card{border-radius:16px;padding:14px}}
+
 </style>
 </head>
 <body>
