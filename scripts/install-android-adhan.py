@@ -13,7 +13,8 @@ import org.json.JSONArray;
 @CapacitorPlugin(name="PrayerAlarm")
 public class PrayerAlarmPlugin extends Plugin {
  @PluginMethod public void schedule(PluginCall call) {
-  String times=call.getString("times","[]");
+  String times=call.getString("times");
+  if(times==null)times="[]";
   try {
    JSONArray arr=new JSONArray(times);
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("times",arr.toString()).apply();
@@ -33,7 +34,7 @@ import android.app.*;
 import android.content.*;
 import android.os.Build;
 import org.json.*;
-import java.time.*;
+import java.util.Calendar;
 public class PrayerAlarmReceiver extends BroadcastReceiver {
  static final int BASE=82000;
  static PendingIntent pending(Context c,int id,int h,int m) {
@@ -43,9 +44,9 @@ public class PrayerAlarmReceiver extends BroadcastReceiver {
  static void set(Context c,int id,int h,int m) {
   AlarmManager am=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
   if(am==null)return;
-  LocalDateTime now=LocalDateTime.now(), at=now.withHour(h).withMinute(m).withSecond(0).withNano(0);
-  if(!at.isAfter(now))at=at.plusDays(1);
-  long when=at.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+  Calendar at=Calendar.getInstance(); at.set(Calendar.HOUR_OF_DAY,h); at.set(Calendar.MINUTE,m); at.set(Calendar.SECOND,0); at.set(Calendar.MILLISECOND,0);
+  if(at.getTimeInMillis()<=System.currentTimeMillis())at.add(Calendar.DAY_OF_YEAR,1);
+  long when=at.getTimeInMillis();
   PendingIntent pi=pending(c,id,h,m);
   if(Build.VERSION.SDK_INT>=23)am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,when,pi);
   else am.setExact(AlarmManager.RTC_WAKEUP,when,pi);
