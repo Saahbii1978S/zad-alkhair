@@ -1113,6 +1113,16 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
  .hero .tag{font-size:19px!important;line-height:1.65!important}
 }
 
+
+/* زر تحديد الموقع الجغرافي لمواقيت الصلاة */
+.zad-use-location{
+ display:block;width:100%;margin:9px 0 13px;padding:11px 14px;
+ border:1px solid #ffffff80;border-radius:12px;
+ background:#ffffff20;color:#fff;font:800 15px Tajawal,Arial,sans-serif;
+ cursor:pointer
+}
+.zad-use-location:disabled{opacity:.7;cursor:wait}
+
 </style>
 
 </head>
@@ -1126,6 +1136,7 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
 <div class="home-prayer-card">
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div></div>
  <div class="home-prayer-city"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div>
+ <button type="button" id="zad-use-location" class="zad-use-location">📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً</button>
  <div id="home-prayer-list" class="home-prayer-list"><span>الفجر</span><span>الظهر</span><span>العصر</span><span>المغرب</span><span>العشاء</span></div>
  <div class="home-next-prayer"><span>الصلاة القادمة <b id="home-next-name">—</b></span><strong id="home-next-countdown">—</strong></div>
  <p class="home-prayer-note">المواقيت تقريبية حسب طريقة الحساب، ويُعتمد توقيت الجامع المحلي عند الاختلاف.</p>
@@ -1664,7 +1675,31 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateZadL
  draw();
 })();
 
-loadPrayerTimes();
+function requestPrayerLocation(showMessage=true){
+ if(!navigator.geolocation){
+  if(showMessage)alert('المتصفح لا يدعم تحديد الموقع. اختار البلد والمدينة يدوياً.');
+  loadPrayerTimes();return;
+ }
+ const btn=document.getElementById('zad-use-location');
+ if(btn){btn.disabled=true;btn.textContent='جاري تحديد موقعك...';}
+ navigator.geolocation.getCurrentPosition(
+  position=>{
+   if(btn){btn.disabled=false;btn.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';}
+   loadPrayerTimes(position.coords.latitude,position.coords.longitude);
+  },
+  error=>{
+   if(btn){btn.disabled=false;btn.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';}
+   if(showMessage){
+    const message=error.code===1?'لم تسمح بالوصول إلى الموقع. تنجم تفعّل إذن الموقع من إعدادات Chrome.':'تعذّر تحديد موقعك. تأكد من تشغيل GPS والإنترنت.';
+    alert(message+' باش نعرضولك مواقيت المدينة المختارة.');
+   }
+   loadPrayerTimes();
+  },
+  {enableHighAccuracy:true,timeout:15000,maximumAge:300000}
+ );
+}
+document.getElementById('zad-use-location')?.addEventListener('click',()=>requestPrayerLocation(true));
+requestPrayerLocation(false);
 
 let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))show(initial);paint()})();
 </script>
