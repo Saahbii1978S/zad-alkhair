@@ -1314,6 +1314,40 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
  .home-prayer-card .home-prayer-list b{font-size:18px!important}
 }
 
+
+/* عرض مواقيت الصلاة الستة في سطر واحد مع الحفاظ على ارتفاع البطاقات */
+.home-prayer-card .home-prayer-list{
+ display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:5px!important
+}
+.home-prayer-card .home-prayer-list>div{
+ min-width:0!important;min-height:98px!important;
+ padding:11px 2px!important
+}
+.home-prayer-card .home-prayer-list .prayer-icon{
+ width:36px!important;height:36px!important;font-size:19px!important
+}
+.home-prayer-card .home-prayer-list span{
+ font-size:12px!important;white-space:nowrap!important
+}
+.home-prayer-card .home-prayer-list b{
+ font-size:16px!important;white-space:nowrap!important
+}
+@media(max-width:480px){
+ .home-prayer-card .home-prayer-list{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:3px!important
+ }
+ .home-prayer-card .home-prayer-list>div{
+  min-height:98px!important;padding:10px 1px!important
+ }
+ .home-prayer-card .home-prayer-list .prayer-icon{
+  width:30px!important;height:30px!important;font-size:17px!important
+ }
+ .home-prayer-card .home-prayer-list span{font-size:10px!important}
+ .home-prayer-card .home-prayer-list b{font-size:13px!important}
+}
+
 </style>
 
 </head>
