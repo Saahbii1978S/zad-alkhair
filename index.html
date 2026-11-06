@@ -1060,6 +1060,59 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
  .home-prayer-city select{font-size:12px!important}
 }
 
+
+/* رأس الواجهة: الكعبة يساراً والعنوان والنص يميناً */
+.hero{
+ min-height:230px!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:flex-end!important;
+ justify-content:center!important;
+ direction:ltr!important;
+ text-align:right!important;
+ padding:28px 28px!important;
+ border-radius:0 0 24px 24px!important;
+ background-image:linear-gradient(90deg,rgba(5,28,23,.04) 0%,rgba(5,28,23,.10) 34%,rgba(5,28,23,.76) 53%,rgba(5,28,23,.94) 100%),url("https://storage.googleapis.com/wp-static/wp-orphansinneed/2025/10/7441399c-kaaba12.jpg")!important;
+ background-size:cover!important;
+ background-position:left center!important;
+ color:#fff!important;
+}
+.hero .brand,.hero .tag,.hero .dua-request{
+ direction:rtl!important;
+ text-align:right!important;
+ width:47%!important;
+ max-width:560px!important;
+ margin-left:0!important;
+ margin-right:0!important;
+ position:relative!important;
+ z-index:1!important;
+ color:#fff!important;
+}
+.hero .brand{
+ font-family:Tajawal,Arial,sans-serif!important;
+ font-size:clamp(38px,5.2vw,54px)!important;
+ line-height:1.35!important;
+ font-weight:900!important;
+ text-shadow:0 2px 12px #000!important;
+}
+.hero .tag{
+ font-size:clamp(20px,2.7vw,27px)!important;
+ line-height:1.8!important;
+ font-weight:800!important;
+ text-shadow:0 2px 9px #000!important;
+}
+@media(max-width:600px){
+ .hero{
+  min-height:190px!important;
+  padding:20px 14px!important;
+  background-image:linear-gradient(90deg,rgba(5,28,23,.02) 0%,rgba(5,28,23,.12) 29%,rgba(5,28,23,.78) 48%,rgba(5,28,23,.96) 100%),url("https://storage.googleapis.com/wp-static/wp-orphansinneed/2025/10/7441399c-kaaba12.jpg")!important;
+  background-position:left center!important;
+ }
+ .hero .brand,.hero .tag,.hero .dua-request{width:53%!important}
+ .hero .brand{font-size:36px!important}
+ .hero .tag{font-size:19px!important;line-height:1.65!important}
+}
+
 </style>
 
 </head>
