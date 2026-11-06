@@ -1123,6 +1123,45 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
 }
 .zad-use-location:disabled{opacity:.7;cursor:wait}
 
+
+/* إظهار صورة الكعبة كاملة مع مساحة واضحة للعنوان */
+.hero{
+ background-color:#102f28!important;
+ background-image:
+  linear-gradient(90deg,rgba(5,28,23,0) 0%,rgba(5,28,23,.08) 34%,rgba(5,28,23,.78) 53%,rgba(5,28,23,.96) 100%),
+  url("https://storage.googleapis.com/wp-static/wp-orphansinneed/2025/10/7441399c-kaaba12.jpg")!important;
+ background-repeat:no-repeat!important;
+ background-size:100% 100%,auto 100%!important;
+ background-position:center,left center!important;
+}
+.home-prayer-city{
+ grid-template-columns:48px minmax(0,1fr) 52px minmax(0,1fr)!important;
+ gap:8px!important;
+}
+.home-prayer-city label{font-size:15px!important}
+.home-prayer-city select{
+ min-width:0!important;width:100%!important;
+ font-size:15px!important;padding:10px 7px!important;
+ white-space:normal!important;text-overflow:clip!important;
+}
+@media(max-width:600px){
+ .hero{
+  background-size:100% 100%,auto 100%!important;
+  background-position:center,left center!important;
+ }
+ .home-prayer-city{
+  grid-template-columns:44px minmax(0,1fr) 48px minmax(0,1fr)!important;
+  gap:6px!important;
+ }
+ .home-prayer-city label{font-size:13px!important}
+ .home-prayer-city select{font-size:14px!important;padding:9px 5px!important}
+}
+@media(max-width:380px){
+ .home-prayer-city{grid-template-columns:40px minmax(0,1fr) 44px minmax(0,1fr)!important;gap:4px!important}
+ .home-prayer-city label{font-size:12px!important}
+ .home-prayer-city select{font-size:13px!important;padding:8px 3px!important}
+}
+
 </style>
 
 </head>
