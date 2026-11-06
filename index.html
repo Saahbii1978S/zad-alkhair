@@ -417,6 +417,25 @@ body{font-size:20px}
 .khatma-juz input{width:19px;height:19px;accent-color:#315f91}
 @media(max-width:480px){.quran-verse-text{font-size:25px}.khatma-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.qibla-result{font-size:17px}}
 
+
+/* الختمة الجماعية السحابية */
+.khatma-cloud-panel{border:1px solid #d9e6f2;background:linear-gradient(145deg,#f8fbff,#eef5fb)}
+.khatma-cloud-panel input{width:100%;min-width:0;padding:12px 13px;border:1px solid #cfdae6;border-radius:12px;background:#fff;color:#23435f;font:600 16px Tajawal;margin:5px 0 10px}
+.khatma-cloud-actions{display:flex;flex-wrap:wrap;gap:8px}
+.khatma-cloud-actions button,.khatma-cloud-grid button{border:0;border-radius:12px;padding:11px 13px;background:#315f91;color:#fff;font:700 15px Tajawal;cursor:pointer}
+.khatma-cloud-actions button.secondary{background:#e3edf7;color:#315f91}
+.khatma-cloud-status{padding:11px 13px;border-radius:12px;background:#fff;color:#42617b;border:1px solid #dce7f1;line-height:1.8}
+.khatma-cloud-groups{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.khatma-cloud-groups button{border:1px solid #c9d9e8;border-radius:999px;background:#fff;color:#315f91;padding:8px 13px;font:700 14px Tajawal}
+.khatma-cloud-groups button.active{background:#315f91;color:#fff}
+.khatma-cloud-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.khatma-cloud-grid .part{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:right;background:#fff;color:#315f91;border:1px solid #d6e2ee;min-height:76px}
+.khatma-cloud-grid .part small{font-size:12px;font-weight:500;opacity:.85}
+.khatma-cloud-grid .part.taken{background:#f0f4f8;color:#62778b;border-color:#e0e7ee}
+.khatma-cloud-grid .part.mine{background:#e8f3ff;border-color:#9fc3e8;color:#244f78}
+.khatma-cloud-grid .part.done{background:#e9f7ef;border-color:#b8dfc6;color:#276342}
+.khatma-code{font-size:22px;font-weight:900;letter-spacing:2px;color:#244f78;direction:ltr;display:inline-block;padding:5px 9px;background:#fff;border:1px dashed #9bb7d1;border-radius:9px}
+@media(min-width:520px){.khatma-cloud-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -482,15 +501,37 @@ body{font-size:20px}
   <div class="actions"><button id="khatma-reset" type="button">إعادة ختمة جديدة</button><button id="khatma-share" type="button">مشاركة تقدّمي</button></div>
   <p id="khatma-status" class="muted">علّم الجزء بعد ما تكمل قراءته.</p>
  </div>
- <div class="card">
-  <h2>🤝 ختمة مع العائلة والأصحاب</h2>
-  <p>تنجم تبعث دعوة لأصحابك عبر واتساب وتقسّموا الأجزاء بيناتكم. في النسخة الحالية كل واحد يحدّث تقدّمه عنده، وما فماش مزامنة مباشرة بين الهواتف بعد.</p>
-  <div class="actions"><button id="khatma-invite" type="button">إرسال دعوة ختمة عبر واتساب</button></div>
-  <p class="muted">المتابعة الجماعية المباشرة تحتاج قاعدة بيانات مشتركة وحسابات أو رابط دعوة آمن.</p>
+ <div class="card khatma-cloud-panel" id="zad-khatma-cloud-panel">
+  <h2>🤝 ختمة جماعية مباشرة</h2>
+  <p>اعمل مجموعة مع العائلة والأصحاب، اقسموا الأجزاء، وكل واحد يحجز الجزء متاعه ويعلّم عليه كي يكمل. التغييرات تظهر للمشاركين في نفس المجموعة.</p>
+  <div id="khatma-cloud-status" class="khatma-cloud-status" role="status">اضغط على «تفعيل المشاركة» للبدء. ما نطلبوش منك بريد إلكتروني ولا كلمة سر.</div>
+  <div class="khatma-cloud-actions" style="margin-top:10px"><button id="khatma-cloud-start" type="button">تفعيل المشاركة</button></div>
+  <div id="khatma-cloud-forms" hidden>
+   <label for="khatma-cloud-name">اسمك اللي يظهر للمشاركين</label>
+   <input id="khatma-cloud-name" maxlength="40" placeholder="مثال: أحمد">
+   <label for="khatma-cloud-title">اسم الختمة الجديدة</label>
+   <input id="khatma-cloud-title" maxlength="80" placeholder="مثال: ختمة العائلة">
+   <div class="khatma-cloud-actions"><button id="khatma-cloud-create" type="button">إنشاء ختمة جديدة</button></div>
+   <div style="margin-top:16px;border-top:1px solid #dce7f1;padding-top:14px">
+    <label for="khatma-cloud-code">رمز دعوة عندك</label>
+    <input id="khatma-cloud-code" maxlength="12" placeholder="أدخل رمز الدعوة من 12 حرفاً" style="text-transform:uppercase;direction:ltr;text-align:center">
+    <div class="khatma-cloud-actions"><button id="khatma-cloud-join" class="secondary" type="button">الانضمام إلى ختمة</button></div>
+   </div>
+  </div>
+  <div id="khatma-cloud-group-area" hidden>
+   <div id="khatma-cloud-groups" class="khatma-cloud-groups"></div>
+   <div id="khatma-cloud-invite-area" class="khatma-cloud-status" hidden></div>
+   <div id="khatma-cloud-progress" class="muted"></div>
+   <div id="khatma-cloud-grid" class="khatma-cloud-grid"></div>
+   <div class="khatma-cloud-actions"><button id="khatma-cloud-share" class="secondary" type="button">مشاركة رمز الدعوة</button><button id="khatma-cloud-refresh" class="secondary" type="button">تحديث</button></div>
+  </div>
+  <p class="muted" style="margin-top:12px">ملاحظة: الحساب المجهول مربوط بهذا المتصفح والجهاز. إذا مسحت بيانات المتصفح أو بدّلت الهاتف، قد تفقد إمكانية الدخول لنفس العضوية. لا تمسح بيانات المتصفح إذا تحب تواصل بنفس الحساب.</p>
  </div>
 </section>
 </main>
 <footer>زاد الخير • نسأل الله القبول والإخلاص • المحتوى قابل للمراجعة والتطوير</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.80.0/dist/umd/supabase.min.js"></script>
+<script src="./supabase-config.js"></script>
 <script>
 (()=>{const $=s=>document.querySelector(s);let count=Number(localStorage.getItem('zad-count')||0),names=['سبحان الله','الحمد لله','الله أكبر','أستغفر الله'];let ni=0;function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));history.replaceState(null,'','#'+id);window.scrollTo(0,0)}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));function paint(){$('#count').textContent=count;localStorage.setItem('zad-count',count)}$('#add').onclick=()=>{count++;paint()};$('#minus').onclick=()=>{count=Math.max(0,count-1);paint()};$('#reset').onclick=()=>{count=0;paint()};$('#change').onclick=()=>{$('#zikrLabel').textContent=names[++ni%names.length]};document.querySelectorAll('[data-task]').forEach(c=>{c.checked=localStorage.getItem('zad-task-'+c.dataset.task)==='1';c.onchange=()=>localStorage.setItem('zad-task-'+c.dataset.task,c.checked?'1':'0')});
 function setupDhikr(id){
@@ -690,7 +731,124 @@ function shareKhatma(){
  if(navigator.share)navigator.share({title:'دعوة ختمة قرآن - زاد الخير',text:msg}).catch(()=>{});
  else window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener');
 }
-$('#khatma-share').onclick=shareKhatma;$('#khatma-invite').onclick=shareKhatma;
+
+$('#khatma-share').onclick=shareKhatma;
+const cloudStatus=$('#khatma-cloud-status'),cloudForms=$('#khatma-cloud-forms'),cloudGroupArea=$('#khatma-cloud-group-area');
+let cloudClient=null,cloudUser=null,cloudGroups=[],cloudActive=null,cloudMemberId=null,cloudChannel=null,cloudInviteCode=null;
+function cloudMessage(message,isError=false){cloudStatus.textContent=message;cloudStatus.style.borderColor=isError?'#e5b5b5':'#dce7f1';cloudStatus.style.color=isError?'#9b3434':'#42617b'}
+function cloudError(error){
+ let msg=error?.message||'صار خطأ غير متوقع.';
+ if(/anonymous|signup|disabled|not enabled/i.test(msg))msg='الدخول المجهول موش مفعّل في Supabase بعد. يلزم تفعّلو من Authentication ← Sign In / Providers ← Anonymous، وبعدها جرّب من جديد.';
+ return msg;
+}
+function cloudInit(){
+ const cfg=window.ZAD_SUPABASE_CONFIG;
+ if(!window.supabase?.createClient||!cfg?.url||!cfg?.publishableKey||cfg.publishableKey.includes('PASTE_'))throw new Error('إعدادات الاتصال ناقصة. تأكد من ملف supabase-config.js.');
+ if(!cloudClient)cloudClient=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ return cloudClient;
+}
+async function cloudEnsureSession(){
+ const client=cloudInit();
+ let {data,error}=await client.auth.getSession();if(error)throw error;
+ if(data.session?.user){cloudUser=data.session.user;return cloudUser}
+ const signed=await client.auth.signInAnonymously();if(signed.error)throw signed.error;
+ cloudUser=signed.data.user;return cloudUser;
+}
+async function cloudLoadGroups(){
+ if(!cloudUser)return;
+ const {data:members,error:mErr}=await cloudClient.from('khatma_members').select('id,group_id,display_name').eq('user_id',cloudUser.id);
+ if(mErr)throw mErr;
+ const ids=[...new Set((members||[]).map(m=>m.group_id))];
+ if(!ids.length){cloudGroups=[];cloudGroupArea.hidden=true;cloudForms.hidden=false;return}
+ const {data:groups,error:gErr}=await cloudClient.from('khatma_groups').select('id,title,created_at').in('id',ids).order('created_at',{ascending:false});
+ if(gErr)throw gErr;
+ cloudGroups=(groups||[]).map(g=>({...g,myMember:(members||[]).find(m=>m.group_id===g.id)}));
+ cloudForms.hidden=false;cloudGroupArea.hidden=false;cloudRenderGroups();
+ if(!cloudActive||!cloudGroups.some(g=>g.id===cloudActive.id))cloudActive=cloudGroups[0];
+ await cloudSelectGroup(cloudActive.id);
+}
+function cloudRenderGroups(){
+ const root=$('#khatma-cloud-groups');root.innerHTML='';
+ cloudGroups.forEach(g=>{const b=document.createElement('button');b.type='button';b.textContent=g.title;b.className=cloudActive?.id===g.id?'active':'';b.onclick=()=>cloudSelectGroup(g.id);root.append(b)});
+}
+async function cloudSelectGroup(id){
+ cloudActive=cloudGroups.find(g=>g.id===id);if(!cloudActive)return;
+ cloudMemberId=cloudActive.myMember?.id||null;cloudRenderGroups();
+ $('#khatma-cloud-invite-area').hidden=true;
+ await cloudLoadAssignments();
+ if(cloudChannel){await cloudClient.removeChannel(cloudChannel);cloudChannel=null}
+ cloudChannel=cloudClient.channel('khatma-live-'+id).on('postgres_changes',{event:'*',schema:'public',table:'khatma_assignments',filter:'group_id=eq.'+id},()=>cloudLoadAssignments()).subscribe();
+}
+async function cloudLoadAssignments(){
+ if(!cloudActive)return;
+ const {data:assignments,error}=await cloudClient.from('khatma_assignments').select('id,group_id,juz,member_id,completed_at,claimed_at').eq('group_id',cloudActive.id).order('juz');
+ if(error)throw error;
+ const {data:members,membersError}=await cloudClient.from('khatma_members').select('id,display_name,user_id').eq('group_id',cloudActive.id);
+ if(membersError)throw membersError;
+ cloudRenderAssignments(assignments||[],members||[]);
+}
+function cloudRenderAssignments(assignments,members){
+ const root=$('#khatma-cloud-grid');root.innerHTML='';
+ const byMember=new Map(members.map(m=>[m.id,m]));
+ const completed=assignments.filter(a=>a.completed_at).length;
+ $('#khatma-cloud-progress').textContent='الختمة: '+completed+' من 30 جزءاً مكتمل. المحجوز: '+assignments.length+' جزءاً.';
+ for(let n=1;n<=30;n++){
+  const a=assignments.find(x=>Number(x.juz)===n),m=a?byMember.get(a.member_id):null;
+  const b=document.createElement('button');b.type='button';b.className='part';
+  const title=document.createElement('strong');title.textContent='الجزء '+n;b.append(title);
+  const small=document.createElement('small');
+  if(!a){small.textContent='متاح للحجز';b.onclick=()=>cloudClaim(n);b.classList.add('mine')}
+  else if(a.completed_at){small.textContent='مكتمل • '+(m?.display_name||'مشارك');b.classList.add('done')}
+  else if(m?.id===cloudMemberId){small.textContent='محجوز باسمك • اضغط للإكمال';b.classList.add('mine');b.onclick=()=>cloudComplete(a.id)}
+  else{small.textContent='محجوز: '+(m?.display_name||'مشارك');b.classList.add('taken')}
+  b.append(small);root.append(b);
+ }
+}
+async function cloudClaim(juz){
+ try{cloudMessage('جاري حجز الجزء '+juz+'...');const {error}=await cloudClient.rpc('claim_khatma_juz',{p_group_id:cloudActive.id,p_juz:juz});if(error)throw error;await cloudLoadAssignments();cloudMessage('تم حجز الجزء '+juz+' ليك. ربي يسهّل عليك.')}
+ catch(e){cloudMessage(cloudError(e),true);await cloudLoadAssignments().catch(()=>{})}
+}
+async function cloudComplete(id){
+ if(!confirm('تأكد اللي كملت قراءة الجزء؟'))return;
+ try{const {error}=await cloudClient.rpc('complete_khatma_juz',{p_assignment_id:id});if(error)throw error;await cloudLoadAssignments();cloudMessage('ما شاء الله! تم تسجيل إكمال الجزء. تقبّل الله منك.')}
+ catch(e){cloudMessage(cloudError(e),true)}
+}
+$('#khatma-cloud-start').onclick=async()=>{
+ try{cloudMessage('جاري تفعيل المشاركة الآمنة...');await cloudEnsureSession();cloudForms.hidden=false;$('#khatma-cloud-start').hidden=true;cloudMessage('تم تفعيل المشاركة على هذا الجهاز. اكتب اسمك وأنشئ ختمة أو أدخل رمز دعوة.');await cloudLoadGroups()}
+ catch(e){cloudMessage(cloudError(e),true)}
+};
+$('#khatma-cloud-create').onclick=async()=>{
+ try{
+  await cloudEnsureSession();
+  const title=$('#khatma-cloud-title').value.trim(),name=$('#khatma-cloud-name').value.trim();
+  if(title.length<2||!name)throw new Error('اكتب اسم الختمة واسمك قبل الإنشاء.');
+  cloudMessage('جاري إنشاء الختمة...');
+  const {data,error}=await cloudClient.rpc('create_khatma_group',{p_title:title,p_display_name:name});if(error)throw error;
+  cloudInviteCode=data.invite_code;await cloudLoadGroups();
+  const area=$('#khatma-cloud-invite-area');area.hidden=false;area.textContent='رمز الدعوة الخاص بالمجموعة: ';
+  const code=document.createElement('span');code.className='khatma-code';code.textContent=cloudInviteCode;area.append(code);
+  cloudMessage('تم إنشاء الختمة. ابعث رمز الدعوة لأصحابك باش ينضمّوا.');
+ }catch(e){cloudMessage(cloudError(e),true)}
+};
+$('#khatma-cloud-join').onclick=async()=>{
+ try{
+  await cloudEnsureSession();
+  const code=$('#khatma-cloud-code').value.trim().toUpperCase(),name=$('#khatma-cloud-name').value.trim();
+  if(code.length!==12||!name)throw new Error('اكتب اسمك ورمز الدعوة الصحيح من 12 حرفاً.');
+  cloudMessage('جاري الانضمام إلى الختمة...');
+  const {data,error}=await cloudClient.rpc('join_khatma_group',{p_code:code,p_display_name:name});if(error)throw error;
+  cloudInviteCode=code;await cloudLoadGroups();cloudMessage('انضمّيت للختمة بنجاح. اختار جزءاً متاحاً للمشاركة.');
+ }catch(e){cloudMessage(cloudError(e),true)}
+};
+$('#khatma-cloud-share').onclick=()=>{
+ if(!cloudActive)return;
+ const code=cloudInviteCode||'';
+ const msg='السلام عليكم 🌷\nانضمّوا معانا في ختمة القرآن الجماعية: '+cloudActive.title+'\nرمز الدعوة: '+code+'\nافتحوا زاد الخير ثم قسم الختمة الجماعية وأدخلوا الرمز: '+location.href;
+ if(navigator.share)navigator.share({title:'دعوة ختمة جماعية - زاد الخير',text:msg}).catch(()=>{});
+ else window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener');
+};
+$('#khatma-cloud-refresh').onclick=()=>cloudLoadAssignments().catch(e=>cloudMessage(cloudError(e),true));
+
 
 /* تسجيل نسخة قابلة للتثبيت والحفظ الأساسي دون إنترنت */
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
