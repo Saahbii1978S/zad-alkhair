@@ -79,6 +79,22 @@ footer{padding:28px 16px 38px}
 .tile{color:#496453}
 .big{background:#426b56;box-shadow:0 8px 24px #315b4b25}
 @media(max-width:480px){.home-prayer-card{background:linear-gradient(145deg,#fffefa,#f1f3eb)}.prayer-icon{font-size:20px}}
+
+/* أيقونات الصلوات داخل دوائر ناعمة */
+.home-prayer-list .prayer-icon{
+ display:grid;place-items:center;width:40px;height:40px;margin:0 auto 6px;
+ border-radius:50%;background:#edf1e9;border:1px solid #e1e7dc;
+ color:#8a7549;font-size:21px;line-height:1;
+}
+.prayer-item-name .prayer-icon{
+ display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;
+ border-radius:50%;margin:0;background:#edf1e9;border:1px solid #e1e7dc;
+ font-size:21px;line-height:1;
+}
+@media(max-width:390px){
+ .home-prayer-list .prayer-icon{width:35px;height:35px;font-size:19px}
+ .prayer-item-name .prayer-icon{flex-basis:36px;width:36px;height:36px;font-size:19px}
+}
 </style>
 </head>
 <body>
