@@ -387,12 +387,42 @@ body{font-size:20px}
  .actions button,.smallbtn{font-size:16px;padding:11px 14px}
 }
 
+
+/* القرآن والقبلة والختمة */
+.quran-controls{display:grid;grid-template-columns:1fr;gap:7px;margin:14px 0}
+.quran-controls label{font-weight:800;color:#315f91}
+.quran-controls select{width:100%;padding:12px;border:1px solid #d7e2ed;border-radius:12px;background:#fff;color:#315f91;font:700 16px Tajawal}
+.quran-actions{justify-content:flex-start;margin:12px 0}
+.quran-audio{padding:14px;background:#eef3f8;border:1px solid #dce6f0;border-radius:14px;margin:12px 0}
+.quran-audio audio{width:100%}
+.quran-verses{margin-top:16px}
+.quran-verse{padding:18px 8px;border-bottom:1px solid #e7eaf0}
+.quran-verse-text{font:30px/2.25 Amiri,serif;text-align:center;color:#244d70}
+.quran-verse-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;color:#738293;font-size:14px}
+.quran-verse-tools button{border:0;border-radius:10px;padding:8px 12px;background:#eaf1f8;color:#315f91;font:700 14px Tajawal}
+.qibla-card{text-align:center}
+.qibla-compass{position:relative;width:min(76vw,280px);height:min(76vw,280px);margin:22px auto;border:9px solid #e4edf4;border-radius:50%;background:radial-gradient(circle,#fff 52%,#eff4f8 53%,#fff 70%);box-shadow:0 5px 20px #315f9112}
+.qibla-compass:before,.qibla-compass:after{content:"";position:absolute;background:#d9e3ec}
+.qibla-compass:before{width:1px;height:90%;left:50%;top:5%}
+.qibla-compass:after{height:1px;width:90%;top:50%;left:5%}
+.qibla-north{position:absolute;top:8px;left:50%;transform:translateX(-50%);color:#315f91;font-weight:800;z-index:1}
+#qibla-arrow{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%) rotate(0deg);font-size:90px;color:#315f91;transform-origin:center;transition:transform .25s}
+.qibla-kaaba{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:26px;z-index:1}
+.qibla-result{font-size:20px;font-weight:800;color:#315f91}
+.khatma-progress{text-align:center;margin:15px 0}
+.khatma-progress strong{font-size:34px;color:#315f91;margin-left:7px}
+.khatma-progress .dhikr-progress{height:10px;margin-top:12px}
+.khatma-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}
+.khatma-juz{display:flex;align-items:center;gap:7px;padding:12px 8px;border:1px solid #dce6ef;border-radius:12px;background:#f7f9fb;font-weight:700;color:#34536d}
+.khatma-juz input{width:19px;height:19px;accent-color:#315f91}
+@media(max-width:480px){.quran-verse-text{font-size:25px}.khatma-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.qibla-result{font-size:17px}}
+
 </style>
 </head>
 <body>
 <header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p></header>
 <nav class="nav" aria-label="أقسام الموقع">
-<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button>
+<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button>
 </nav>
 <main>
 <section class="view active" id="home">
@@ -418,6 +448,47 @@ body{font-size:20px}
 <section class="view" id="names"><div class="card"><h2>من أسماء الله الحسنى</h2><div class="tiles"><div class="tile">الرَّحْمَٰن<br><small>واسع الرحمة</small></div><div class="tile">الرَّحِيم<br><small>كثير الرحمة</small></div><div class="tile">الْمَلِك<br><small>مالك الملك</small></div><div class="tile">الْقُدُّوس<br><small>المنزّه عن النقائص</small></div><div class="tile">السَّلَام<br><small>السالم من كل نقص</small></div><div class="tile">الْعَزِيز<br><small>الغالب الذي لا يُغلب</small></div></div><p class="muted">هذه مجموعة مختارة للتعريف، ويمكن توسيعها لاحقاً مع مراجعة المعاني والمصادر.</p></div></section>
 <section class="view" id="tasbeeh"><div class="card" style="text-align:center"><h2>عدّاد التسبيح</h2><p id="zikrLabel">سبحان الله</p><div class="counter" id="count">0</div><button class="big" id="add">سبّح</button><div class="actions" style="margin-top:18px"><button id="minus">أنقص مرة</button><button id="reset">تصفير</button><button id="change">غيّر الذكر</button></div><p class="muted">العدّاد وسيلة للتذكير والتنظيم، والأجر عند الله.</p></div></section>
 <section class="view" id="tracker"><div class="card"><h2>متابعتي اليومية</h2><p>ضع علامة على ما أنجزته اليوم. تُحفظ العلامات على جهازك.</p><label><input type="checkbox" data-task="prayer"> المحافظة على الصلوات</label><br><label><input type="checkbox" data-task="quran"> ورد من القرآن</label><br><label><input type="checkbox" data-task="adhkar"> أذكار الصباح والمساء</label><br><label><input type="checkbox" data-task="kindness"> عمل خير أو صدقة</label></div></section>
+
+<section class="view" id="quran">
+ <div class="card">
+  <h2>📖 القرآن الكريم</h2>
+  <p class="muted">مصحف بالنص العثماني، مع الاستماع للآيات. يلزم الإنترنت أول مرة لتحميل السورة.</p>
+  <div class="quran-controls">
+   <label for="quran-surah">اختار السورة</label><select id="quran-surah"><option value="1">الفاتحة</option></select>
+   <label for="quran-reciter">القارئ</label><select id="quran-reciter"><option value="ar.alafasy">مشاري العفاسي</option><option value="ar.abdulbasitmurattal">عبد الباسط عبد الصمد</option><option value="ar.husary">محمود خليل الحصري</option><option value="ar.minshawi">محمد صديق المنشاوي</option></select>
+  </div>
+  <div class="quran-actions actions"><button id="quran-load" type="button">فتح السورة</button><button id="quran-save" type="button">حفظ السورة للقراءة دون إنترنت</button></div>
+  <p id="quran-status" class="muted" role="status">جاري تحضير فهرس السور...</p>
+  <div id="quran-audio-box" class="quran-audio" hidden><p id="quran-now-playing">اختار آية للاستماع</p><audio id="quran-audio" controls preload="none"></audio></div>
+  <div id="quran-verses" class="quran-verses"><p class="muted">اختار سورة ثم اضغط «فتح السورة».</p></div>
+ </div>
+</section>
+<section class="view" id="qibla">
+ <div class="card qibla-card">
+  <h2>🧭 اتجاه القبلة</h2>
+  <p>اسمح للموقع باستعمال موقعك واتجاه الهاتف لحساب اتجاه القبلة.</p>
+  <div class="qibla-compass"><div class="qibla-north">شمال</div><div id="qibla-arrow">➤</div><div class="qibla-kaaba">🕋</div></div>
+  <p id="qibla-result" class="qibla-result">اضغط على الزر لتحديد اتجاه القبلة.</p>
+  <div class="actions"><button id="qibla-locate" type="button">تحديد موقعي واتجاه القبلة</button><button id="qibla-sensor" type="button">معايرة البوصلة</button></div>
+  <p class="muted">الدقة تعتمد على GPS والبوصلة الموجودة في هاتفك. أبعد الهاتف عن المعادن والمغناطيس، وقارن الاتجاه بعلامة قبلة موثوقة في المسجد.</p>
+ </div>
+</section>
+<section class="view" id="khatma">
+ <div class="card">
+  <h2>🌙 ختمتي مع القرآن</h2>
+  <p>تابع الأجزاء التي قرأتها. التقدم محفوظ على هذا الجهاز.</p>
+  <div class="khatma-progress"><strong id="khatma-count">0</strong><span>من 30 جزءاً</span><div class="dhikr-progress"><span id="khatma-bar"></span></div></div>
+  <div id="khatma-juz" class="khatma-grid"></div>
+  <div class="actions"><button id="khatma-reset" type="button">إعادة ختمة جديدة</button><button id="khatma-share" type="button">مشاركة تقدّمي</button></div>
+  <p id="khatma-status" class="muted">علّم الجزء بعد ما تكمل قراءته.</p>
+ </div>
+ <div class="card">
+  <h2>🤝 ختمة مع العائلة والأصحاب</h2>
+  <p>تنجم تبعث دعوة لأصحابك عبر واتساب وتقسّموا الأجزاء بيناتكم. في النسخة الحالية كل واحد يحدّث تقدّمه عنده، وما فماش مزامنة مباشرة بين الهواتف بعد.</p>
+  <div class="actions"><button id="khatma-invite" type="button">إرسال دعوة ختمة عبر واتساب</button></div>
+  <p class="muted">المتابعة الجماعية المباشرة تحتاج قاعدة بيانات مشتركة وحسابات أو رابط دعوة آمن.</p>
+ </div>
+</section>
 </main>
 <footer>زاد الخير • نسأل الله القبول والإخلاص • المحتوى قابل للمراجعة والتطوير</footer>
 <script>
@@ -513,6 +584,116 @@ if(adhanMode.value==='audio'){adhanAudio.currentTime=0;adhanAudio.play().then(()
 function checkAdhanSchedule(){if(!prayerTimes)return;const now=cityClockParts(new Date());const dateKey=now.year+'-'+String(now.month).padStart(2,'0')+'-'+String(now.day).padStart(2,'0');const hm=String(now.hour).padStart(2,'0')+':'+String(now.minute).padStart(2,'0');for(const prayer of Object.keys(prayerNames)){if(!adhanEnabled[prayer])continue;const prayerTime=String(prayerTimes[prayer]||'').slice(0,5);if(prayerTime!==hm)continue;const key=dateKey+'-'+countrySel.value+'-'+citySel.value+'-'+prayer;if(localStorage.getItem('zad-adhan-last')===key)continue;localStorage.setItem('zad-adhan-last',key);fireAdhan(prayer,key)}}
 setInterval(checkAdhanSchedule,12000);
 $('#prayer-refresh').onclick=loadPrayerTimes;document.querySelector('[data-page="prayer-times"]').addEventListener('click',loadPrayerTimes);
+
+/* القرآن الكريم: نص عثماني واستماع حسب القارئ */
+const quranSurah=$('#quran-surah'),quranReciter=$('#quran-reciter'),quranStatus=$('#quran-status'),quranVerses=$('#quran-verses'),quranAudio=$('#quran-audio');
+let currentSurahData=null;
+const quranCacheName='zad-quran-text-v1';
+async function quranFetch(url){
+ try{const cache=await caches.open(quranCacheName);const saved=await cache.match(url);if(saved)return await saved.json()}catch(e){}
+ const res=await fetch(url);if(!res.ok)throw new Error('تعذّر الاتصال بمكتبة القرآن');
+ const copy=res.clone();try{const cache=await caches.open(quranCacheName);await cache.put(url,copy)}catch(e){}
+ return await res.json();
+}
+async function loadSurahIndex(){
+ try{
+  const json=await quranFetch('https://api.alquran.cloud/v1/surah');
+  if(json.code!==200||!Array.isArray(json.data))throw new Error('الفهرس غير متاح');
+  quranSurah.innerHTML=json.data.map(x=>'<option value="'+x.number+'">'+x.number+'. '+x.name+' — '+x.englishName+'</option>').join('');
+  quranStatus.textContent='الفهرس جاهز. اختار السورة اللي تحب تقراها.';
+  const last=Number(localStorage.getItem('zad-quran-last-surah')||1);
+  if(last>=1&&last<=114)quranSurah.value=String(last);
+ }catch(e){quranStatus.textContent='ما نجّمش نحمّل فهرس السور. تثبّت من الإنترنت، أو افتح سورة محفوظة من قبل.'}
+}
+async function openSurah(){
+ const number=Number(quranSurah.value);if(!number)return;
+ quranStatus.textContent='جاري تحميل السورة...';quranVerses.innerHTML='';
+ try{
+  const url='https://api.alquran.cloud/v1/surah/'+number+'/quran-uthmani';
+  const json=await quranFetch(url);if(json.code!==200||!json.data?.ayahs)throw new Error('السورة غير متاحة');
+  currentSurahData=json.data;localStorage.setItem('zad-quran-last-surah',String(number));
+  quranStatus.textContent=json.data.name+' • '+json.data.numberOfAyahs+' آية • '+json.data.revelationType;
+  quranVerses.innerHTML=json.data.ayahs.map(a=>'<article class="quran-verse"><div class="quran-verse-text">'+a.text+' ﴿'+a.numberInSurah+'﴾</div><div class="quran-verse-tools"><span>الآية '+a.numberInSurah+'</span><button type="button" data-quran-audio="'+a.number+'">▶ استمع</button></div></article>').join('');
+ }catch(e){quranStatus.textContent='تعذّر تحميل السورة. إذا ما كانتش محفوظة، يلزم اتصال بالإنترنت.'}
+}
+quranSurah.onchange=()=>openSurah();
+$('#quran-load').onclick=openSurah;
+$('#quran-save').onclick=async()=>{
+ if(!currentSurahData){quranStatus.textContent='افتح السورة أولاً قبل حفظها.';return}
+ try{const url='https://api.alquran.cloud/v1/surah/'+currentSurahData.number+'/quran-uthmani';const cache=await caches.open(quranCacheName);await cache.put(url,new Response(JSON.stringify({code:200,status:'OK',data:currentSurahData}),{headers:{'Content-Type':'application/json'}}));quranStatus.textContent='تم حفظ نص '+currentSurahData.name+' على هذا الجهاز للقراءة دون إنترنت.'}
+ catch(e){quranStatus.textContent='المتصفح ما سمحش بالحفظ. جرّب تحديث المتصفح.'}
+};
+quranVerses.addEventListener('click',e=>{
+ const b=e.target.closest('[data-quran-audio]');if(!b)return;
+ const ayah=Number(b.dataset.quranAudio),edition=quranReciter.value;
+ quranAudio.src='https://cdn.islamic.network/quran/audio/128/'+edition+'/'+ayah+'.mp3';
+ $('#quran-audio-box').hidden=false;$('#quran-now-playing').textContent='استماع للآية رقم '+ayah;
+ quranAudio.play().catch(()=>{quranStatus.textContent='تعذّر تشغيل التلاوة. تثبّت من الإنترنت أو جرّب قارئاً آخر.'});
+});
+loadSurahIndex();
+
+/* اتجاه القبلة بالحساب الجغرافي والبوصلة عند توفرها */
+const kaabaLat=21.4225,kaabaLon=39.8262;let qiblaBearing=null,deviceHeading=null;
+function bearingToKaaba(lat,lon){
+ const r=Math.PI/180,p1=lat*r,p2=kaabaLat*r,dl=(kaabaLon-lon)*r;
+ const y=Math.sin(dl),x=Math.cos(p1)*Math.tan(p2)-Math.sin(p1)*Math.cos(dl);
+ return (Math.atan2(y,x)/r+360)%360;
+}
+function renderQibla(){
+ if(qiblaBearing===null)return;
+ const angle=deviceHeading===null?qiblaBearing:(qiblaBearing-deviceHeading+360)%360;
+ $('#qibla-arrow').style.transform='translate(-50%,-50%) rotate('+angle+'deg)';
+ $('#qibla-result').textContent='اتجاه القبلة: '+Math.round(qiblaBearing)+'° من الشمال'+(deviceHeading===null?' • فعّل البوصلة لتوجيه السهم حسب الهاتف':' • وجّه السهم نحو الكعبة');
+}
+$('#qibla-locate').onclick=()=>{
+ if(!navigator.geolocation){$('#qibla-result').textContent='المتصفح لا يدعم تحديد الموقع.';return}
+ $('#qibla-result').textContent='جاري تحديد موقعك...';
+ navigator.geolocation.getCurrentPosition(pos=>{
+  qiblaBearing=bearingToKaaba(pos.coords.latitude,pos.coords.longitude);renderQibla();
+ },err=>{$('#qibla-result').textContent=err.code===1?'يلزم تسمح للموقع باستعمال موقعك.':'تعذّر تحديد الموقع. فعّل GPS وعاود المحاولة.'},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+};
+function onDeviceOrientation(e){
+ let heading=null;if(typeof e.webkitCompassHeading==='number')heading=e.webkitCompassHeading;
+ else if(e.absolute&&typeof e.alpha==='number')heading=(360-e.alpha)%360;
+ if(heading!==null){deviceHeading=heading;renderQibla()}
+}
+$('#qibla-sensor').onclick=async()=>{
+ try{
+  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+   const permission=await DeviceOrientationEvent.requestPermission();if(permission!=='granted')throw new Error('permission');
+  }
+  window.addEventListener('deviceorientationabsolute',onDeviceOrientation,true);
+  window.addEventListener('deviceorientation',onDeviceOrientation,true);
+  $('#qibla-result').textContent='حرّك الهاتف حركة رقم 8 لمعايرة البوصلة، ثم وجّهه نحو القبلة.';
+ }catch(e){$('#qibla-result').textContent='البوصلة غير متاحة أو لم يتم السماح بها. يبقى اتجاه القبلة بالدرجات ظاهر.'}
+};
+
+/* ختمة شخصية: تقدم محلي على الجهاز */
+const khatmaKey='zad-khatma-juz-v1';
+let khatmaDone=[];try{khatmaDone=JSON.parse(localStorage.getItem(khatmaKey)||'[]')}catch(e){khatmaDone=[]}
+function renderKhatma(){
+ const root=$('#khatma-juz');root.innerHTML='';
+ for(let n=1;n<=30;n++){
+  const label=document.createElement('label');label.className='khatma-juz';
+  const input=document.createElement('input');input.type='checkbox';input.checked=khatmaDone.includes(n);
+  input.onchange=()=>{khatmaDone=input.checked?[...new Set([...khatmaDone,n])]:khatmaDone.filter(x=>x!==n);localStorage.setItem(khatmaKey,JSON.stringify(khatmaDone));renderKhatma()};
+  const span=document.createElement('span');span.textContent='الجزء '+n;label.append(input,span);root.append(label);
+ }
+ $('#khatma-count').textContent=khatmaDone.length;$('#khatma-bar').style.width=(khatmaDone.length/30*100)+'%';
+ $('#khatma-status').textContent=khatmaDone.length===30?'ما شاء الله! أتممت ختمتك. تقبّل الله منك.':'أكملت '+khatmaDone.length+' جزءاً، وباقي '+(30-khatmaDone.length)+' جزءاً.';
+}
+renderKhatma();
+$('#khatma-reset').onclick=()=>{if(!confirm('تحب تبدأ ختمة جديدة وتمسح تقدم الختمة الحالية؟'))return;khatmaDone=[];localStorage.removeItem(khatmaKey);renderKhatma()};
+function shareKhatma(){
+ const msg='السلام عليكم 🌷\nنحب نعملوا ختمة قرآن جماعية. كل واحد يختار جزءاً ويعلّم عليه بعد ما يكمله.\nموقع زاد الخير: '+location.href+'\nتقدّمي الحالي: '+khatmaDone.length+'/30 جزءاً.';
+ if(navigator.share)navigator.share({title:'دعوة ختمة قرآن - زاد الخير',text:msg}).catch(()=>{});
+ else window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener');
+}
+$('#khatma-share').onclick=shareKhatma;$('#khatma-invite').onclick=shareKhatma;
+
+/* تسجيل نسخة قابلة للتثبيت والحفظ الأساسي دون إنترنت */
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+
 loadPrayerTimes();
 
 let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))show(initial);paint()})();
