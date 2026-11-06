@@ -1348,6 +1348,38 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
  .home-prayer-card .home-prayer-list b{font-size:13px!important}
 }
 
+
+/* أيقونات رئيسية بارزة بلمسة ثلاثية الأبعاد */
+.home-shortcuts .tile{
+ display:flex;flex-direction:column;justify-content:center;align-items:center;
+ gap:9px;min-height:132px;padding:12px 8px;text-align:center;
+ border:1px solid #d6c18d;border-radius:20px;
+ background:linear-gradient(155deg,#fff 0%,#f3f0e7 48%,#e5e9e3 100%);
+ box-shadow:0 5px 0 #b9a16e,0 9px 16px #182f3c20,inset 0 2px 4px #ffffff;
+ color:#244f70;position:relative;overflow:hidden;
+}
+.home-shortcuts .tile:before{
+ content:"";position:absolute;inset:4px;border:1px solid #d7c69d;
+ border-radius:15px;pointer-events:none;opacity:.8;
+}
+.home-shortcuts .shortcut-icon{
+ display:grid;place-items:center;width:76px;height:76px;flex:0 0 76px;
+ border-radius:19px;font-size:43px;line-height:1;
+ background:radial-gradient(circle at 30% 22%,#fff 0%,#eaf1f5 35%,#c8d8e2 72%,#9fb7c8 100%);
+ border:2px solid #d7bd7d;
+ box-shadow:0 5px 0 #8b9eaa,0 8px 13px #20384a35,inset 0 3px 5px #fff;
+ filter:drop-shadow(0 2px 2px #243c4a30);
+}
+.home-shortcuts .tile>span:last-child{
+ position:relative;z-index:1;font-size:15px;font-weight:800;color:#254e6b;
+ text-shadow:0 1px #fff;
+}
+.home-shortcuts .tile:active{transform:translateY(2px);box-shadow:0 3px 0 #b9a16e,0 5px 10px #182f3c20}
+@media(max-width:480px){
+ .home-shortcuts .tile{min-height:116px;gap:7px;padding:9px 5px;border-radius:17px}
+ .home-shortcuts .shortcut-icon{width:66px;height:66px;flex-basis:66px;font-size:37px;border-radius:17px}
+ .home-shortcuts .tile>span:last-child{font-size:13px}
+}
 </style>
 
 </head>
