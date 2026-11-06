@@ -2213,42 +2213,13 @@ header.hero .tag{
 
 
 <style id="zad-shortcuts-original-blue-icons">
- .home-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 15px}
- .home-shortcuts .tile{min-height:70px;padding:8px 3px;font-size:13px}
-}
-@media(max-width:350px){.home-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-
-/* عرض مواقيت الصلاة الستة في سطر واحد على الهاتف */
-.home-prayer-list{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
-.home-prayer-list>div{min-width:0;padding:8px 1px}
-.home-prayer-list .prayer-icon{width:32px;height:32px;font-size:17px}
-.home-prayer-list span{font-size:10px;white-space:nowrap}
-.home-prayer-list b{font-size:12px;white-space:nowrap}
-@media(max-width:390px){
- .home-prayer-list{grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
- .home-prayer-list .prayer-icon{width:27px;height:27px;font-size:15px}
- .home-prayer-list span{font-size:8px}
- .home-prayer-list b{font-size:10px}
-}
-
-
-
-/* وضوح أكبر للصفحة الرئيسية على الهاتف */
-.home-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0 22px}
+.home-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0 22px}
 .home-shortcuts .tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:112px;padding:13px 6px;font-size:17px;font-weight:800;line-height:1.5;text-align:center;border-radius:18px}
 .home-shortcuts .shortcut-icon{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#eaf1f8;border:1px solid #d8e4ef;font-size:29px;line-height:1}
-.home-prayer-list .prayer-icon{width:39px;height:39px;font-size:21px}
-.home-prayer-list span{font-size:11px;font-weight:700}
-.home-prayer-list b{font-size:14px}
-.home-prayer-list>div{padding:9px 1px}
 @media(max-width:390px){
  .home-shortcuts{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
  .home-shortcuts .tile{min-height:104px;padding:11px 3px;font-size:15px;gap:7px}
  .home-shortcuts .shortcut-icon{width:46px;height:46px;font-size:26px}
- .home-prayer-list .prayer-icon{width:34px;height:34px;font-size:18px}
- .home-prayer-list span{font-size:9px}
- .home-prayer-list b{font-size:11px}
 }
 </style>
 </body></html>
