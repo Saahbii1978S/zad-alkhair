@@ -3,5 +3,5 @@
    لا تضع هنا أبداً service_role أو sb_secret أو أي كلمة سر. */
 window.ZAD_SUPABASE_CONFIG = Object.freeze({
   url: "https://sndbyixuhefajzevmprr.supabase.co",
-  publishableKey: "PASTE_SUPABASE_PUBLISHABLE_KEY_HERE"
+  publishableKey: "sb_publishable_tH-To1mD8kpNpl1Ql30c6g_a6fFnqiq"
 });
