@@ -719,13 +719,40 @@ footer{color:#8495a1}
 .live-clock-date{font-size:12px;color:#e4edf4;font-weight:600}
 @media(max-width:390px){.live-clock-bar{gap:7px;padding:7px 8px}.live-clock-label,.live-clock-date{font-size:10px}.live-clock-time{font-size:23px;letter-spacing:1px}}
 
+
+/* رزنامة ميلادية وهجرية */
+.calendar-card{overflow:hidden}
+.calendar-heading{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.calendar-heading h2{margin:0 0 4px;font-size:19px}
+.calendar-mark{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:#e8f1f5;font-size:25px}
+.calendar-today{padding:14px;border-radius:16px;background:linear-gradient(120deg,#09243d,#12534f);color:#fff;text-align:center;margin-bottom:14px}
+.calendar-today .cal-greg{font-size:21px;font-weight:900}
+.calendar-today .cal-hijri{font-size:15px;color:#e7d39d;margin-top:5px;font-weight:700}
+.calendar-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0}
+.calendar-controls strong{font-size:15px;text-align:center;flex:1}
+.calendar-controls button{border:0;border-radius:11px;padding:8px 12px;background:#eaf0f4;color:#12344a;font-weight:800}
+.calendar-controls button:first-child,.calendar-controls button:nth-child(3){font-size:21px;min-width:38px;padding:5px}
+.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;direction:rtl}
+.calendar-weekdays span{text-align:center;font-size:10px;font-weight:800;color:#647889;padding:7px 0}
+.calendar-day{min-height:61px;border:1px solid #e5ebef;border-radius:11px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:5px 1px}
+.calendar-day .greg{font-size:15px;font-weight:900;color:#17364b}
+.calendar-day .hijri{font-size:10px;color:#718397;font-weight:700}
+.calendar-day.outside{opacity:.35;background:#f7f9fa}
+.calendar-day.today{border:2px solid #b9974e;background:#fff9e9;box-shadow:0 3px 10px #b9974e22}
+.calendar-day.today .greg{color:#815d16}
+.calendar-legend{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;margin:15px 0 7px;font-size:11px;color:#687b89}
+.calendar-legend span{display:flex;align-items:center;gap:5px}
+.calendar-legend i{width:9px;height:9px;border-radius:50%;background:#dce5eb}
+.calendar-legend .legend-hijri{background:#b9974e}.calendar-legend .legend-today{background:#fff0c5;border:1px solid #b9974e}
+.calendar-note{font-size:11px;color:#71808b;line-height:1.7;text-align:center;margin:12px 0 0}
+@media(max-width:390px){.calendar-weekdays,.calendar-grid{gap:3px}.calendar-day{min-height:55px;border-radius:8px}.calendar-day .greg{font-size:14px}.calendar-day .hijri{font-size:9px}.calendar-controls strong{font-size:13px}.calendar-controls button{padding:7px 9px}}
 </style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
 <header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request">من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
 <nav class="nav" aria-label="أقسام الموقع">
-<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button>
+<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button><button data-page="calendar">الرزنامة</button>
 </nav>
 <main>
 <section class="view active" id="home">
@@ -738,7 +765,7 @@ footer{color:#8495a1}
  <button class="home-prayer-more" type="button" data-go="prayer-times">عرض المواقيت بالتفصيل ←</button>
  </div>
 
-<div class="tiles home-shortcuts"><div class="tile" data-go="morning"><span class="shortcut-icon">☀️</span><span>أذكار الصباح</span></div><div class="tile" data-go="evening"><span class="shortcut-icon">🌙</span><span>أذكار المساء</span></div><div class="tile" data-go="prayer"><span class="shortcut-icon">۞</span><span>بعد الصلاة</span></div><div class="tile" data-go="sleep"><span class="shortcut-icon">🌙</span><span>قبل النوم</span></div><div class="tile" data-go="duas"><span class="shortcut-icon">🤲</span><span>الأدعية</span></div><div class="tile" data-go="names"><span class="shortcut-icon">✨</span><span>الأسماء الحسنى</span></div><div class="tile" data-go="tasbeeh"><span class="shortcut-icon">📿</span><span>التسبيح</span></div><div class="tile" data-go="tracker"><span class="shortcut-icon">📊</span><span>متابعتي</span></div><div class="tile" data-go="prayer-times"><span class="shortcut-icon">🕌</span><span>المواقيت</span></div><div class="tile" data-go="quran"><span class="shortcut-icon">📖</span><span>القرآن الكريم</span></div><div class="tile" data-go="qibla"><span class="shortcut-icon">🧭</span><span>القبلة</span></div><div class="tile" data-go="khatma"><span class="shortcut-icon">🌙</span><span>الختمة</span></div></div>
+<div class="tiles home-shortcuts"><div class="tile" data-go="morning"><span class="shortcut-icon">☀️</span><span>أذكار الصباح</span></div><div class="tile" data-go="evening"><span class="shortcut-icon">🌙</span><span>أذكار المساء</span></div><div class="tile" data-go="prayer"><span class="shortcut-icon">۞</span><span>بعد الصلاة</span></div><div class="tile" data-go="sleep"><span class="shortcut-icon">🌙</span><span>قبل النوم</span></div><div class="tile" data-go="duas"><span class="shortcut-icon">🤲</span><span>الأدعية</span></div><div class="tile" data-go="names"><span class="shortcut-icon">✨</span><span>الأسماء الحسنى</span></div><div class="tile" data-go="tasbeeh"><span class="shortcut-icon">📿</span><span>التسبيح</span></div><div class="tile" data-go="tracker"><span class="shortcut-icon">📊</span><span>متابعتي</span></div><div class="tile" data-go="prayer-times"><span class="shortcut-icon">🕌</span><span>المواقيت</span></div><div class="tile" data-go="quran"><span class="shortcut-icon">📖</span><span>القرآن الكريم</span></div><div class="tile" data-go="qibla"><span class="shortcut-icon">🧭</span><span>القبلة</span></div><div class="tile" data-go="khatma"><span class="shortcut-icon">🌙</span><span>الختمة</span></div><div class="tile" data-go="calendar"><span class="shortcut-icon">📅</span><span>الرزنامة</span></div></div>
 <div class="card"><h2>آية اليوم</h2><p class="verse">﴿فَسَبِّحْ بِحَمْدِ رَبِّكَ وَكُن مِّنَ السَّاجِدِينَ﴾</p><p class="ref">سورة الحجر: 98</p></div>
 <div class="card"><h2>ابدأ بخير اليوم</h2><p>اجعل لك ورداً من الذكر والقرآن، وحافظ على الصلاة، ولو بالقليل الدائم.</p></div>
 </section>
@@ -810,6 +837,18 @@ footer{color:#8495a1}
    <div class="khatma-cloud-actions"><button id="khatma-cloud-share" class="secondary" type="button">مشاركة رمز الدعوة</button><button id="khatma-cloud-refresh" class="secondary" type="button">تحديث</button></div>
   </div>
   <p class="muted" style="margin-top:12px">ملاحظة: الحساب المجهول مربوط بهذا المتصفح والجهاز. إذا مسحت بيانات المتصفح أو بدّلت الهاتف، قد تفقد إمكانية الدخول لنفس العضوية. لا تمسح بيانات المتصفح إذا تحب تواصل بنفس الحساب.</p>
+ </div>
+</section>
+
+<section class="view" id="calendar">
+ <div class="card calendar-card">
+  <div class="calendar-heading"><span class="calendar-mark">📅</span><div><h2>الرزنامة الميلادية والهجرية</h2><p class="muted">تابع التاريخين معاً حسب توقيت تونس</p></div></div>
+  <div class="calendar-today" id="calendar-today"></div>
+  <div class="calendar-controls"><button type="button" id="calendar-prev" aria-label="الشهر السابق">‹</button><strong id="calendar-month-title"></strong><button type="button" id="calendar-next" aria-label="الشهر التالي">›</button><button type="button" id="calendar-current">اليوم</button></div>
+  <div class="calendar-weekdays"><span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span><span>الخميس</span><span>الجمعة</span><span>السبت</span></div>
+  <div class="calendar-grid" id="calendar-grid"></div>
+  <div class="calendar-legend"><span><i class="legend-greg"></i> التاريخ الميلادي</span><span><i class="legend-hijri"></i> التاريخ الهجري</span><span><i class="legend-today"></i> اليوم</span></div>
+  <p class="calendar-note">قد يختلف التاريخ الهجري بيوم حسب رؤية الهلال والبلد. يُعرض هنا وفق تقويم أم القرى عند توفره.</p>
  </div>
 </section>
 </main>
@@ -1206,6 +1245,38 @@ function updateZadLiveClock(){
 updateZadLiveClock();
 setInterval(updateZadLiveClock,1000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateZadLiveClock()});
+
+/* رزنامة التاريخين: ميلادي مع التاريخ الهجري لكل يوم */
+(function initDualCalendar(){
+ const grid=document.getElementById('calendar-grid');if(!grid)return;
+ const monthTitle=document.getElementById('calendar-month-title'),todayBox=document.getElementById('calendar-today');
+ const today=new Date(),todayKey=[today.getFullYear(),today.getMonth(),today.getDate()].join('-');
+ let shown=new Date(today.getFullYear(),today.getMonth(),1);
+ const gregFmt=new Intl.DateTimeFormat('ar-TN',{day:'numeric'});
+ let hijriFmt;
+ try{hijriFmt=new Intl.DateTimeFormat('ar-TN-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'});hijriFmt.format(today)}
+ catch(e){hijriFmt=new Intl.DateTimeFormat('ar-TN-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'})}
+ function dateKey(d){return [d.getFullYear(),d.getMonth(),d.getDate()].join('-')}
+ function draw(){
+  const fullHijri=hijriFmt.format(today);
+  todayBox.innerHTML='<div class="cal-greg">'+new Intl.DateTimeFormat('ar-TN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(today)+'</div><div class="cal-hijri">'+fullHijri+' هـ</div>';
+  monthTitle.textContent=new Intl.DateTimeFormat('ar-TN',{month:'long',year:'numeric'}).format(shown);
+  const first=new Date(shown.getFullYear(),shown.getMonth(),1);
+  const start=new Date(first);start.setDate(1-first.getDay());
+  let html='';
+  for(let i=0;i<42;i++){
+   const d=new Date(start);d.setDate(start.getDate()+i);
+   const hijri=hijriFmt.formatToParts(d).find(p=>p.type==='day')?.value||'';
+   const outside=d.getMonth()!==shown.getMonth(),isToday=dateKey(d)===todayKey;
+   html+='<div class="calendar-day'+(outside?' outside':'')+(isToday?' today':'')+'"'+(isToday?' aria-label="اليوم"':'')+'><span class="greg">'+gregFmt.format(d)+'</span><span class="hijri">'+hijri+'</span></div>';
+  }
+  grid.innerHTML=html;
+ }
+ document.getElementById('calendar-prev').onclick=()=>{shown=new Date(shown.getFullYear(),shown.getMonth()-1,1);draw()};
+ document.getElementById('calendar-next').onclick=()=>{shown=new Date(shown.getFullYear(),shown.getMonth()+1,1);draw()};
+ document.getElementById('calendar-current').onclick=()=>{shown=new Date(today.getFullYear(),today.getMonth(),1);draw()};
+ draw();
+})();
 
 loadPrayerTimes();
 
