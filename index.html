@@ -969,6 +969,47 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
  body.zad-font-medium .arabic{font-size:23px!important}
  body.zad-font-large .arabic{font-size:27px!important}
 }
+
+/* تحسينات واجهة زاد الخير حسب طلب المستخدم */
+.hero{
+ background-image:linear-gradient(90deg,rgba(5,35,27,.72),rgba(5,35,27,.48)),url("https://upload.wikimedia.org/wikipedia/commons/2/2e/The_Kaaba.jpg");
+ background-size:cover;
+ background-position:center 48%;
+ color:#fff!important;
+ text-align:center!important;
+ min-height:190px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+}
+.hero .brand{color:#fff!important;text-shadow:0 2px 12px #000b}
+.hero .tag{color:#fff!important;text-shadow:0 1px 8px #000b}
+.home-eyebrow{color:#fff!important}
+.home-next-prayer{color:#fff!important}
+.home-next-prayer b,.home-next-prayer strong{color:#fff!important}
+.home-prayer-city{
+ display:grid!important;
+ grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr);
+ align-items:center;
+ gap:8px!important;
+ color:#fff!important;
+}
+.home-prayer-city label{white-space:nowrap;color:#fff!important;font-weight:700}
+.home-prayer-city select{
+ display:block;width:100%;min-width:0;max-width:100%;
+ color:#fff!important;background:rgba(255,255,255,.16)!important;
+ border:1px solid rgba(255,255,255,.5)!important;
+ padding:8px 5px!important;text-overflow:ellipsis;
+}
+.home-prayer-city select option{color:#183d32!important;background:#fff!important}
+@media(max-width:380px){
+ .hero{min-height:170px;padding:22px 14px!important}
+ .home-prayer-city{gap:5px!important}
+ .home-prayer-city label{font-size:12px!important}
+ .home-prayer-city select{font-size:12px!important}
+}
+
 </style>
 
 </head>
@@ -980,7 +1021,7 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
  <button type="button" id="zad-copy-link">نسخ الرابط</button>
 </div>
 <div class="home-prayer-card">
- <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة • تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div><span class="mosque-mark">۞</span></div>
+ <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div><span class="mosque-mark">۞</span></div>
  <div class="home-prayer-city"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div>
  <div id="home-prayer-list" class="home-prayer-list"><span>الفجر</span><span>الظهر</span><span>العصر</span><span>المغرب</span><span>العشاء</span></div>
  <div class="home-next-prayer"><span>الصلاة القادمة <b id="home-next-name">—</b></span><strong id="home-next-countdown">—</strong></div>
