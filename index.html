@@ -774,7 +774,7 @@ function cloudRenderGroups(){
 }
 async function cloudSelectGroup(id){
  cloudActive=cloudGroups.find(g=>g.id===id);if(!cloudActive)return;
- cloudMemberId=cloudActive.myMember?.id||null;cloudRenderGroups();
+ cloudMemberId=cloudActive.myMember?.id||null;cloudInviteCode=localStorage.getItem('zad-khatma-invite-'+id)||'';cloudRenderGroups();
  $('#khatma-cloud-invite-area').hidden=true;
  await cloudLoadAssignments();
  if(cloudChannel){await cloudClient.removeChannel(cloudChannel);cloudChannel=null}
