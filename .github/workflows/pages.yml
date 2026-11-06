@@ -23,6 +23,18 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Validate inline JavaScript
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path("index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script\\b[^>]*>([\\s\\S]*?)</script>", html, re.I)
+          if not scripts:
+              raise SystemExit("No inline JavaScript found")
+          Path("/tmp/zad-inline.js").write_text("\\n".join(scripts), encoding="utf-8")
+          PY
+          node --check /tmp/zad-inline.js
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
