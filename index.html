@@ -988,6 +988,24 @@ body{font-size:17px!important}
  .home-prayer-field select{font-size:13px!important;padding:8px 4px!important}
 }
 
+
+/* توسيع خانات البلد والمدينة: كل خانة في سطر مستقل */
+.home-prayer-city{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ gap:9px!important;
+ width:100%!important;
+}
+.home-prayer-field{display:flex!important;flex-direction:column!important;gap:5px!important;width:100%!important;min-width:0!important}
+.home-prayer-field label{font-size:14px!important;white-space:nowrap!important;text-align:right!important}
+.home-prayer-field select{
+ display:block!important;box-sizing:border-box!important;
+ width:100%!important;min-width:100%!important;max-width:100%!important;
+ direction:rtl!important;text-align:right!important;
+ font-size:16px!important;padding:11px 10px!important;
+ white-space:nowrap!important;text-overflow:clip!important;
+}
+
 </style>
 <style>
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e7ebef}
