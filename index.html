@@ -1006,6 +1006,56 @@ body{font-size:17px!important}
  white-space:nowrap!important;text-overflow:clip!important;
 }
 
+
+
+/* إصلاح نهائي لخانات البلد والمدينة على الهاتف */
+.home-prayer-card .home-prayer-city{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ width:100%!important;
+ gap:12px!important;
+ align-items:stretch!important;
+ justify-content:stretch!important;
+ margin:14px 0!important;
+}
+.home-prayer-card .home-prayer-field{
+ display:grid!important;
+ grid-template-columns:1fr!important;
+ width:100%!important;
+ min-width:0!important;
+ gap:6px!important;
+}
+.home-prayer-card .home-prayer-field label{
+ display:block!important;
+ width:100%!important;
+ text-align:right!important;
+ font-size:14px!important;
+ white-space:normal!important;
+}
+.home-prayer-card .home-prayer-field select{
+ display:block!important;
+ box-sizing:border-box!important;
+ width:100%!important;
+ min-width:100%!important;
+ max-width:100%!important;
+ height:48px!important;
+ padding:10px 14px!important;
+ font-family:Tajawal,sans-serif!important;
+ font-size:17px!important;
+ font-weight:800!important;
+ line-height:1.4!important;
+ direction:rtl!important;
+ text-align:right!important;
+ text-overflow:clip!important;
+ white-space:normal!important;
+ overflow:visible!important;
+ border-radius:12px!important;
+}
+@media(max-width:480px){
+ .home-prayer-card .home-prayer-city{grid-template-columns:minmax(0,1fr)!important;gap:11px!important}
+ .home-prayer-card .home-prayer-field select{height:50px!important;font-size:17px!important;padding:10px 14px!important}
+}
+
 </style>
 <style>
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e7ebef}
