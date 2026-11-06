@@ -965,6 +965,29 @@ body{font-size:17px!important}
  .home-prayer-city select{font-size:11px!important;padding:6px 3px!important}
 }
 
+
+/* إظهار اسم البلد والمدينة كاملاً على الهاتف */
+.home-prayer-city{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:10px!important;
+ width:100%!important;
+}
+.home-prayer-field{display:flex!important;flex-direction:column!important;gap:5px!important;min-width:0!important}
+.home-prayer-field label{font-size:14px!important;white-space:nowrap!important;text-align:right!important}
+.home-prayer-field select{
+ box-sizing:border-box!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ direction:rtl!important;text-align:right!important;
+ font-size:14px!important;padding:9px 7px!important;
+ text-overflow:clip!important;white-space:nowrap!important;
+}
+@media(max-width:380px){
+ .home-prayer-city{gap:7px!important}
+ .home-prayer-field label{font-size:13px!important}
+ .home-prayer-field select{font-size:13px!important;padding:8px 4px!important}
+}
+
 </style>
 <style>
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e7ebef}
@@ -1174,7 +1197,7 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
 </div>
 <div class="home-prayer-card">
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div></div>
- <div class="home-prayer-city"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div>
+ <div class="home-prayer-city"><div class="home-prayer-field"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select></div><div class="home-prayer-field"><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div></div>
  <button type="button" id="zad-use-location" class="zad-use-location">📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً</button>
  <div id="home-prayer-list" class="home-prayer-list"><span>الفجر</span><span>الظهر</span><span>العصر</span><span>المغرب</span><span>العشاء</span></div>
  <div class="home-next-prayer"><span>الصلاة القادمة <b id="home-next-name">—</b></span><strong id="home-next-countdown">—</strong></div>
