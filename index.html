@@ -772,6 +772,25 @@ footer{color:#8495a1}
  #morning .dhikr-count-progress,#evening .dhikr-count-progress{width:62px;height:62px;min-width:62px}
  #morning .dhikr-count-progress strong,#evening .dhikr-count-progress strong{font-size:16px}
 }
+
+/* سبحة إلكترونية داكنة */
+.rosary-card{text-align:center;padding:22px 16px 20px;background:linear-gradient(180deg,#fff 0%,#f4f7f8 100%)}
+.rosary-card h2{font-size:21px;margin-bottom:5px}
+.rosary-zikr{font-family:Amiri,serif;font-size:23px;font-weight:800;color:#173e50;margin:4px 0 16px}
+.rosary-shell{width:min(100%,310px);margin:0 auto 18px;padding:15px;border-radius:34px;background:linear-gradient(145deg,#071521,#17394b 55%,#06111b);box-shadow:inset 0 2px 5px #ffffff22,0 12px 28px #06152138;border:1px solid #29485a;position:relative}
+.rosary-shell:before{content:"";position:absolute;inset:6px;border:1px solid #c6a45b55;border-radius:29px;pointer-events:none}
+.rosary-screen{margin:4px auto 14px;width:100%;padding:12px 10px 9px;border-radius:22px;background:linear-gradient(180deg,#020a10,#0b1c27);border:1px solid #547081;box-shadow:inset 0 3px 12px #000b,0 2px 5px #ffffff0c;color:#e6f3f6}
+.rosary-caption{font-size:12px;color:#a8c0cb;font-weight:700}
+.rosary-screen .counter{font-family:ui-monospace,Consolas,monospace;font-size:clamp(48px,13vw,66px);line-height:1.2;letter-spacing:2px;color:#d9bd77;font-weight:900;padding:3px 0;text-shadow:0 0 14px #d9bd7744;font-variant-numeric:tabular-nums}
+.rosary-unit{font-size:11px;color:#9eb6c2}
+.rosary-button{width:124px;height:124px;margin:0 auto 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:5px solid #355568;background:radial-gradient(circle at 35% 28%,#2e6175,#0c293b 62%,#06131e);box-shadow:inset 0 3px 8px #ffffff24,inset 0 -8px 14px #0008,0 5px 13px #0008;color:#fff;transition:transform .12s,filter .12s}
+.rosary-button span{font-size:14px;color:#d8bd79;line-height:1}
+.rosary-button b{font:800 20px Tajawal}
+.rosary-button:active{transform:scale(.94);filter:brightness(1.25)}
+.rosary-actions{gap:8px}
+.rosary-actions button{border:1px solid #dce5e9;background:#eaf0f3;color:#173e50;border-radius:13px;padding:10px 13px;font-size:13px}
+@media(max-width:390px){.rosary-card{padding:18px 12px}.rosary-shell{width:min(100%,285px)}.rosary-button{width:112px;height:112px}}
+
 </style>
 </head>
 <body>
@@ -802,7 +821,7 @@ footer{color:#8495a1}
 <section class="view" id="sleep"><div class="card"><h2>أذكار قبل النوم</h2><div class="dhikr"><div class="arabic">بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا</div></div><div class="dhikr"><div class="arabic">اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ</div></div><div class="dhikr"><div class="arabic">سُبْحَانَ اللَّهِ (٣٣) — الْحَمْدُ لِلَّهِ (٣٣) — اللَّهُ أَكْبَرُ (٣٤)</div></div></div></section>
 <section class="view" id="duas"><div class="card"><h2>أدعية</h2><div class="dhikr"><div class="arabic">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div><p class="muted">سورة البقرة: 201</p></div><div class="dhikr"><div class="arabic">رَبِّ زِدْنِي عِلْمًا</div><p class="muted">سورة طه: 114</p></div><div class="dhikr"><div class="arabic">رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً</div><p class="muted">سورة آل عمران: 8</p></div></div></section>
 <section class="view" id="names"><div class="card"><h2>من أسماء الله الحسنى</h2><div class="tiles"><div class="tile">الرَّحْمَٰن<br><small>واسع الرحمة</small></div><div class="tile">الرَّحِيم<br><small>كثير الرحمة</small></div><div class="tile">الْمَلِك<br><small>مالك الملك</small></div><div class="tile">الْقُدُّوس<br><small>المنزّه عن النقائص</small></div><div class="tile">السَّلَام<br><small>السالم من كل نقص</small></div><div class="tile">الْعَزِيز<br><small>الغالب الذي لا يُغلب</small></div></div><p class="muted">هذه مجموعة مختارة للتعريف، ويمكن توسيعها لاحقاً مع مراجعة المعاني والمصادر.</p></div></section>
-<section class="view" id="tasbeeh"><div class="card" style="text-align:center"><h2>عدّاد التسبيح</h2><p id="zikrLabel">سبحان الله</p><div class="counter" id="count">0</div><button class="big" id="add">سبّح</button><div class="actions" style="margin-top:18px"><button id="minus">أنقص مرة</button><button id="reset">تصفير</button><button id="change">غيّر الذكر</button></div><p class="muted">العدّاد وسيلة للتذكير والتنظيم، والأجر عند الله.</p></div></section>
+<section class="view" id="tasbeeh"><div class="card rosary-card"><h2>📿 السبحة الإلكترونية</h2><p id="zikrLabel" class="rosary-zikr">سبحان الله</p><div class="rosary-shell"><div class="rosary-screen"><span class="rosary-caption">عدد التسبيحات</span><div class="counter" id="count">0</div><span class="rosary-unit">تسبيحة</span></div><button class="big rosary-button" id="add" type="button" aria-label="اضغط للتسبيح"><span>●</span><b>سبّح</b></button></div><div class="rosary-actions actions"><button id="minus" type="button">− أنقص</button><button id="reset" type="button">↺ تصفير</button><button id="change" type="button">✧ غيّر الذكر</button></div><p class="muted">اضغط على زرّ السبحة لكل تسبيحة. العدّاد يحفظ العدد على جهازك.</p></div></section>
 <section class="view" id="tracker"><div class="card"><h2>متابعتي اليومية</h2><p>ضع علامة على ما أنجزته اليوم. تُحفظ العلامات على جهازك.</p><label><input type="checkbox" data-task="prayer"> المحافظة على الصلوات</label><br><label><input type="checkbox" data-task="quran"> ورد من القرآن</label><br><label><input type="checkbox" data-task="adhkar"> أذكار الصباح والمساء</label><br><label><input type="checkbox" data-task="kindness"> عمل خير أو صدقة</label></div></section>
 
 <section class="view" id="quran">
