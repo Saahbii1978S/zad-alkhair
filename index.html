@@ -1337,7 +1337,7 @@ $('#khatma-cloud-refresh').onclick=()=>cloudLoadAssignments().catch(e=>cloudMess
 
 
 /* تسجيل نسخة قابلة للتثبيت والحفظ الأساسي دون إنترنت */
-if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',async()=>{try{const registration=await navigator.serviceWorker.register('./sw.js?v=4',{updateViaCache:'none'});await registration.update()}catch(e){}});
 
 
 /* ساعة رقمية مباشرة بتوقيت تونس، تتجدد كل ثانية وتبقى ظاهرة أثناء التنقل */
