@@ -498,10 +498,30 @@ body{font-size:20px}
     margin-top:7px;
   }
 }
+
+/* دعوة الخير أسفل العبارة التعريفية */
+.hero .dua-request{
+  max-width:760px;
+  margin:12px auto 0;
+  padding:9px 14px;
+  border:1px solid #ffffff70;
+  border-radius:14px;
+  background:#ffffff20;
+  color:#fff !important;
+  font-family:Amiri,Tajawal,serif;
+  font-size:clamp(19px,2.5vw,23px);
+  font-weight:700;
+  line-height:1.8;
+  text-align:center;
+  text-shadow:0 1px 2px #18334a;
+}
+@media(max-width:480px){
+  .hero .dua-request{font-size:19px;margin-top:10px;padding:8px 9px}
+}
 </style>
 </head>
 <body>
-<header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p></header>
+<header class="hero"><div class="brand">✧ زاد الخير ✧</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request">من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
 <nav class="nav" aria-label="أقسام الموقع">
 <button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button>
 </nav>
