@@ -478,6 +478,26 @@ body{font-size:20px}
  .home-prayer-list span{font-size:9px}
  .home-prayer-list b{font-size:11px}
 }
+
+/* توضيح وتكبير العبارة التعريفية أعلى الصفحة */
+.hero .tag{
+  display:block;
+  max-width:720px;
+  margin:8px auto 0;
+  color:#fff !important;
+  font-size:clamp(19px,2.4vw,23px) !important;
+  font-weight:700;
+  line-height:1.9;
+  text-shadow:0 1px 2px #102f48;
+}
+@media(max-width:480px){
+  .hero .tag{
+    font-size:19px !important;
+    line-height:1.85;
+    padding:0 4px;
+    margin-top:7px;
+  }
+}
 </style>
 </head>
 <body>
