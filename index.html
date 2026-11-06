@@ -916,6 +916,30 @@ body{font-size:17px!important}
 }
 
 </style>
+<style>
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e7ebef}
+.setting-row:last-of-type{border-bottom:0}.setting-row>div{min-width:0}.setting-row strong{color:#315f91}
+.setting-row .muted{margin:3px 0 0}
+.setting-row select{min-width:112px;padding:10px;border:1px solid #d7e2ed;border-radius:10px;background:#fff;color:#315f91;font:700 15px Tajawal}
+.setting-switch{display:flex;align-items:center;gap:7px;color:#315f91;font-weight:700;white-space:nowrap}
+.setting-switch input{width:20px;height:20px;accent-color:#315f91}
+body.zad-dark{background:#17232b;color:#e8edf0}
+body.zad-dark .nav,body.zad-dark .card,body.zad-dark .tile{background:#24343e;color:#e8edf0;border-color:#3b4d57}
+body.zad-dark .nav button{color:#d5e0e5}body.zad-dark .nav button.active{background:#315f91;color:#fff}
+body.zad-dark .card h2,body.zad-dark .setting-row strong{color:#a9c9e8}
+body.zad-dark .muted,body.zad-dark footer{color:#bdc9cf}
+body.zad-dark .setting-row{border-color:#40515b}
+body.zad-dark .setting-row select{background:#24343e;color:#e8edf0;border-color:#526572}
+body.zad-dark .actions button,body.zad-dark .smallbtn{background:#344b5a;color:#e8edf0}
+body.zad-dark .home-prayer-card{background:#24343e;border-color:#40515b;color:#e8edf0}
+body.zad-dark .home-prayer-head h2,body.zad-dark .home-prayer-head p,body.zad-dark .home-prayer-city{color:#e8edf0}
+body.zad-dark .home-prayer-list>div,body.zad-dark .home-next-prayer,body.zad-dark .prayer-item,body.zad-dark .dhikr-tools{background:#2b404b;border-color:#40515b;color:#e8edf0}
+body.zad-dark .arabic,body.zad-dark .verse{color:#e8edf0}
+body.zad-font-small .arabic{font-size:21px}body.zad-font-small .card h2{font-size:19px}body.zad-font-small .muted{font-size:12px}
+body.zad-font-medium .arabic{font-size:25px}body.zad-font-medium .card h2{font-size:23px}
+body.zad-font-large .arabic{font-size:30px}body.zad-font-large .card h2{font-size:27px}body.zad-font-large .muted{font-size:16px}body.zad-font-large .tile{font-size:18px}
+@media(max-width:480px){body.zad-font-small .arabic{font-size:19px}body.zad-font-medium .arabic{font-size:23px}body.zad-font-large .arabic{font-size:27px}}
+</style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
@@ -934,7 +958,7 @@ body{font-size:17px!important}
  </div>
 
 <nav class="nav" aria-label="أقسام الموقع">
-<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button><button data-page="calendar">الرزنامة</button>
+<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button><button data-page="calendar">الرزنامة</button><button data-page="settings">⚙️ الإعدادات</button>
 </nav>
 <main>
 <section class="view active" id="home">
@@ -1023,6 +1047,20 @@ body{font-size:17px!important}
   <div class="calendar-legend"><span><i class="legend-greg"></i> التاريخ الميلادي</span><span><i class="legend-hijri"></i> التاريخ الهجري</span><span><i class="legend-today"></i> اليوم</span></div>
   <p class="calendar-note">قد يختلف التاريخ الهجري بيوم حسب رؤية الهلال والبلد. يُعرض هنا وفق تقويم أم القرى عند توفره.</p>
  </div>
+</section>
+<section class="view" id="settings">
+ <div class="card settings-card">
+  <h2>⚙️ إعدادات زاد الخير</h2>
+  <p class="muted">اختار طريقة العرض اللي تريحك. إعداداتك تتحفظ على جهازك وحدك.</p>
+  <div class="setting-row"><div><strong>حجم الكتابة</strong><p class="muted">صغير أو متوسط أو كبير</p></div><select id="zad-font-size" aria-label="حجم الكتابة"><option value="small">صغير</option><option value="medium">متوسط</option><option value="large">كبير</option></select></div>
+  <div class="setting-row"><div><strong>الوضع الليلي 🌙</strong><p class="muted">ألوان مريحة للقراءة في الليل</p></div><label class="setting-switch"><input type="checkbox" id="zad-dark-mode"><span>تشغيل</span></label></div>
+  <div class="setting-row"><div><strong>اهتزاز السبحة</strong><p class="muted">اهتزاز خفيف عند التسبيح إذا هاتفك يدعم ذلك</p></div><label class="setting-switch"><input type="checkbox" id="zad-vibration"><span>تشغيل</span></label></div>
+  <div class="setting-row"><div><strong>مشاركة زاد الخير</strong><p class="muted">ابعث التطبيق لأهلك وأصحابك</p></div><button class="smallbtn" type="button" id="zad-settings-share">مشاركة</button></div>
+  <div class="setting-row"><div><strong>نسخ رابط التطبيق</strong><p class="muted">ابعث الرابط في واتساب أو ماسنجر</p></div><button class="smallbtn" type="button" id="zad-settings-copy">نسخ الرابط</button></div>
+  <p id="zad-settings-status" class="muted" role="status">إعداداتك محفوظة على هذا الجهاز.</p>
+  <div class="actions"><button type="button" id="zad-settings-reset">إرجاع الإعدادات الأصلية</button></div>
+ </div>
+ <div class="card"><h2>عن زاد الخير</h2><p>ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله.</p><p class="muted">نسأل الله أن ينفع به ويتقبّل من كل من ساهم فيه.</p></div>
 </section>
 </main>
 <footer>زاد الخير • نسأل الله القبول والإخلاص • المحتوى قابل للمراجعة والتطوير</footer>
@@ -1494,4 +1532,25 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
 })();
 </script>
 
+<script>
+(function(){
+ const $=id=>document.getElementById(id),keys={font:'zad-setting-font-v1',dark:'zad-setting-dark-v1',vibration:'zad-setting-vibration-v1'};
+ const font=$('zad-font-size'),dark=$('zad-dark-mode'),vibration=$('zad-vibration'),status=$('zad-settings-status');
+ if(!font||!dark||!vibration)return;
+ function apply(){
+  document.body.classList.remove('zad-font-small','zad-font-medium','zad-font-large');
+  document.body.classList.add('zad-font-'+font.value);document.body.classList.toggle('zad-dark',dark.checked);
+  localStorage.setItem(keys.font,font.value);localStorage.setItem(keys.dark,dark.checked?'1':'0');localStorage.setItem(keys.vibration,vibration.checked?'1':'0');
+  status.textContent='تحفظت إعداداتك على هذا الجهاز ❤️';
+ }
+ font.value=localStorage.getItem(keys.font)||'medium';if(!['small','medium','large'].includes(font.value))font.value='medium';
+ dark.checked=localStorage.getItem(keys.dark)==='1';vibration.checked=localStorage.getItem(keys.vibration)==='1';apply();
+ font.addEventListener('change',apply);dark.addEventListener('change',apply);vibration.addEventListener('change',apply);
+ $('zad-settings-reset').addEventListener('click',()=>{font.value='medium';dark.checked=false;vibration.checked=false;apply();status.textContent='رجّعنا الإعدادات الأصلية.'});
+ const appUrl='https://saahbii1978s.github.io/zad-alkhair/';
+ $('zad-settings-share').addEventListener('click',async()=>{try{if(navigator.share)await navigator.share({title:'زاد الخير',text:'زاد الخير — ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله',url:appUrl});else{await navigator.clipboard.writeText(appUrl);status.textContent='نسخنا الرابط. ابعثه لأصحابك.'}}catch(e){if(e.name!=='AbortError')status.textContent='تعذّرت المشاركة. استعمل زر نسخ الرابط.'}});
+ $('zad-settings-copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(appUrl);status.textContent='تم نسخ رابط زاد الخير ❤️'}catch(e){window.prompt('انسخ رابط زاد الخير:',appUrl)}});
+ const add=$('add');if(add)add.addEventListener('click',()=>{if(localStorage.getItem(keys.vibration)==='1'&&navigator.vibrate)navigator.vibrate(25)});
+})();
+</script>
 </body></html>
