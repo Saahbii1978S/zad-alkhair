@@ -2,6 +2,14 @@ name: Build Zad Alkhair APK
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'package.json'
+      - 'manifest.webmanifest'
+      - 'capacitor.config.json'
+      - '.github/workflows/build-android-apk.yml'
 
 permissions:
   contents: read
