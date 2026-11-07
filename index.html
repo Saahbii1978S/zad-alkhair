@@ -1554,8 +1554,8 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
   <h2>🧭 اتجاه القبلة</h2>
   <p>اسمح للموقع باستعمال موقعك واتجاه الهاتف لحساب اتجاه القبلة.</p>
   <div class="qibla-compass"><div class="qibla-north">شمال</div><div id="qibla-arrow">➤</div><div class="qibla-kaaba">🕋</div></div>
-  <p id="qibla-result" class="qibla-result">اضغط على الزر لتحديد اتجاه القبلة.</p>
-  <div class="actions"><button id="qibla-locate" type="button">تحديد موقعي واتجاه القبلة</button><button id="qibla-sensor" type="button">معايرة البوصلة</button></div>
+  <p id="qibla-result" class="qibla-result" role="status" aria-live="polite">اضغط على الزر لتحديد اتجاه القبلة.</p>
+  <div class="actions"><button id="qibla-locate" type="button">تحديد موقعي واتجاه القبلة</button><button id="qibla-sensor" type="button">تفعيل بوصلة الهاتف</button></div>
   <p class="muted">الدقة تعتمد على GPS والبوصلة الموجودة في هاتفك. أبعد الهاتف عن المعادن والمغناطيس، وقارن الاتجاه بعلامة قبلة موثوقة في المسجد.</p>
  </div>
 </section>
@@ -1854,7 +1854,7 @@ $('#qibla-sensor').onclick=async()=>{
   }
   window.addEventListener('deviceorientationabsolute',onDeviceOrientation,true);
   window.addEventListener('deviceorientation',onDeviceOrientation,true);
-  $('#qibla-result').textContent='حرّك الهاتف حركة رقم 8 لمعايرة البوصلة، ثم وجّهه نحو القبلة.';
+  $('#qibla-result').textContent='تم تفعيل قراءة بوصلة الهاتف. حرّك الهاتف بعيداً عن المعادن والمغناطيس، ثم وجّهه بهدوء.';
  }catch(e){$('#qibla-result').textContent='البوصلة غير متاحة أو لم يتم السماح بها. يبقى اتجاه القبلة بالدرجات ظاهر.'}
 };
 
