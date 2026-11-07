@@ -1632,7 +1632,7 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
 <footer>زاد الخير • نسأل الله القبول والإخلاص • المحتوى قابل للمراجعة والتطوير</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.80.0/dist/umd/supabase.min.js"></script>
 <script src="./supabase-config.js"></script>
-<script type="module">import { LocalNotifications } from "https://esm.sh/@capacitor/local-notifications@8.0.0"; import { registerPlugin } from "https://esm.sh/@capacitor/core@8.6.0"; window.ZadLocalNotifications = LocalNotifications; window.ZadPrayerAlarm = registerPlugin("PrayerAlarm");</script>
+<script type="module">if(window.Capacitor?.isNativePlatform?.()){try{const [{LocalNotifications},{registerPlugin}]=await Promise.all([import("https://esm.sh/@capacitor/local-notifications@8.0.0"),import("https://esm.sh/@capacitor/core@8.6.0")]);window.ZadLocalNotifications=LocalNotifications;window.ZadPrayerAlarm=registerPlugin("PrayerAlarm")}catch(error){console.warn("تعذّر تحميل خدمات التنبيهات الأصلية",error)}}</script>
 <script>
 (()=>{const $=s=>document.querySelector(s);let count=Number(localStorage.getItem('zad-count')||0),names=['سبحان الله','الحمد لله','الله أكبر','أستغفر الله'];let ni=0;function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));history.replaceState(null,'','#'+id);window.scrollTo(0,0)}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));document.querySelectorAll('.home-shortcuts [data-go]').forEach(tile=>{tile.setAttribute('role','button');tile.setAttribute('tabindex','0');tile.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show(tile.dataset.go)}})});function paint(){$('#count').textContent=count;localStorage.setItem('zad-count',count)}$('#add').onclick=()=>{count++;paint()};$('#minus').onclick=()=>{count=Math.max(0,count-1);paint()};$('#reset').onclick=()=>{count=0;paint()};$('#change').onclick=()=>{$('#zikrLabel').textContent=names[++ni%names.length]};document.querySelectorAll('[data-task]').forEach(c=>{c.checked=localStorage.getItem('zad-task-'+c.dataset.task)==='1';c.onchange=()=>localStorage.setItem('zad-task-'+c.dataset.task,c.checked?'1':'0')});
 function setupDhikr(id){
@@ -2079,7 +2079,7 @@ function requestPrayerLocation(showMessage=true){
  );
 }
 document.getElementById('zad-use-location')?.addEventListener('click',()=>requestPrayerLocation(true));
-requestPrayerLocation(false);
+loadPrayerTimes();
 
 let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))show(initial);paint()})();
 </script>
