@@ -40,6 +40,47 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
+      - name: Apply Zad Alkhair launcher icon
+        run: |
+          python3 -m pip install --quiet cairosvg pillow
+          python3 - <<'PY'
+          from pathlib import Path
+          import cairosvg
+          from PIL import Image
+
+          source = Path("icon.svg")
+          if not source.exists():
+              raise SystemExit("icon.svg is missing; cannot create the app launcher icon")
+
+          rendered = Path("/tmp/zad-alkhair-icon.png")
+          cairosvg.svg2png(url=str(source), write_to=str(rendered), output_width=512, output_height=512)
+          image = Image.open(rendered).convert("RGBA")
+
+          root = Path("android/app/src/main/res")
+          densities = {
+              "mipmap-mdpi": 48,
+              "mipmap-hdpi": 72,
+              "mipmap-xhdpi": 96,
+              "mipmap-xxhdpi": 144,
+              "mipmap-xxxhdpi": 192,
+          }
+          for folder, size in densities.items():
+              target = root / folder
+              target.mkdir(parents=True, exist_ok=True)
+              icon = image.resize((size, size), Image.Resampling.LANCZOS)
+              icon.save(target / "ic_launcher.png", optimize=True)
+              icon.save(target / "ic_launcher_round.png", optimize=True)
+
+          # Use the branded PNGs on all Android versions instead of Capacitor's
+          # generic adaptive foreground/background launcher artwork.
+          adaptive = root / "mipmap-anydpi-v26"
+          for name in ("ic_launcher.xml", "ic_launcher_round.xml"):
+              file = adaptive / name
+              if file.exists():
+                  file.unlink()
+          print("Installed branded Zad Alkhair launcher icons for all Android densities.")
+          PY
+
       - name: Add Android notification permissions
         run: |
           python3 - <<'PY'
@@ -47,7 +88,7 @@ jobs:
           p = Path('android/app/src/main/AndroidManifest.xml')
           s = p.read_text(encoding='utf-8')
           marker = '    <application'
-          permissions = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\n'
+          permissions = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\\n    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />\\n'
           if 'android.permission.POST_NOTIFICATIONS' not in s:
               s = s.replace(marker, permissions + marker, 1)
           p.write_text(s, encoding='utf-8')
@@ -114,7 +155,7 @@ jobs:
           if 'signingConfig signingConfigs.release' not in s:
               start = s.index('buildTypes {')
               pos = s.index('release {', start)
-              s = s[:pos] + s[pos:].replace('release {', 'release {\n            signingConfig signingConfigs.release', 1)
+              s = s[:pos] + s[pos:].replace('release {', 'release {\\n            signingConfig signingConfigs.release', 1)
           p.write_text(s, encoding='utf-8')
           PY
           keytool -list -keystore "$ANDROID_KEYSTORE_PATH" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS" >/dev/null
