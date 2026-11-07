@@ -2290,6 +2290,25 @@ header.hero .tag{
  .home-shortcuts .shortcut-icon{width:46px;height:46px;font-size:26px}
 }
 </style>
+
+
+<style id="zad-mobile-quran-controls-v1">
+/* تحسين اللمس والقراءة في القرآن والقبلة على الهاتف */
+.quran-controls select{min-height:46px!important;padding:10px 12px!important}
+.quran-actions button,.quran-verse-tools button,.qibla-card .actions button{min-height:44px!important}
+.quran-verse-tools{flex-wrap:wrap!important;row-gap:10px!important}
+.quran-verse-tools button{padding:10px 14px!important}
+.quran-controls select:focus-visible,.quran-actions button:focus-visible,
+.quran-verse-tools button:focus-visible,.qibla-card .actions button:focus-visible{
+ outline:3px solid #d9b66d!important;outline-offset:3px!important
+}
+@media(max-width:480px){
+ .quran-verse{padding:16px 5px!important}
+ .quran-verse-tools{justify-content:center!important}
+ .quran-actions{gap:8px!important}
+ .quran-actions button{flex:1 1 145px!important}
+ .qibla-card .actions button{flex:1 1 100%!important}
+}
+</style>
+
 </body></html>
-
-
