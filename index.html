@@ -1441,6 +1441,37 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
 .dhikr-tools{align-items:center}
 @media(max-width:480px){.view#morning .dhikr .arabic,.view#evening .dhikr .arabic{font-size:23px;line-height:2}.view#morning .dhikr,.view#evening .dhikr{min-height:210px;padding:20px 13px}}
 </style>
+<style id="zad-prayer-and-sections-readability-v1">
+/* وضوح أسماء وأوقات الصلاة مع الحفاظ على صف واحد في الواجهة */
+.home-prayer-card{padding:18px 15px}
+.home-prayer-head h2{font-size:24px;line-height:1.5}
+.home-prayer-city label{display:block;margin-bottom:4px;font-size:13px;font-weight:800;color:#f0d99e}
+.home-prayer-list{gap:5px}
+.home-prayer-list>div{min-width:0;padding:11px 2px;border-radius:13px;background:#ffffff18}
+.home-prayer-list span{font-size:12px;font-weight:800;white-space:nowrap}
+.home-prayer-list b{font-size:15px;font-weight:900;direction:ltr;white-space:nowrap}
+.home-next-prayer{font-size:14px;padding:12px 13px}
+.home-next-prayer strong{font-size:20px}
+.home-shortcuts .tile{font-size:16px;font-weight:800}
+.home-shortcuts .shortcut-icon{flex-shrink:0}
+#prayer-times .prayer-list{gap:10px}
+#prayer-times .prayer-item{min-height:58px;align-items:center;padding:13px 14px;font-size:17px;border:1px solid #e1e9df}
+#prayer-times .prayer-item strong,#prayer-times .prayer-item b{font-size:19px;font-weight:900;direction:ltr}
+#prayer-times .next-prayer{padding:15px 16px;font-size:16px}
+#prayer-times .next-prayer strong{font-size:22px}
+#prayer-times #prayer-date{font-size:15px;font-weight:700}
+@media(max-width:390px){
+ .home-prayer-card{padding:15px 10px}
+ .home-prayer-list{gap:3px}
+ .home-prayer-list>div{padding:9px 1px}
+ .home-prayer-list span{font-size:10px}
+ .home-prayer-list b{font-size:12px}
+ .home-next-prayer strong{font-size:18px}
+ .home-shortcuts .tile{font-size:15px}
+ #prayer-times .prayer-item{padding:11px 9px;font-size:15px}
+ #prayer-times .prayer-item strong,#prayer-times .prayer-item b{font-size:17px}
+}
+</style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
