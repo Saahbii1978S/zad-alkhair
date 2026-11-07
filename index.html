@@ -1431,6 +1431,16 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
 }
 </style>
 
+<style id="zad-dhikr-one-at-a-time-v1">
+.view#morning .dhikr,.view#evening .dhikr{margin:18px 0;padding:25px 18px;border:1px solid #e3e9df;border-radius:20px;background:linear-gradient(160deg,#fff 0%,#f5f8f2 100%);box-shadow:0 8px 24px rgba(18,63,53,.08);text-align:center;cursor:pointer;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.view#morning .dhikr .arabic,.view#evening .dhikr .arabic{font-size:27px;line-height:2.15;color:#183f34}
+.view#morning .dhikr .muted:first-child,.view#evening .dhikr .muted:first-child{font-weight:800;color:#98783e;font-size:16px}
+.view#morning .dhikr-count-progress,.view#evening .dhikr-count-progress{display:block;margin-top:8px;padding:12px 25px;border-radius:16px;background:#e8f0e8;color:#245541;font-size:17px;line-height:1.8}
+.view#morning .dhikr-count-progress strong,.view#evening .dhikr-count-progress strong{font-size:27px}
+.dhikr-finish-message{margin:18px 0;padding:22px;border-radius:18px;background:#eaf3e9;color:#245541;text-align:center;font-size:20px;font-weight:800}
+.dhikr-tools{align-items:center}
+@media(max-width:480px){.view#morning .dhikr .arabic,.view#evening .dhikr .arabic{font-size:23px;line-height:2}.view#morning .dhikr,.view#evening .dhikr{min-height:210px;padding:20px 13px}}
+</style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
@@ -1567,6 +1577,9 @@ function setupDhikr(id){
  const saved=()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return {}}};
  let counts=saved(),showDone=false;
  const doneEl=document.getElementById(id+'-done'),totalEl=document.getElementById(id+'-total'),bar=document.getElementById(id+'-bar'),showBtn=document.getElementById(id+'-show');
+ const intro=root.querySelector('.card > .muted');
+ const finish=document.createElement('div');finish.className='dhikr-finish-message';finish.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';finish.hidden=true;
+ root.querySelector('.dhikr-progress')?.after(finish);
  const required=items.map(el=>{
    const label=el.querySelector('.muted:last-child')?.textContent||'';
    if(/مئة مرة/.test(label))return 100;
@@ -1578,33 +1591,30 @@ function setupDhikr(id){
    return 1;
  });
  totalEl.textContent=items.length;
+ function activeIndex(){return items.findIndex((el,i)=>Number(counts[i]||0)<required[i])}
  function render(){
    let completed=0;
    items.forEach((el,i)=>{
      const n=Math.min(required[i],Math.max(0,Number(counts[i]||0))),complete=n>=required[i];
      if(complete)completed++;
-     el.classList.toggle('done',complete&&!showDone);
-     el.style.opacity=complete?'0.58':'1';
+     el.style.display=showDone||i===activeIndex()?'':'none';
+     el.style.opacity='1';
      el.setAttribute('aria-pressed',complete?'true':'false');
      let progress=el.querySelector('.dhikr-count-progress');
-     if(required[i]>1){
-       if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}
-       progress.innerHTML='التكرار<br><strong>'+n+' / '+required[i]+'</strong>';
-       const repeatLabel=el.querySelector(':scope > .muted:last-of-type');
-       if(repeatLabel) repeatLabel.style.display='none';
-     } else {
-       if(progress) progress.remove();
-       const repeatLabel=el.querySelector(':scope > .muted:last-of-type');
-       if(repeatLabel) repeatLabel.style.display='';
-     }
+     if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}
+     progress.innerHTML='عدد التكرار<br><strong>'+n+' / '+required[i]+'</strong>';
+     const repeatLabel=el.querySelector(':scope > .muted:last-of-type');
+     if(repeatLabel)repeatLabel.style.display='none';
    });
    doneEl.textContent=completed;bar.style.width=(items.length?completed/items.length*100:0)+'%';
-   showBtn.textContent=showDone?'إخفاء المكتمل':'إظهار المكتمل';
+   showBtn.textContent=showDone?'العودة للذكر الحالي':'عرض جميع الأذكار';
+   finish.hidden=completed!==items.length||showDone;
+   if(intro)intro.textContent=showDone?'قائمة الأذكار كاملة. للمتابعة بالترتيب ارجع إلى الذكر الحالي.':'اقرأ الذكر الظاهر، واضغط عليه مع كل تكرار. عند إكمال العدد ينتقل تلقائياً إلى الذكر التالي.';
  }
  function increment(el){
-   const i=items.indexOf(el);if(i<0)return;
+   const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;
    counts[i]=Math.min(required[i],Number(counts[i]||0)+1);
-   localStorage.setItem(key,JSON.stringify(counts));render();
+   localStorage.setItem(key,JSON.stringify(counts));showDone=false;render();
  }
  items.forEach(el=>{
    el.addEventListener('click',()=>increment(el));
