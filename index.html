@@ -1545,7 +1545,7 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
   </div>
   <div class="quran-actions actions"><button id="quran-load" type="button">فتح السورة</button><button id="quran-save" type="button">حفظ السورة للقراءة دون إنترنت</button></div>
   <p id="quran-status" class="muted" role="status">جاري تحضير فهرس السور...</p>
-  <div id="quran-audio-box" class="quran-audio" hidden><p id="quran-now-playing">اختار آية للاستماع</p><audio id="quran-audio" controls preload="none"></audio></div>
+  <div id="quran-audio-box" class="quran-audio" hidden><p id="quran-now-playing" role="status" aria-live="polite">اختار آية للاستماع</p><audio id="quran-audio" controls preload="none" aria-label="مشغل تلاوة القرآن"></audio></div>
   <div id="quran-verses" class="quran-verses"><p class="muted">اختار سورة ثم اضغط «فتح السورة».</p></div>
  </div>
 </section>
@@ -1803,7 +1803,7 @@ async function openSurah(){
   const json=await quranFetch(url);if(json.code!==200||!json.data?.ayahs)throw new Error('السورة غير متاحة');
   currentSurahData=json.data;localStorage.setItem('zad-quran-last-surah',String(number));
   quranStatus.textContent=json.data.name+' • '+json.data.numberOfAyahs+' آية • '+json.data.revelationType;
-  quranVerses.innerHTML=json.data.ayahs.map(a=>'<article class="quran-verse"><div class="quran-verse-text">'+a.text+' ﴿'+a.numberInSurah+'﴾</div><div class="quran-verse-tools"><span>الآية '+a.numberInSurah+'</span><button type="button" data-quran-audio="'+a.number+'">▶ استمع</button></div></article>').join('');
+  quranVerses.innerHTML=json.data.ayahs.map(a=>'<article class="quran-verse"><div class="quran-verse-text">'+a.text+' ﴿'+a.numberInSurah+'﴾</div><div class="quran-verse-tools"><span>الآية '+a.numberInSurah+'</span><button type="button" data-quran-audio="'+a.number+'" aria-label="استمع إلى الآية رقم '+a.numberInSurah+'">▶ استمع</button></div></article>').join('');
  }catch(e){quranStatus.textContent='تعذّر تحميل السورة. إذا ما كانتش محفوظة، يلزم اتصال بالإنترنت.'}
 }
 quranSurah.onchange=()=>openSurah();
