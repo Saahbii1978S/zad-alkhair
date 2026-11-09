@@ -2016,7 +2016,7 @@ async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
    if(status)status.textContent='📍 لقاك GPS في: '+locationLabel+accuracyText+' • مواقيت الصلاة حسب التوقيت المحلي للمنطقة ('+prayerTimezone+').';
   }else{
    const status=document.getElementById('zad-location-status');
-   if(status&&localStorage.getItem('zad-prayer-location-mode')!=='auto')status.textContent='المواقيت مضبوطة حسب المدينة المختارة: '+locationLabel+' • '+prayerTimezone;
+   if(status&&localStorage.getItem('zad-prayer-location-mode')!=='auto')status.textContent='';
   }
   const dateLabel=locationLabel+' • '+json.data.date.readable+' • '+json.data.date.hijri.date+' هـ';
   $('#prayer-date').textContent=dateLabel;$('#home-prayer-date').textContent=dateLabel;
@@ -3140,3 +3140,11 @@ header.hero .tag{
 </body></html>
 
 
+
+
+<style id="zad-prayer-time-compact-v2">
+/* إخفاء سطر المدينة الافتراضي وتصغير أرقام المواقيت لمنع التداخل */
+#zad-location-status:empty{display:none!important;margin:0!important;padding:0!important;min-height:0!important}
+#home #home-prayer-list>div>b{font-size:clamp(14px,3.7vw,16.5px)!important;line-height:1.15!important;letter-spacing:-.25px!important}
+@media(max-width:390px){#home #home-prayer-list>div>b{font-size:13.5px!important;letter-spacing:-.35px!important}}
+</style>
