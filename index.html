@@ -1672,6 +1672,32 @@ html body .home-prayer-card .home-prayer-list > div.is-next-prayer > b{color:#14
   html body .home-prayer-card .home-prayer-list > div > b{font-size:12px!important}
 }
 </style>
+<style id="zad-prayer-ruqaa-larger-v1">
+@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap');
+html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){
+  font-family:'Aref Ruqaa',serif!important;
+  font-size:clamp(15px,4.1vw,19px)!important;
+  line-height:1.25!important;
+  font-weight:700!important;
+  color:#183d59!important;
+}
+html body .home-prayer-card .home-prayer-list > div > b{
+  font-family:'Aref Ruqaa',serif!important;
+  font-size:clamp(18px,4.8vw,23px)!important;
+  line-height:1.25!important;
+  font-weight:700!important;
+  color:#102f49!important;
+  letter-spacing:0!important;
+}
+html body .home-prayer-card .home-prayer-list > div{
+  min-height:82px!important;
+  gap:5px!important;
+}
+@media(max-width:390px){
+ html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){font-size:14px!important}
+ html body .home-prayer-card .home-prayer-list > div > b{font-size:17px!important}
+}
+</style>
 <style id="zad-colourful-shortcuts-v1">
 .home-shortcuts .shortcut-icon{border-width:1px!important;box-shadow:inset 0 1px 2px #fff,0 3px 8px #243b2d0b!important}
 .home-shortcuts .tile:nth-child(6n+1) .shortcut-icon{background:#e8f1fb!important;border-color:#d4e4f5!important;color:#386b9b!important}
