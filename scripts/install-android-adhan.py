@@ -167,6 +167,10 @@ for filename,url in sources.items():
 syria_mp3=raw/"adhan_syria.mp3"
 subprocess.run(["ffmpeg","-y","-i",str(syria_mp3),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_syria.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 syria_mp3.unlink()
+syria_mp3=raw/"adhan_syria.mp3"
+subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3","-o",str(syria_mp3)],check=True)
+subprocess.run(["ffmpeg","-y","-i",str(syria_mp3),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_syria.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+syria_mp3.unlink()
 morocco_wav=raw/"adhan_morocco.wav"
 subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Llamada_a_oraci%C3%B3n_Mezquita_Hassan_II.wav","-o",str(morocco_wav)],check=True)
 subprocess.run(["ffmpeg","-y","-i",str(morocco_wav),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_morocco.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
