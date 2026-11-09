@@ -3115,7 +3115,7 @@ header.hero .tag{
  const a=document.getElementById('hero-photo-a'),b=document.getElementById('hero-photo-b');
  if(a&&b){let index=0,active=a,inactive=b;const rotate=()=>{const next=(index+1)%photos.length;inactive.onload=()=>{active.classList.remove('is-active');inactive.classList.add('is-active');const old=active;active=inactive;inactive=old;index=next;};inactive.onerror=()=>{index=next;};inactive.src=photos[next].src;inactive.alt=photos[next].alt;};window.setInterval(rotate,8500);}
 })();
-/* تذكير صوتي عند فتح التطبيق؛ إذا منع المتصفح التشغيل التلقائي يبدأ مع أول لمسة */
+/* صوت ترحيب ثابت عند فتح التطبيق: محرك أندرويد الأصلي أولاً، ثم محرك المتصفح كاحتياط */
 (()=>{
  const key='zad-startup-voice';
  const toggle=document.getElementById('zad-startup-voice');
@@ -3123,42 +3123,37 @@ header.hero .tag{
  if(localStorage.getItem(key)===null)localStorage.setItem(key,'1');
  toggle.checked=localStorage.getItem(key)!=='0';
  toggle.addEventListener('change',()=>localStorage.setItem(key,toggle.checked?'1':'0'));
- if(!toggle.checked||!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
- if(sessionStorage.getItem('zad-startup-voice-played')==='1')return;
- let started=false,attempting=false;
- const removeGestureFallback=()=>{
-  ['pointerdown','touchstart','click','keydown'].forEach(type=>document.removeEventListener(type,onFirstGesture,true));
- };
- const onFirstGesture=()=>{
-  if(!started&&localStorage.getItem(key)!=='0')speak();
- };
- const markStarted=()=>{
-  started=true;attempting=false;
-  sessionStorage.setItem('zad-startup-voice-played','1');
-  removeGestureFallback();
- };
- function speak(){
-  if(started||attempting||localStorage.getItem(key)==='0')return;
-  attempting=true;
+ if(!toggle.checked||sessionStorage.getItem('zad-startup-voice-played')==='1')return;
+ let started=false,trying=false;
+ const mark=()=>{started=true;sessionStorage.setItem('zad-startup-voice-played','1');};
+ function browserVoice(){
+  if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
   try{
-   const voices=window.speechSynthesis.getVoices();
+   const voices=speechSynthesis.getVoices();
    const arabic=voices.filter(v=>/^ar([_-]|$)/i.test(v.lang));
-   const preferred=arabic.find(v=>/male|maged|majid|tarik|hamed|naif|mansour/i.test(v.name))||arabic[0];
+   const voice=arabic.find(v=>/male|maged|majid|tarik|hamed|naif|mansour/i.test(v.name))||arabic[0];
    const first=new SpeechSynthesisUtterance('اذكر الله');
-   first.lang='ar';first.rate=.88;first.pitch=.92;if(preferred)first.voice=preferred;
    const second=new SpeechSynthesisUtterance('وصلِّ على النبي محمد صلى الله عليه وسلم');
-   second.lang='ar';second.rate=.88;second.pitch=.92;if(preferred)second.voice=preferred;
-   first.onstart=markStarted;
-   first.onend=()=>{if(!started)markStarted();window.setTimeout(()=>{if(localStorage.getItem(key)!=='0')window.speechSynthesis.speak(second)},650)};
-   first.onerror=()=>{attempting=false};
-   window.speechSynthesis.cancel();
-   window.speechSynthesis.speak(first);
-   window.setTimeout(()=>{if(!started)attempting=false},1800);
-  }catch(e){attempting=false}
+   [first,second].forEach(u=>{u.lang='ar';u.rate=.88;u.pitch=.94;if(voice)u.voice=voice;});
+   first.onend=()=>{if(!started){mark();speechSynthesis.speak(second);}};
+   first.onstart=mark;
+   speechSynthesis.cancel();speechSynthesis.speak(first);
+  }catch(e){}
  }
- ['pointerdown','touchstart','click','keydown'].forEach(type=>document.addEventListener(type,onFirstGesture,{capture:true,passive:true}));
- window.setTimeout(()=>{if(window.speechSynthesis.getVoices().length)speak();else{window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;if(!started)speak()};window.setTimeout(()=>{if(!started)speak()},1000)}},1200);
-})();;
+ async function speak(){
+  if(started||trying||localStorage.getItem(key)==='0')return;
+  trying=true;
+  const native=window.Capacitor?.Plugins?.WelcomeVoice;
+  if(native?.speak){
+   try{await native.speak();mark();trying=false;return;}catch(e){}
+  }
+  browserVoice();trying=false;
+ }
+ const events=['pointerdown','touchstart','click','keydown'];
+ const fallback=()=>{if(!started)speak();};
+ events.forEach(type=>document.addEventListener(type,fallback,{capture:true,passive:true,once:true}));
+ setTimeout(speak,900);
+})();;;
 </script>
 </body></html>
 
