@@ -115,6 +115,7 @@ public class AdhanPlaybackService extends Service {
    else if("syria".equals(selected))audio=R.raw.adhan_syria;
    player=MediaPlayer.create(this,audio);
    if(player==null){stopSelf(startId);return START_NOT_STICKY;}
+   player.setWakeMode(this,PowerManager.PARTIAL_WAKE_LOCK);
    player.setOnCompletionListener(mp->{mp.release();player=null;stopForeground(true);stopSelf();});
    player.setOnErrorListener((mp,what,extra)->{stopForeground(true);stopSelf();return true;});
    player.start();
