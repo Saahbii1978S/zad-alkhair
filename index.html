@@ -1115,6 +1115,16 @@ body{font-size:17px!important}
  .hero .tag{font-size:13px!important;max-width:96%}
 }
 
+
+/* صور الأماكن المقدسة في رأس التطبيق: انتقال سينمائي هادئ */
+.hero{position:relative!important;isolation:isolate!important;overflow:hidden!important}
+.hero-photo-layer{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.hero-photo-layer:after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(4,24,20,.48),rgba(4,24,20,.22) 48%,rgba(4,24,20,.48));z-index:2}
+.hero-photo-layer img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 48%;opacity:0;transform:scale(1.035);transition:opacity 1800ms ease;filter:saturate(1.05)}
+.hero-photo-layer img.is-active{opacity:1;animation:zadSacredKenBurns 9s ease-in-out both}
+@keyframes zadSacredKenBurns{0%{transform:scale(1.035)}100%{transform:scale(1.12)}}
+.hero .brand,.hero .tag,.hero .dua-request{position:relative;z-index:3}
+@media(prefers-reduced-motion:reduce){.hero-photo-layer img,.hero-photo-layer img.is-active{transition:none;animation:none;transform:none}}
 </style>
 <style>
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e7ebef}
@@ -1767,7 +1777,7 @@ html body .next-prayer > span b{
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
-<header class="hero"><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
+<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
 <div class="zad-share-bar" aria-label="مشاركة زاد الخير">
  <button type="button" id="zad-share-button">مشاركة التطبيق</button>
  <button type="button" id="zad-copy-link">نسخ الرابط</button>
@@ -1879,6 +1889,7 @@ html body .next-prayer > span b{
   <h2>⚙️ إعدادات زاد الخير</h2>
   <p class="muted">اختار طريقة العرض اللي تريحك. إعداداتك تتحفظ على جهازك وحدك.</p>
   <div class="setting-row"><div><strong>حجم الكتابة</strong><p class="muted">صغير أو متوسط أو كبير</p></div><select id="zad-font-size" aria-label="حجم الكتابة"><option value="small">صغير</option><option value="medium">متوسط</option><option value="large">كبير</option></select></div>
+  <div class="setting-row"><div><strong>تذكير صوتي عند فتح التطبيق</strong><p class="muted">يقول: اذكر الله، ثم صلِّ على النبي محمد ﷺ</p></div><label class="setting-switch"><input type="checkbox" id="zad-startup-voice"><span>تشغيل</span></label></div>
   <div class="setting-row"><div><strong>الوضع الليلي 🌙</strong><p class="muted">ألوان مريحة للقراءة في الليل</p></div><label class="setting-switch"><input type="checkbox" id="zad-dark-mode"><span>تشغيل</span></label></div>
   <div class="setting-row"><div><strong>اهتزاز السبحة</strong><p class="muted">اهتزاز خفيف عند التسبيح إذا هاتفك يدعم ذلك</p></div><label class="setting-switch"><input type="checkbox" id="zad-vibration"><span>تشغيل</span></label></div>
   <div class="setting-row"><div><strong>مشاركة زاد الخير</strong><p class="muted">ابعث التطبيق لأهلك وأصحابك</p></div><button class="smallbtn" type="button" id="zad-settings-share">مشاركة</button></div>
@@ -1886,7 +1897,7 @@ html body .next-prayer > span b{
   <p id="zad-settings-status" class="muted" role="status">إعداداتك محفوظة على هذا الجهاز.</p>
   <div class="actions"><button type="button" id="zad-settings-reset">إرجاع الإعدادات الأصلية</button></div>
  </div>
- <div class="card"><h2>عن زاد الخير</h2><p>ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله.</p><p class="muted">نسأل الله أن ينفع به ويتقبّل من كل من ساهم فيه.</p></div>
+ <div class="card"><h2>عن زاد الخير</h2><p>ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله.</p><p class="muted">نسأل الله أن ينفع به ويتقبّل من كل من ساهم فيه.</p><p class="muted" style="font-size:11px">مصدر صور الأماكن المقدسة: الكعبة — GusJuned (CC BY-SA 3.0)؛ المسجد النبوي — Wadie Al-Houh (CC0)؛ المسجد الأقصى — Nikeman916 (ملكية عامة).</p><p class="muted" style="font-size:11px"><a href="https://commons.wikimedia.org/wiki/File:Kaaba,_Masjid_Al-Haram,_Mecca,_Saudi_Arabia_-_panoramio.jpg" target="_blank" rel="noopener">ترخيص صورة الكعبة</a> · <a href="https://commons.wikimedia.org/wiki/File:Green_Dome,_Masjid_Al_Nabawi.jpg" target="_blank" rel="noopener">صورة المسجد النبوي</a> · <a href="https://commons.wikimedia.org/wiki/File:Al_Aqsa.jpg" target="_blank" rel="noopener">صورة المسجد الأقصى</a></p></div>
 </section>
 </main>
 <footer>زاد الخير • نسأل الله القبول والإخلاص • المحتوى قابل للمراجعة والتطوير</footer>
@@ -3091,6 +3102,41 @@ header.hero .tag{
  #home #home-prayer-list>div>b{font-size:14.4px!important}
 }
 </style>
+
+<script>
+/* صور متعاقبة للكعبة والمسجد النبوي والمسجد الأقصى */
+(()=>{
+ const photos=[
+  {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600',alt:'الكعبة المشرفة كاملة في المسجد الحرام'},
+  {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Green_Dome%2C_Masjid_Al_Nabawi.jpg?width=1500',alt:'المسجد النبوي والقبة الخضراء في المدينة المنورة'},
+  {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Al_Aqsa.jpg?width=1600',alt:'المسجد الأقصى المبارك في القدس'}
+ ];
+ const a=document.getElementById('hero-photo-a'),b=document.getElementById('hero-photo-b');
+ if(a&&b){let index=0,active=a,inactive=b;const rotate=()=>{const next=(index+1)%photos.length;inactive.onload=()=>{active.classList.remove('is-active');inactive.classList.add('is-active');const old=active;active=inactive;inactive=old;index=next;};inactive.onerror=()=>{index=next;};inactive.src=photos[next].src;inactive.alt=photos[next].alt;};window.setInterval(rotate,8500);}
+})();
+/* تذكير صوتي عند فتح التطبيق فقط، مع إمكانية إيقافه من الإعدادات */
+(()=>{
+ const key='zad-startup-voice';const toggle=document.getElementById('zad-startup-voice');
+ if(!toggle)return;
+ if(localStorage.getItem(key)===null)localStorage.setItem(key,'1');
+ toggle.checked=localStorage.getItem(key)!=='0';
+ toggle.addEventListener('change',()=>localStorage.setItem(key,toggle.checked?'1':'0'));
+ if(!toggle.checked||!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
+ if(sessionStorage.getItem('zad-startup-voice-played')==='1')return;
+ sessionStorage.setItem('zad-startup-voice-played','1');
+ const speak=()=>{
+  if(localStorage.getItem(key)==='0')return;
+  const voices=window.speechSynthesis.getVoices();
+  const arabic=voices.filter(v=>/^ar([_-]|$)/i.test(v.lang));
+  const preferred=arabic.find(v=>/male|maged|majid|tarik|hamed|naif|mansour/i.test(v.name))||arabic[0];
+  const first=new SpeechSynthesisUtterance('اذكر الله');first.lang='ar';first.rate=.88;first.pitch=.92;if(preferred)first.voice=preferred;
+  const second=new SpeechSynthesisUtterance('وصلِّ على النبي محمد صلى الله عليه وسلم');second.lang='ar';second.rate=.88;second.pitch=.92;if(preferred)second.voice=preferred;
+  first.onend=()=>window.setTimeout(()=>{if(localStorage.getItem(key)!=='0')window.speechSynthesis.speak(second)},650);
+  window.speechSynthesis.cancel();window.speechSynthesis.speak(first);
+ };
+ window.setTimeout(()=>{if(window.speechSynthesis.getVoices().length)speak();else{window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;speak()};window.setTimeout(speak,900)}},1200);
+})();
+</script>
 </body></html>
 
 
