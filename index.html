@@ -1768,6 +1768,7 @@ html body .next-prayer > span b{
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div></div>
  <div class="home-prayer-city"><div class="home-prayer-field"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select></div><div class="home-prayer-field"><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div></div>
  <button type="button" id="zad-use-location" class="zad-use-location">📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً</button>
+ <p id="zad-location-status" class="home-prayer-note" role="status" aria-live="polite"></p>
  <div id="home-prayer-list" class="home-prayer-list"><span>الفجر</span><span>الظهر</span><span>العصر</span><span>المغرب</span><span>العشاء</span></div>
  <div class="home-next-prayer"><span>الصلاة القادمة <b id="home-next-name">—</b></span><strong id="home-next-countdown">—</strong></div>
  <p class="home-prayer-note">المواقيت تقريبية حسب طريقة الحساب، ويُعتمد توقيت الجامع المحلي عند الاختلاف.</p>
@@ -2329,34 +2330,36 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateZadL
  draw();
 })();
 
+
 function requestPrayerLocation(showMessage=true){
- if(!navigator.geolocation){
-  localStorage.setItem('zad-prayer-location-mode','manual');
-  if(showMessage)alert('المتصفح لا يدعم تحديد الموقع. اختار البلد والمدينة يدوياً.');
-  window.zadLoadPrayerTimes();return;
- }
  const btn=document.getElementById('zad-use-location');
+ const status=document.getElementById('zad-location-status');
+ const say=(message)=>{if(status)status.textContent=message; if(showMessage&&!status)alert(message);};
+ if(!window.isSecureContext){say('يلزم فتح زاد الخير عبر الرابط الآمن https:// باش يخدم تحديد الموقع.');return;}
+ if(!navigator.geolocation){say('المتصفح لا يدعم تحديد الموقع. اختار المدينة يدوياً.');return;}
+ if(typeof window.zadLoadPrayerTimes!=='function'){say('صار خلل في تحميل مواقيت الصلاة. حدّث الصفحة وعاود.');return;}
  if(btn){btn.disabled=true;btn.textContent='جاري تحديد موقعك...';}
+ say('نستناو في تحديد موقعك...');
  navigator.geolocation.getCurrentPosition(
   position=>{
    localStorage.setItem('zad-prayer-location-mode','auto');
    if(btn){btn.disabled=false;btn.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';}
+   say('تم تحديد موقعك. جاري ضبط مواقيت الصلاة...');
    window.zadLoadPrayerTimes(position.coords.latitude,position.coords.longitude);
   },
   error=>{
-   localStorage.setItem('zad-prayer-location-mode','manual');
    if(btn){btn.disabled=false;btn.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';}
-   if(showMessage){
-    const message=error.code===1?'لم تسمح بالوصول إلى الموقع. تنجم تفعّل إذن الموقع من إعدادات Chrome.':'تعذّر تحديد موقعك. تأكد من تشغيل GPS والإنترنت.';
-    alert(message+' باش نعرضولك مواقيت المدينة المختارة.');
-   }
+   localStorage.setItem('zad-prayer-location-mode','manual');
+   const message=error.code===1?'إذن الموقع مرفوض. افتح إعدادات الموقع في Chrome واسمح لزاد الخير باستعمال الموقع.':error.code===2?'الهاتف ما قدرش يحدد الموقع. شغّل GPS وحاول في مكان مفتوح.':'تحديد الموقع تأخّر. شغّل GPS والإنترنت وعاود المحاولة.';
+   say(message);
    window.zadLoadPrayerTimes();
   },
-  {enableHighAccuracy:true,timeout:15000,maximumAge:300000}
+  {enableHighAccuracy:true,timeout:25000,maximumAge:0}
  );
 }
-document.getElementById('zad-use-location')?.addEventListener('click',()=>requestPrayerLocation(true));
-if(localStorage.getItem('zad-prayer-location-mode')==='manual')loadPrayerTimes();else requestPrayerLocation(false);
+const zadLocationButton=document.getElementById('zad-use-location');
+if(zadLocationButton)zadLocationButton.onclick=()=>requestPrayerLocation(true);
+if(localStorage.getItem('zad-prayer-location-mode')==='manual')window.zadLoadPrayerTimes();else requestPrayerLocation(false);
 
 let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))show(initial);paint()})();
 </script>
