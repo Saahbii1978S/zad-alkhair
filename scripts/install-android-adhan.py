@@ -19,7 +19,7 @@ public class PrayerAlarmPlugin extends Plugin {
    JSONArray arr=new JSONArray(times);
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("times",arr.toString()).apply();
    String sound=call.getString("sound","default");
-   if(!"default".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound))sound="default";
+   if(!"default".equals(sound)&&!"mecca".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound))sound="default";
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("sound",sound).apply();
    PrayerAlarmReceiver.scheduleAll(getContext(),arr);
    call.resolve();
@@ -103,7 +103,8 @@ public class AdhanPlaybackService extends Service {
    if(player!=null){player.release();player=null;}
    String selected=getSharedPreferences("zad_prayer_alarms",MODE_PRIVATE).getString("sound","default");
    int audio=R.raw.adhan_default;
-   if("madinah".equals(selected))audio=R.raw.adhan_madinah;
+   if("mecca".equals(selected))audio=R.raw.adhan_mecca;
+   else if("madinah".equals(selected))audio=R.raw.adhan_madinah;
    else if("general2".equals(selected))audio=R.raw.adhan_general2;
    player=MediaPlayer.create(this,audio);
    if(player==null){stopSelf(startId);return START_NOT_STICKY;}
@@ -140,6 +141,12 @@ sources={
  "adhan_madinah.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg",
  "adhan_general2.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Muslim_calling_to_prayer.ogg",
 }
+mecca_webm=raw/"adhan_mecca.webm"
+subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm","-o",str(mecca_webm)],check=True)
+subprocess.run(["ffmpeg","-y","-i",str(mecca_webm),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_mecca.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+mecca_data=(raw/"adhan_mecca.ogg").read_bytes()
+if len(mecca_data)<10000 or not mecca_data.startswith(b"OggS"):
+ raise SystemExit("Mecca adhan conversion failed OGG validation")
 for filename,url in sources.items():
  target=raw/filename
  subprocess.run(["curl","-fL",url,"-o",str(target)],check=True)
