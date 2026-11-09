@@ -2485,72 +2485,75 @@ header.hero .tag{
 </style>
 
 
-<style id="zad-almosally-prayer-and-shortcuts-v3">
-/* AlMosally-inspired prayer time cards */
+<style id="zad-almosally-prayer-and-shortcuts-v4">
+/* Prayer strip matching AlMosally: six compact columns in one horizontal row */
 .home-prayer-card{
- background:linear-gradient(155deg,#f5fbff 0%,#eaf5fd 58%,#e2f0fa 100%)!important;
+ background:linear-gradient(155deg,#f7fbff 0%,#edf6fc 100%)!important;
  color:#193f5b!important;border:1px solid #d0e4f3!important;
- border-radius:23px!important;box-shadow:0 9px 25px #376d9418!important;padding:18px 15px!important
+ border-radius:22px!important;box-shadow:0 8px 22px #376d9414!important;padding:16px 12px!important
 }
-.home-prayer-head h2{color:#193f5b!important;font-size:23px!important}
+.home-prayer-head h2{color:#193f5b!important;font-size:22px!important}
 .home-eyebrow{color:#477b9e!important;font-weight:800}
 .home-prayer-head p,.home-prayer-note{color:#607f96!important}
 .home-prayer-city{color:#315e7b!important}
 .home-prayer-field label{color:#456f8a!important}
-.home-prayer-city select{background:#fff!important;color:#1d4968!important;border:1px solid #c9dfef!important;border-radius:11px!important}
+.home-prayer-city select{background:#fff!important;color:#1d4968!important;border:1px solid #c9dfef!important;border-radius:10px!important}
 .home-prayer-city option{color:#193f5b!important}
-.home-prayer-card .zad-use-location{background:#fff!important;color:#28688f!important;border:1px solid #c9dfef!important;border-radius:12px!important}
-.home-prayer-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important;margin-top:13px!important}
+.home-prayer-card .zad-use-location{background:#fff!important;color:#28688f!important;border:1px solid #c9dfef!important;border-radius:11px!important}
+/* One continuous white strip: prayer name, icon, time */
+.home-prayer-list{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:0!important;margin:13px 0 10px!important;padding:9px 2px!important;
+ background:#fff!important;border:1px solid #d9e8f2!important;border-radius:15px!important;
+ box-shadow:0 3px 10px #376d940b!important;overflow:hidden!important
+}
 .home-prayer-list>div{
  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
- min-height:111px!important;padding:10px 4px!important;gap:4px!important;
- background:#fff!important;border:1px solid #d4e6f3!important;border-radius:16px!important;
- box-shadow:0 3px 10px #376d9410!important
+ min-width:0!important;min-height:88px!important;gap:4px!important;padding:5px 1px!important;
+ background:transparent!important;border:0!important;border-left:1px solid #edf2f6!important;
+ border-radius:0!important;box-shadow:none!important
+}
+.home-prayer-list>div:last-child{border-left:0!important}
+.home-prayer-list span:not(.prayer-icon){
+ order:0!important;display:block!important;color:#526f84!important;
+ font-size:clamp(9px,2.5vw,12px)!important;font-weight:800!important;white-space:nowrap!important;
+ margin:0!important
 }
 .home-prayer-list .prayer-icon{
- display:grid!important;place-items:center!important;width:43px!important;height:43px!important;
- border-radius:50%!important;margin:0 auto 3px!important;background:#e6f3fc!important;
- border:1px solid #d4e8f6!important;color:#367da9!important;font-size:22px!important
+ order:1!important;display:grid!important;place-items:center!important;
+ width:32px!important;height:32px!important;margin:0!important;border-radius:50%!important;
+ background:#edf6fc!important;border:1px solid #deedf7!important;color:#4285ae!important;
+ font-size:17px!important;line-height:1!important
 }
-.home-prayer-list span:not(.prayer-icon){color:#4a718b!important;font-size:13px!important;font-weight:800!important}
-.home-prayer-list b{color:#173f5e!important;font-size:19px!important;font-weight:900!important;direction:ltr!important}
-.home-prayer-list>div.is-next-prayer{background:#dcefff!important;border:2px solid #64a8d3!important}
-.home-next-prayer{background:#dceefa!important;color:#234f6e!important;border:1px solid #c9e0ef!important;border-radius:15px!important}
+.home-prayer-list b{
+ order:2!important;display:block!important;color:#183f5c!important;
+ font-size:clamp(11px,3vw,14px)!important;font-weight:900!important;
+ direction:ltr!important;white-space:nowrap!important
+}
+.home-prayer-list>div.is-next-prayer{
+ background:#eaf5fc!important;box-shadow:inset 0 -3px 0 #65a8d2!important
+}
+.home-next-prayer{background:#dceefa!important;color:#234f6e!important;border:1px solid #c9e0ef!important;border-radius:14px!important}
 .home-next-prayer b,.home-next-prayer strong{color:#17628f!important}
-.home-next-prayer strong{font-size:22px!important}
-.home-prayer-more{color:#286f9a!important;background:#fff!important;border:1px solid #c9dfef!important;border-radius:11px!important;padding:8px 13px!important}
+.home-next-prayer strong{font-size:21px!important}
+.home-prayer-more{color:#286f9a!important;background:#fff!important;border:1px solid #c9dfef!important;border-radius:10px!important;padding:7px 12px!important}
+/* Detail page uses a simple readable two-column list */
 #prayer-times .card:first-child{background:linear-gradient(155deg,#f7fbff,#eaf4fc)!important;border:1px solid #d1e4f2!important;border-radius:20px!important;color:#1c405b!important}
 #prayer-times .card:first-child h2{color:#173b58!important}
 #prayer-times .card:first-child .muted,#prayer-times #prayer-date{color:#58758b!important}
 #prayer-times .prayer-controls select{background:#fff!important;color:#173b58!important;border:1px solid #c7ddea!important}
-#prayer-times .prayer-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-#prayer-times .prayer-item{
- display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;
- min-height:70px!important;padding:11px 12px!important;border-radius:15px!important;
- background:#fff!important;border:1px solid #d4e5f1!important;color:#234b68!important;
- box-shadow:0 3px 10px #376d940d!important
-}
-#prayer-times .prayer-item-name{display:flex!important;align-items:center!important;gap:8px!important;color:#355e7a!important;font-weight:800!important}
-#prayer-times .prayer-item .prayer-icon{
- display:grid!important;place-items:center!important;flex:0 0 39px!important;width:39px!important;height:39px!important;
- border-radius:50%!important;background:#e5f2fb!important;color:#397ba8!important;font-size:20px!important
-}
-#prayer-times .prayer-item b{color:#173b58!important;font-size:19px!important;font-weight:900!important}
+#prayer-times .prayer-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+#prayer-times .prayer-item{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:7px!important;min-height:66px!important;padding:9px!important;border-radius:14px!important;background:#fff!important;border:1px solid #d4e5f1!important;color:#234b68!important;box-shadow:0 3px 9px #376d940b!important}
+#prayer-times .prayer-item-name{display:flex!important;align-items:center!important;gap:7px!important;color:#355e7a!important;font-weight:800!important}
+#prayer-times .prayer-item .prayer-icon{display:grid!important;place-items:center!important;flex:0 0 34px!important;width:34px!important;height:34px!important;border-radius:50%!important;background:#e5f2fb!important;color:#397ba8!important;font-size:18px!important}
+#prayer-times .prayer-item b{color:#173b58!important;font-size:17px!important;font-weight:900!important}
 #prayer-times .prayer-item.is-next-prayer{background:#dcefff!important;border:2px solid #64a8d3!important}
-#prayer-times .next-prayer{background:#dceefa!important;border:1px solid #c8dfef!important;border-radius:15px!important;color:#214e6d!important;padding:14px!important}
+#prayer-times .next-prayer{background:#dceefa!important;border:1px solid #c8dfef!important;border-radius:14px!important;color:#214e6d!important;padding:13px!important}
 #prayer-times .next-prayer strong{color:#155d8d!important}
-/* Colorful circular shortcut icons, white rounded tiles */
+/* Colorful circular section icons are separate from the prayer strip */
 .home-shortcuts{gap:10px!important}
-.home-shortcuts .tile{
- background:#fff!important;border:1px solid #e4ebf0!important;border-radius:18px!important;
- box-shadow:0 5px 15px #233d5010!important;color:#304e64!important;
- min-height:112px!important;gap:8px!important
-}
-.home-shortcuts .shortcut-icon{
- display:grid!important;place-items:center!important;width:55px!important;height:55px!important;
- border-radius:50%!important;font-size:28px!important;line-height:1!important;
- border:1px solid transparent!important;box-shadow:inset 0 2px 3px #fff9,0 3px 8px #243b2d0b!important
-}
+.home-shortcuts .tile{background:#fff!important;border:1px solid #e4ebf0!important;border-radius:17px!important;box-shadow:0 5px 14px #233d500d!important;color:#304e64!important;min-height:108px!important;gap:8px!important}
+.home-shortcuts .shortcut-icon{display:grid!important;place-items:center!important;width:53px!important;height:53px!important;border-radius:50%!important;font-size:27px!important;line-height:1!important;border:1px solid transparent!important;box-shadow:inset 0 2px 3px #fff9,0 3px 8px #243b2d0b!important}
 .home-shortcuts .tile:nth-child(6n+1) .shortcut-icon{background:#e5f2ff!important;border-color:#d2e5f8!important;color:#397eb1!important}
 .home-shortcuts .tile:nth-child(6n+2) .shortcut-icon{background:#fff0e7!important;border-color:#f5dfd1!important;color:#c17b50!important}
 .home-shortcuts .tile:nth-child(6n+3) .shortcut-icon{background:#eaf6ec!important;border-color:#d8ebdc!important;color:#4a8b5c!important}
@@ -2558,18 +2561,14 @@ header.hero .tag{
 .home-shortcuts .tile:nth-child(6n+5) .shortcut-icon{background:#fff5dd!important;border-color:#f3e6c1!important;color:#a57d32!important}
 .home-shortcuts .tile:nth-child(6n) .shortcut-icon{background:#fcecf2!important;border-color:#f3dce5!important;color:#b15e7f!important}
 @media(max-width:390px){
- .home-prayer-card{padding:14px 10px!important}
- .home-prayer-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
- .home-prayer-list>div{min-height:100px!important;padding:8px 2px!important}
- .home-prayer-list .prayer-icon{width:37px!important;height:37px!important;font-size:19px!important}
- .home-prayer-list span:not(.prayer-icon){font-size:11px!important}
- .home-prayer-list b{font-size:16px!important}
- #prayer-times .prayer-item{padding:9px 7px!important}
- #prayer-times .prayer-item-name{gap:6px!important;font-size:13px!important}
- #prayer-times .prayer-item .prayer-icon{flex-basis:33px!important;width:33px!important;height:33px!important;font-size:17px!important}
- #prayer-times .prayer-item b{font-size:16px!important}
- .home-shortcuts .shortcut-icon{width:49px!important;height:49px!important;font-size:25px!important}
- .home-shortcuts .tile{min-height:103px!important}
+ .home-prayer-card{padding:13px 7px!important}
+ .home-prayer-list{grid-template-columns:repeat(6,minmax(0,1fr))!important;padding:8px 0!important}
+ .home-prayer-list>div{min-height:83px!important;padding:4px 0!important}
+ .home-prayer-list span:not(.prayer-icon){font-size:9px!important;letter-spacing:-.3px!important}
+ .home-prayer-list .prayer-icon{width:29px!important;height:29px!important;font-size:16px!important}
+ .home-prayer-list b{font-size:11px!important;letter-spacing:-.4px!important}
+ .home-shortcuts .shortcut-icon{width:48px!important;height:48px!important;font-size:24px!important}
+ .home-shortcuts .tile{min-height:100px!important}
 }
 </style>
 
