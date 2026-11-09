@@ -174,7 +174,9 @@ jobs:
               s = s[:pos] + s[pos:].replace('release {', 'release {\\n            signingConfig signingConfigs.release', 1)
           p.write_text(s, encoding='utf-8')
           PY
-          keytool -list -keystore "$ANDROID_KEYSTORE_PATH" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS" >/dev/null
+          echo "Checking decoded keystore and configured alias (no passwords will be printed)."
+          ls -l "$ANDROID_KEYSTORE_PATH"
+          keytool -list -keystore "$ANDROID_KEYSTORE_PATH" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS"
 
       - name: Build signed release APK and Play Store bundle
         if: ${{ steps.signing_check.outputs.enabled == 'true' }}
