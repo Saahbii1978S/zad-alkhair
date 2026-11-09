@@ -2956,6 +2956,41 @@ header.hero .tag{
  #home .next-prayer,#home .next-prayer>span{font-size:16px!important}
 }
 </style>
+
+<script id="zad-location-button-reliable-v3">
+(function(){
+ const button=document.getElementById('zad-use-location');
+ if(!button)return;
+ let status=document.getElementById('zad-location-status');
+ if(!status){
+  status=document.createElement('p');
+  status.id='zad-location-status';
+  status.setAttribute('role','status');
+  status.setAttribute('aria-live','polite');
+  button.insertAdjacentElement('afterend',status);
+ }
+ status.style.cssText='display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;grid-column:1/-1!important;grid-row:auto!important;width:100%!important;min-height:22px!important;margin:7px 0!important;padding:5px 8px!important;border-radius:8px!important;background:#ffffff!important;color:#185b45!important;font:700 13px/1.6 Tajawal,Arial,sans-serif!important;text-align:center!important;';
+ button.addEventListener('click',function(){
+  status.textContent='نستناو في تحديد موقعك... تأكّد اللي GPS مفعّل.';
+  button.disabled=true;
+  button.textContent='جاري تحديد موقعك...';
+  const reset=()=>{button.disabled=false;button.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';};
+  if(!window.isSecureContext){status.textContent='افتح زاد الخير من الرابط https://saahbii1978s.github.io/zad-alkhair/ في Chrome للسماح بتحديد الموقع.';reset();return;}
+  if(!navigator.geolocation){status.textContent='تحديد الموقع غير مدعوم في المتصفح. اختار المدينة يدوياً.';reset();return;}
+  if(typeof window.zadLoadPrayerTimes!=='function'){status.textContent='تحميل مواقيت الصلاة مازال ما كملش. حدّث الصفحة وعاود.';reset();return;}
+  navigator.geolocation.getCurrentPosition(function(pos){
+   try{localStorage.setItem('zad-prayer-location-mode','auto');}catch(e){}
+   status.textContent='تم تحديد موقعك، جاري تحديث مواقيت الصلاة...';
+   reset();
+   window.zadLoadPrayerTimes(pos.coords.latitude,pos.coords.longitude);
+  },function(err){
+   reset();
+   const msg=err.code===1?'إذن الموقع مرفوض. من إعدادات Chrome > إعدادات الموقع، اسمح للموقع باستعمال الموقع الجغرافي.':err.code===2?'الهاتف ما لقا حتى موقع. شغّل GPS وجرّب في مكان مفتوح.':'تحديد الموقع تأخّر. شغّل GPS والإنترنت وعاود.';
+   status.textContent=msg;
+  },{enableHighAccuracy:true,timeout:30000,maximumAge:0});
+ },{passive:true});
+})();
+</script>
 </body></html>
 
 
