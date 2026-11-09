@@ -148,7 +148,7 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ANDROID_KEYSTORE_PATH: android/app/zad-alkhair-release.jks
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/zad-alkhair-release.jks
         run: |
           set -euo pipefail
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_PATH"
@@ -198,6 +198,21 @@ jobs:
             android/app/build/outputs/bundle/release/*.aab
           if-no-files-found: error
           retention-days: 90
+
+      - name: Prepare signed direct APK download
+        if: ${{ steps.signing_check.outputs.enabled == 'true' }}
+        run: cp android/app/build/outputs/apk/release/app-release.apk zad-alkhair.apk
+
+      - name: Publish signed APK as the direct download
+        if: ${{ steps.signing_check.outputs.enabled == 'true' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: Zad Alkhair - Latest APK
+          body: "آخر نسخة APK موقعة من تطبيق زاد الخير. حمّل الملف وثبّته على هاتف Android."
+          files: zad-alkhair.apk
+          overwrite_files: true
+          make_latest: true
 
       - name: Remove temporary signing key
         if: always()
