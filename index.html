@@ -1643,62 +1643,44 @@ function setupDhikr(id){
  const root=document.getElementById(id),items=[...root.querySelectorAll('.dhikr-tap')];
  const key='zad-'+id+'-counts-v4',legacyKey='zad-'+id+'-counts-v3';
  const saved=()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return {}}};
- let counts=saved(),showDone=false;
+ let counts=saved(),showDone=false,focusMode=false;
  if(!localStorage.getItem(key)){
-  try{
-   const legacy=JSON.parse(localStorage.getItem(legacyKey)||'{}');
-   if(Object.keys(legacy).length){
-    counts[0]=legacy[0]||0;
-    counts[1]=legacy[1]||0;counts[2]=legacy[1]||0;counts[3]=legacy[1]||0;
-    Object.keys(legacy).forEach(k=>{const i=Number(k);if(i>=2)counts[i+2]=legacy[k]});
-    localStorage.setItem(key,JSON.stringify(counts));
-   }
-  }catch(e){}
+  try{const legacy=JSON.parse(localStorage.getItem(legacyKey)||'{}');if(Object.keys(legacy).length){
+   counts[0]=legacy[0]||0;counts[1]=legacy[1]||0;counts[2]=legacy[1]||0;counts[3]=legacy[1]||0;
+   Object.keys(legacy).forEach(k=>{const i=Number(k);if(i>=2)counts[i+2]=legacy[k]});
+   localStorage.setItem(key,JSON.stringify(counts));
+  }}catch(e){}
  }
  const doneEl=document.getElementById(id+'-done'),totalEl=document.getElementById(id+'-total'),bar=document.getElementById(id+'-bar'),showBtn=document.getElementById(id+'-show');
  const intro=root.querySelector('.card > .muted');
+ const tools=root.querySelector('.dhikr-tools');
+ const startBtn=document.createElement('button');startBtn.type='button';startBtn.className='dhikr-start-btn';startBtn.textContent='ابدأ قراءة الأذكار';tools.appendChild(startBtn);
+ const focus=document.createElement('div');focus.className='dhikr-focus';focus.hidden=true;focus.setAttribute('role','dialog');focus.setAttribute('aria-modal','true');focus.setAttribute('aria-label',id==='morning'?'قراءة أذكار الصباح':'قراءة أذكار المساء');
+ focus.innerHTML='<div class="dhikr-focus-top"><button type="button" class="dhikr-focus-back">رجوع ✕</button><span class="dhikr-focus-title">'+(id==='morning'?'أذكار الصباح':'أذكار المساء')+'</span><span class="dhikr-focus-step"></span></div><div class="dhikr-focus-content"></div><p class="dhikr-focus-hint">اضغط على الذكر أو على العدّاد لتسجيل التكرار</p><div class="dhikr-focus-actions"><button type="button" class="dhikr-focus-exit">إنهاء القراءة</button></div>';
+ document.body.appendChild(focus);
+ const focusContent=focus.querySelector('.dhikr-focus-content'),step=focus.querySelector('.dhikr-focus-step');
+ const closeFocus=()=>{focusMode=false;focus.hidden=true;document.body.classList.remove('dhikr-focus-open')};
+ focus.querySelector('.dhikr-focus-back').onclick=closeFocus;focus.querySelector('.dhikr-focus-exit').onclick=closeFocus;
  const finish=document.createElement('div');finish.className='dhikr-finish-message';finish.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';finish.hidden=true;
  root.querySelector('.dhikr-progress')?.after(finish);
- const required=items.map(el=>{
-   const label=el.querySelector('.muted:last-child')?.textContent||'';
-   if(/مئة مرة/.test(label))return 100;
-   if(/عشر مرات/.test(label))return 10;
-   if(/سبع مرات/.test(label))return 7;
-   if(/أربع مرات/.test(label))return 4;
-   if(/ثلاث مرات/.test(label))return 3;
-   if(/مرتين/.test(label))return 2;
-   return 1;
- });
+ const required=items.map(el=>{const label=el.querySelector('.muted:last-child')?.textContent||'';if(/مئة مرة/.test(label))return 100;if(/عشر مرات/.test(label))return 10;if(/سبع مرات/.test(label))return 7;if(/أربع مرات/.test(label))return 4;if(/ثلاث مرات/.test(label))return 3;if(/مرتين/.test(label))return 2;return 1});
  totalEl.textContent=items.length;
  function activeIndex(){return items.findIndex((el,i)=>Number(counts[i]||0)<required[i])}
  function render(){
-   let completed=0;
-   items.forEach((el,i)=>{
-     const n=Math.min(required[i],Math.max(0,Number(counts[i]||0))),complete=n>=required[i];
-     if(complete)completed++;
-     el.style.display=showDone||i===activeIndex()?'':'none';
-     el.style.opacity='1';
-     el.setAttribute('aria-pressed',complete?'true':'false');
-     let progress=el.querySelector('.dhikr-count-progress');
-     if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}
-     progress.innerHTML='عدد التكرار<br><strong>'+n+' / '+required[i]+'</strong>';
-     const repeatLabel=el.querySelector(':scope > .muted:last-of-type');
-     if(repeatLabel)repeatLabel.style.display='none';
-   });
-   doneEl.textContent=completed;bar.style.width=(items.length?completed/items.length*100:0)+'%';
-   showBtn.textContent=showDone?'العودة للذكر الحالي':'عرض جميع الأذكار';
-   finish.hidden=completed!==items.length||showDone;
-   if(intro)intro.textContent=showDone?'قائمة الأذكار كاملة. للمتابعة بالترتيب ارجع إلى الذكر الحالي.':'اقرأ الذكر الظاهر، واضغط عليه مع كل تكرار. عند إكمال العدد ينتقل تلقائياً إلى الذكر التالي.';
+  let completed=0;items.forEach((el,i)=>{const n=Math.min(required[i],Math.max(0,Number(counts[i]||0))),complete=n>=required[i];if(complete)completed++;el.style.display=showDone||i===activeIndex()?'':'none';el.style.opacity='1';el.setAttribute('aria-pressed',complete?'true':'false');let progress=el.querySelector('.dhikr-count-progress');if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}progress.innerHTML='عدد التكرار<br><strong>'+n+' / '+required[i]+'</strong>';const repeatLabel=el.querySelector(':scope > .muted:last-of-type');if(repeatLabel)repeatLabel.style.display='none'});
+  doneEl.textContent=completed;bar.style.width=(items.length?completed/items.length*100:0)+'%';showBtn.textContent=showDone?'العودة للذكر الحالي':'عرض جميع الأذكار';finish.hidden=completed!==items.length||showDone;
+  if(intro)intro.textContent=showDone?'قائمة الأذكار كاملة. للمتابعة بالترتيب ارجع إلى الذكر الحالي.':'ابدأ القراءة لتظهر الأذكار واحداً تلو الآخر، كل ذكر في شاشة مستقلة.';
+  startBtn.textContent=completed===items.length?'إعادة قراءة الأذكار':(focusMode?'متابعة القراءة':'ابدأ قراءة الأذكار');
+  const current=activeIndex();
+  if(focusMode){
+   focus.hidden=false;document.body.classList.add('dhikr-focus-open');focusContent.innerHTML='';
+   if(current<0){step.textContent='اكتملت الأذكار';const msg=document.createElement('div');msg.className='dhikr-focus-complete';msg.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';focusContent.appendChild(msg);focus.querySelector('.dhikr-focus-hint').textContent='بارك الله فيك';}
+   else{step.textContent=(current+1)+' / '+items.length;const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');clone.querySelector('.muted:last-child')?.remove();focusContent.appendChild(clone);const activate=()=>increment(items[current]);clone.addEventListener('click',activate);clone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});focus.querySelector('.dhikr-focus-hint').textContent='اضغط على الذكر أو على العدّاد لتسجيل التكرار';}
+  }else{focus.hidden=true;document.body.classList.remove('dhikr-focus-open')}
  }
- function increment(el){
-   const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;
-   counts[i]=Math.min(required[i],Number(counts[i]||0)+1);
-   localStorage.setItem(key,JSON.stringify(counts));showDone=false;render();
- }
- items.forEach(el=>{
-   el.addEventListener('click',()=>increment(el));
-   el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}});
- });
+ function increment(el){const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));showDone=false;render()}
+ items.forEach(el=>{el.addEventListener('click',()=>increment(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}})});
+ startBtn.onclick=()=>{if(activeIndex()<0){counts={};localStorage.setItem(key,JSON.stringify(counts))}showDone=false;focusMode=true;render()};
  showBtn.onclick=()=>{showDone=!showDone;render()};
  document.getElementById(id+'-reset').onclick=()=>{counts={};localStorage.removeItem(key);showDone=false;render()};
  render();
@@ -2392,4 +2374,8 @@ header.hero .tag{
 
 
 
+
+<style id="zad-fullscreen-dhikr-v1">
+.dhikr-start-btn{background:#315f91!important;color:#fff!important;border:0!important;border-radius:12px!important;padding:12px 20px!important;font:800 16px Tajawal!important;box-shadow:0 5px 14px #315f9128}.dhikr-focus[hidden]{display:none!important}.dhikr-focus{position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#f7fafc,#eaf1f7);display:flex;flex-direction:column;padding:calc( max(14px, env(safe-area-inset-top)) ) 16px calc(max(14px, env(safe-area-inset-bottom)));overflow:auto}.dhikr-focus-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0 18px;border-bottom:1px solid #dce6ef;color:#315f91;font-weight:800}.dhikr-focus-top button,.dhikr-focus-actions button{border:0;border-radius:11px;padding:10px 14px;background:#e1eaf3;color:#315f91;font:800 14px Tajawal}.dhikr-focus-title{font-size:18px}.dhikr-focus-step{font-size:14px;direction:ltr}.dhikr-focus-content{flex:1;display:flex;align-items:center;justify-content:center;width:100%;max-width:760px;margin:auto}.dhikr-focus-card{width:100%;min-height:48vh!important;margin:16px 0!important;padding:26px 18px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:20px!important;text-align:center!important;border:1px solid #dce6ef!important;border-radius:24px!important;background:#fff!important;box-shadow:0 12px 34px #24496f18!important;cursor:pointer}.dhikr-focus-card .arabic{font-size:clamp(25px,6vw,36px)!important;line-height:2.15!important;color:#183f55!important}.dhikr-focus-card>.muted:first-child{font-size:17px!important;font-weight:800!important;color:#98783e!important}.dhikr-focus-card .dhikr-count-progress{display:flex!important;align-items:center!important;justify-content:center!important;gap:12px!important;margin:8px auto 0!important;padding:12px 18px!important;border-radius:14px!important;background:#111923!important;color:white!important;font-size:16px!important}.dhikr-focus-card .dhikr-count-progress strong{font-size:25px!important;color:#fff!important}.dhikr-focus-hint{text-align:center;color:#60788b;font-size:14px;margin:8px 0 18px}.dhikr-focus-actions{text-align:center;padding-bottom:8px}.dhikr-focus-actions button{background:#fff;border:1px solid #dce6ef}.dhikr-focus-complete{width:100%;padding:28px 18px;text-align:center;font-size:25px;font-weight:800;color:#315f91;background:#fff;border-radius:22px}.dhikr-focus-open{overflow:hidden!important}.dhikr-focus-open .nav{pointer-events:none}
+</style>
 </body></html>
