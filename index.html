@@ -2961,6 +2961,7 @@ header.hero .tag{
 (function(){
  const button=document.getElementById('zad-use-location');
  if(!button)return;
+ button.onclick=null;
  let status=document.getElementById('zad-location-status');
  if(!status){
   status=document.createElement('p');
