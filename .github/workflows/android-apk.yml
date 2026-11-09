@@ -8,7 +8,7 @@ on:
       - "android-v*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -113,6 +113,19 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Prepare direct APK download
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk zad-alkhair.apk
+
+      - name: Publish direct APK release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: Zad Alkhair - Latest APK
+          body: "آخر نسخة APK من تطبيق زاد الخير. حمّل الملف وثبّته على هاتف Android."
+          files: zad-alkhair.apk
+          overwrite_files: true
+          make_latest: true
 
       - name: Check release signing secrets
         id: signing_check
