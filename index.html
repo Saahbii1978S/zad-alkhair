@@ -3050,6 +3050,31 @@ header.hero .tag{
  },{passive:true});
 })();
 </script>
+
+<style id="zad-prayer-font-slightly-smaller-v1">
+/* تصغير خفيف لخط أسماء الصلوات وأوقاتها مع الحفاظ على وضوحها */
+#home #home-prayer-list>div>span:not(.prayer-icon){
+ font-size:clamp(15px,4.2vw,19px)!important;
+}
+#home #home-prayer-list>div>b{
+ font-size:clamp(19px,5.1vw,23px)!important;
+}
+#home .home-next-prayer,#home .home-next-prayer>span,
+#home .next-prayer,#home .next-prayer>span{
+ font-size:clamp(15px,4.2vw,19px)!important;
+}
+#prayer-times .prayer-item-name{font-size:14px!important}
+#prayer-times .prayer-item b{font-size:15px!important}
+#prayer-times .next-prayer{font-size:14px!important}
+#prayer-times .next-prayer strong{font-size:18px!important}
+@media(max-width:390px){
+ #home #home-prayer-list>div>span:not(.prayer-icon){font-size:14px!important}
+ #home #home-prayer-list>div>b{font-size:18px!important}
+ #home .home-next-prayer,#home .home-next-prayer>span,
+ #home .next-prayer,#home .next-prayer>span{font-size:14px!important}
+}
+</style>
+
 </body></html>
 
 
