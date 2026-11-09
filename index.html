@@ -1274,21 +1274,636 @@ body.zad-font-large .view p:not(.muted),body.zad-font-large .view li{font-size:1
 }
 
 
-/* زر تحديد الموقع: تحديث صامت دون إظهار سطور حالة */
-(()=>{
- const button=document.getElementById('zad-auto-location');
- if(!button)return;
- const status=document.getElementById('zad-location-status');
- if(status)status.remove();
- button.addEventListener('click',function(){
-  if(!window.isSecureContext||!navigator.geolocation||typeof window.zadLoadPrayerTimes!=='function')return;
-  navigator.geolocation.getCurrentPosition(function(pos){
-   try{localStorage.setItem('zad-prayer-location-mode','auto')}catch(e){}
-   window.zadLoadPrayerTimes(pos.coords.latitude,pos.coords.longitude);
-  },function(){},{enableHighAccuracy:true,timeout:30000,maximumAge:0});
- },{passive:true});
-})();
-</script>
+/* زر تحديد الموقع الجغرافي لمواقيت الصلاة */
+.zad-use-location{
+ display:block;width:fit-content;max-width:92%;margin:9px auto 13px;padding:7px 12px;
+ border:1px solid #ffffff80;border-radius:10px;
+ background:#ffffff20;color:#fff;font:800 13px/1.5 Tajawal,Arial,sans-serif;
+ cursor:pointer
+}
+.zad-use-location:disabled{opacity:.7;cursor:wait}
+
+
+/* إظهار صورة الكعبة كاملة مع مساحة واضحة للعنوان */
+.hero{
+ background-color:#102f28!important;
+ background-image:
+  linear-gradient(90deg,rgba(5,28,23,0) 0%,rgba(5,28,23,.08) 34%,rgba(5,28,23,.78) 53%,rgba(5,28,23,.96) 100%),
+  url("https://storage.googleapis.com/wp-static/wp-orphansinneed/2025/10/7441399c-kaaba12.jpg")!important;
+ background-repeat:no-repeat!important;
+ background-size:100% 100%,auto 100%!important;
+ background-position:center,left center!important;
+}
+.home-prayer-city{
+ grid-template-columns:48px minmax(0,1fr) 52px minmax(0,1fr)!important;
+ gap:8px!important;
+}
+.home-prayer-city label{font-size:15px!important}
+.home-prayer-city select{
+ min-width:0!important;width:100%!important;
+ font-size:15px!important;padding:10px 7px!important;
+ white-space:normal!important;text-overflow:clip!important;
+}
+@media(max-width:600px){
+ .hero{
+  background-size:100% 100%,auto 100%!important;
+  background-position:center,left center!important;
+ }
+ .home-prayer-city{
+  grid-template-columns:44px minmax(0,1fr) 48px minmax(0,1fr)!important;
+  gap:6px!important;
+ }
+ .home-prayer-city label{font-size:13px!important}
+ .home-prayer-city select{font-size:14px!important;padding:9px 5px!important}
+}
+@media(max-width:380px){
+ .home-prayer-city{grid-template-columns:40px minmax(0,1fr) 44px minmax(0,1fr)!important;gap:4px!important}
+ .home-prayer-city label{font-size:12px!important}
+ .home-prayer-city select{font-size:13px!important;padding:8px 3px!important}
+}
+
+
+/* موازنة المساحة: خانات أقصر ومواقيت أوضح */
+.home-prayer-card .home-prayer-city{gap:6px!important;margin:8px 0 9px!important}
+.home-prayer-card .home-prayer-field{gap:2px!important}
+.home-prayer-card .home-prayer-field label{font-size:12px!important;line-height:1.2!important}
+.home-prayer-card .home-prayer-field select{
+ height:36px!important;min-height:36px!important;
+ padding:4px 10px!important;font-size:15px!important;line-height:1.2!important;
+ border-radius:9px!important
+}
+.home-prayer-card .home-prayer-list{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:8px!important;margin-top:8px!important
+}
+.home-prayer-card .home-prayer-list>div{
+ min-width:0!important;padding:10px 5px!important;border-radius:12px!important
+}
+.home-prayer-card .home-prayer-list .prayer-icon{
+ width:34px!important;height:34px!important;font-size:19px!important;margin-bottom:4px!important
+}
+.home-prayer-card .home-prayer-list span{font-size:13px!important;margin-bottom:4px!important}
+.home-prayer-card .home-prayer-list b{font-size:17px!important;line-height:1.3!important}
+@media(max-width:480px){
+ .home-prayer-card{padding:15px 12px!important}
+ .home-prayer-card .home-prayer-city{gap:5px!important;margin:7px 0 8px!important}
+ .home-prayer-card .home-prayer-field select{height:34px!important;min-height:34px!important;font-size:14px!important;padding:3px 9px!important}
+ .home-prayer-card .home-prayer-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+ .home-prayer-card .home-prayer-list>div{padding:9px 3px!important}
+ .home-prayer-card .home-prayer-list .prayer-icon{width:32px!important;height:32px!important;font-size:18px!important}
+ .home-prayer-card .home-prayer-list span{font-size:12px!important}
+ .home-prayer-card .home-prayer-list b{font-size:16px!important}
+}
+
+
+/* تحسين مساحة المدينة وتكبير مواقيت الصلاة */
+.home-prayer-card #home-prayer-city{
+ height:30px!important;min-height:30px!important;
+ padding:2px 8px!important;font-size:13px!important;line-height:1.1!important
+}
+.home-prayer-card .home-prayer-list>div{
+ padding:13px 6px!important;min-height:104px!important
+}
+.home-prayer-card .home-prayer-list .prayer-icon{
+ width:40px!important;height:40px!important;font-size:22px!important;margin-bottom:5px!important
+}
+.home-prayer-card .home-prayer-list span{
+ font-size:14px!important;line-height:1.35!important;margin-bottom:5px!important
+}
+.home-prayer-card .home-prayer-list b{
+ font-size:19px!important;line-height:1.35!important
+}
+@media(max-width:480px){
+ .home-prayer-card #home-prayer-city{
+  height:29px!important;min-height:29px!important;font-size:12px!important
+ }
+ .home-prayer-card .home-prayer-list>div{padding:11px 3px!important;min-height:98px!important}
+ .home-prayer-card .home-prayer-list .prayer-icon{width:37px!important;height:37px!important;font-size:20px!important}
+ .home-prayer-card .home-prayer-list span{font-size:13px!important}
+ .home-prayer-card .home-prayer-list b{font-size:18px!important}
+}
+
+
+/* عرض مواقيت الصلاة الستة في سطر واحد مع الحفاظ على ارتفاع البطاقات */
+.home-prayer-card .home-prayer-list{
+ display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:5px!important
+}
+.home-prayer-card .home-prayer-list>div{
+ min-width:0!important;min-height:98px!important;
+ padding:11px 2px!important
+}
+.home-prayer-card .home-prayer-list .prayer-icon{
+ width:36px!important;height:36px!important;font-size:19px!important
+}
+.home-prayer-card .home-prayer-list span{
+ font-size:12px!important;white-space:nowrap!important
+}
+.home-prayer-card .home-prayer-list b{
+ font-size:16px!important;white-space:nowrap!important
+}
+@media(max-width:480px){
+ .home-prayer-card .home-prayer-list{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:3px!important
+ }
+ .home-prayer-card .home-prayer-list>div{
+  min-height:98px!important;padding:10px 1px!important
+ }
+ .home-prayer-card .home-prayer-list .prayer-icon{
+  width:30px!important;height:30px!important;font-size:17px!important
+ }
+ .home-prayer-card .home-prayer-list span{font-size:10px!important}
+ .home-prayer-card .home-prayer-list b{font-size:13px!important}
+}
+
+
+/* أيقونات رئيسية بارزة بلمسة ثلاثية الأبعاد */
+.home-shortcuts .tile{
+ display:flex;flex-direction:column;justify-content:center;align-items:center;
+ gap:9px;min-height:132px;padding:12px 8px;text-align:center;
+ border:1px solid #d6c18d;border-radius:20px;
+ background:linear-gradient(155deg,#fff 0%,#f3f0e7 48%,#e5e9e3 100%);
+ box-shadow:0 5px 0 #b9a16e,0 9px 16px #182f3c20,inset 0 2px 4px #ffffff;
+ color:#244f70;position:relative;overflow:hidden;
+}
+.home-shortcuts .tile:before{
+ content:"";position:absolute;inset:4px;border:1px solid #d7c69d;
+ border-radius:15px;pointer-events:none;opacity:.8;
+}
+.home-shortcuts .shortcut-icon{
+ display:grid;place-items:center;width:76px;height:76px;flex:0 0 76px;
+ border-radius:19px;font-size:43px;line-height:1;
+ background:radial-gradient(circle at 30% 22%,#fff 0%,#eaf1f5 35%,#c8d8e2 72%,#9fb7c8 100%);
+ border:2px solid #d7bd7d;
+ box-shadow:0 5px 0 #8b9eaa,0 8px 13px #20384a35,inset 0 3px 5px #fff;
+ filter:drop-shadow(0 2px 2px #243c4a30);
+}
+.home-shortcuts .tile>span:last-child{
+ position:relative;z-index:1;font-size:15px;font-weight:800;color:#254e6b;
+ text-shadow:0 1px #fff;
+}
+.home-shortcuts .tile:active{transform:translateY(2px);box-shadow:0 3px 0 #b9a16e,0 5px 10px #182f3c20}
+@media(max-width:480px){
+ .home-shortcuts .tile{min-height:116px;gap:7px;padding:9px 5px;border-radius:17px}
+ .home-shortcuts .shortcut-icon{width:66px;height:66px;flex-basis:66px;font-size:37px;border-radius:17px}
+ .home-shortcuts .tile>span:last-child{font-size:13px}
+}
+</style>
+
+<style id="zad-dhikr-one-at-a-time-v1">
+.view#morning .dhikr,.view#evening .dhikr{margin:18px 0;padding:25px 18px;border:1px solid #e3e9df;border-radius:20px;background:linear-gradient(160deg,#fff 0%,#f5f8f2 100%);box-shadow:0 8px 24px rgba(18,63,53,.08);text-align:center;cursor:pointer;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.view#morning .dhikr .arabic,.view#evening .dhikr .arabic{font-size:27px;line-height:2.15;color:#183f34}
+.view#morning .dhikr .muted:first-child,.view#evening .dhikr .muted:first-child{font-weight:800;color:#98783e;font-size:16px}
+.view#morning .dhikr-count-progress,.view#evening .dhikr-count-progress{display:block;margin-top:8px;padding:12px 25px;border-radius:16px;background:#e8f0e8;color:#245541;font-size:17px;line-height:1.8}
+.view#morning .dhikr-count-progress strong,.view#evening .dhikr-count-progress strong{font-size:27px}
+.dhikr-finish-message{margin:18px 0;padding:22px;border-radius:18px;background:#eaf3e9;color:#245541;text-align:center;font-size:20px;font-weight:800}
+.dhikr-tools{align-items:center}
+@media(max-width:480px){.view#morning .dhikr .arabic,.view#evening .dhikr .arabic{font-size:23px;line-height:2}.view#morning .dhikr,.view#evening .dhikr{min-height:210px;padding:20px 13px}}
+
+/* ترتيب مربع عدّ التكرار وتوحيد اللون الأسود */
+.view#morning .dhikr-count-progress,.view#evening .dhikr-count-progress{
+ display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px;
+ width:fit-content;min-width:190px;max-width:100%;margin:12px auto 0;
+ padding:10px 18px;border:1px solid #d5d5d5;border-radius:12px;
+ background:#fff;color:#000!important;font-size:16px;font-weight:800;
+ line-height:1.4;white-space:nowrap;box-sizing:border-box
+}
+.view#morning .dhikr-count-progress strong,.view#evening .dhikr-count-progress strong{
+ display:inline-flex;align-items:center;justify-content:center;min-width:66px;
+ padding:5px 10px;border:1px solid #c8c8c8;border-radius:8px;
+ background:#f4f4f4;color:#000!important;font-size:22px;line-height:1.2
+}
+</style>
+<style id="zad-prayer-and-sections-readability-v1">
+/* وضوح أسماء وأوقات الصلاة مع الحفاظ على صف واحد في الواجهة */
+.home-prayer-card{padding:18px 15px}
+.home-prayer-head h2{font-size:24px;line-height:1.5}
+.home-prayer-city label{display:block;margin-bottom:4px;font-size:13px;font-weight:800;color:#f0d99e}
+.home-prayer-list{gap:5px}
+.home-prayer-list>div{min-width:0;padding:11px 2px;border-radius:13px;background:#ffffff18}
+.home-prayer-list span{font-size:12px;font-weight:800;white-space:nowrap}
+.home-prayer-list b{font-size:15px;font-weight:900;direction:ltr;white-space:nowrap}
+.home-next-prayer{font-size:14px;padding:12px 13px}
+.home-next-prayer strong{font-size:20px}
+.home-shortcuts .tile{font-size:16px;font-weight:800}
+.home-shortcuts .shortcut-icon{flex-shrink:0}
+#prayer-times .prayer-list{gap:10px}
+#prayer-times .prayer-item{min-height:58px;align-items:center;padding:13px 14px;font-size:17px;border:1px solid #e1e9df}
+#prayer-times .prayer-item strong,#prayer-times .prayer-item b{font-size:19px;font-weight:900;direction:ltr}
+#prayer-times .next-prayer{padding:15px 16px;font-size:16px}
+#prayer-times .next-prayer strong{font-size:22px}
+#prayer-times #prayer-date{font-size:15px;font-weight:700}
+@media(max-width:390px){
+ .home-prayer-card{padding:15px 10px}
+ .home-prayer-list{gap:3px}
+ .home-prayer-list>div{padding:9px 1px}
+ .home-prayer-list span{font-size:10px}
+ .home-prayer-list b{font-size:12px}
+ .home-next-prayer strong{font-size:18px}
+ .home-shortcuts .tile{font-size:15px}
+ #prayer-times .prayer-item{padding:11px 9px;font-size:15px}
+ #prayer-times .prayer-item strong,#prayer-times .prayer-item b{font-size:17px}
+}
+</style>
+
+<style id="zad-next-prayer-highlight-v1">
+/* إبراز الصلاة القادمة بهدوء في الرئيسية وصفحة المواقيت */
+.home-prayer-card .home-prayer-list>div.is-next-prayer{
+ border:2px solid #315f91!important;background:#e7f0f8!important;
+ box-shadow:0 0 0 2px #315f9118!important
+}
+#prayer-times .prayer-item.is-next-prayer{
+ border:2px solid #315f91!important;background:#e7f0f8!important;
+ box-shadow:0 3px 12px #315f9118!important
+}
+</style>
+
+<style id="zad-prayer-strip-unified-v6">
+/* مواقيت الصلاة: شريط واحد متصل، بلا بطاقات مستقلة لكل صلاة */
+#home .home-prayer-card{
+ background:#fff!important;color:#24445d!important;
+ border:1px solid #e4ebf1!important;border-radius:19px!important;
+ box-shadow:0 5px 18px #183b5510!important
+}
+#home .home-prayer-head h2{color:#24445d!important}
+#home .home-prayer-head p,#home .home-eyebrow{color:#71879a!important}
+#home .home-prayer-list{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:0!important;margin:13px 0 10px!important;padding:8px 0!important;
+ background:#fff!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;overflow:visible!important
+}
+#home .home-prayer-list>div{
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:5px!important;min-width:0!important;
+ min-height:84px!important;padding:5px 1px!important;
+ background:transparent!important;border:0!important;border-left:1px solid #e8eef3!important;
+ border-radius:0!important;box-shadow:none!important
+}
+#home .home-prayer-list>div:last-child{border-left:0!important}
+#home .home-prayer-list>div>span:not(.prayer-icon){
+ order:0!important;color:#65798a!important;font-size:clamp(9px,2.5vw,12px)!important;
+ font-weight:800!important;white-space:nowrap!important;margin:0!important
+}
+#home .home-prayer-list .prayer-icon{
+ order:1!important;display:grid!important;place-items:center!important;
+ width:32px!important;height:32px!important;margin:0!important;border-radius:50%!important;
+ background:transparent!important;border:0!important;color:#397da8!important;
+ font-size:21px!important;line-height:1!important
+}
+#home .home-prayer-list>div>b{
+ order:2!important;color:#193f5d!important;font-size:clamp(11px,3vw,15px)!important;
+ font-weight:900!important;direction:ltr!important;white-space:nowrap!important
+}
+/* تمييز الصلاة القادمة باللون والخط السفلي فقط، دون مستطيل مستقل */
+#home .home-prayer-list>div.is-next-prayer{
+ background:transparent!important;box-shadow:inset 0 -3px #438ab7!important
+}
+#home .home-prayer-list>div.is-next-prayer>span:not(.prayer-icon),
+#home .home-prayer-list>div.is-next-prayer>b{color:#145b8a!important}
+#home .home-next-prayer{background:#eaf4fb!important;color:#234f6e!important;border:1px solid #d7e7f1!important}
+@media(max-width:390px){
+ #home .home-prayer-card{padding:12px 6px!important}
+ #home .home-prayer-list>div{min-height:79px!important;gap:4px!important;padding:4px 0!important}
+ #home .home-prayer-list>div>span:not(.prayer-icon){font-size:9px!important;letter-spacing:-.35px!important}
+ #home .home-prayer-list .prayer-icon{width:27px!important;height:27px!important;font-size:18px!important}
+ #home .home-prayer-list>div>b{font-size:10px!important;letter-spacing:-.3px!important}
+}
+</style>
+
+
+<style id="zad-real-photo-shortcut-icons-v1">
+#home .home-shortcuts .tile .shortcut-icon{
+ display:block!important;position:relative!important;overflow:hidden!important;
+ width:58px!important;height:58px!important;flex:0 0 58px!important;
+ border-radius:15px!important;padding:0!important;margin:0 auto!important;
+ border:1px solid #dce6ee!important;background:#edf3f8!important;
+ box-shadow:0 3px 10px #183b5518!important;
+}
+#home .home-shortcuts .tile .shortcut-icon img{
+ display:block!important;width:100%!important;height:100%!important;
+ object-fit:cover!important;object-position:center!important;
+ border-radius:14px!important;
+}
+#home .home-shortcuts .tile>span:last-child{margin-top:1px!important}
+@media(max-width:390px){
+ #home .home-shortcuts .tile .shortcut-icon{
+  width:52px!important;height:52px!important;flex-basis:52px!important;border-radius:13px!important
+ }
+ #home .home-shortcuts .tile .shortcut-icon img{border-radius:12px!important}
+}
+</style>
+
+<style id="zad-prayer-unified-final-v8">
+/* توحيد عرض الصلوات الست في صف واحد؛ لا مستطيل مستقل لكل صلاة */
+html body .home-prayer-card .home-prayer-list{
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:0!important;
+  padding:8px 0!important;
+  margin:12px 0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+html body .home-prayer-card .home-prayer-list > div{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:0!important;
+  min-height:68px!important;
+  gap:4px!important;
+  margin:0!important;
+  padding:4px 1px!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-left:1px solid #dce5ec!important;
+  border-radius:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  text-align:center!important;
+}
+html body .home-prayer-card .home-prayer-list > div:last-child{border-left:0!important}
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer{
+  background:transparent!important;
+  border:0!important;
+  border-left:1px solid #dce5ec!important;
+  border-radius:0!important;
+  box-shadow:inset 0 -3px #438ab7!important;
+}
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer:last-child{border-left:0!important}
+html body .home-prayer-card .home-prayer-list > div > span{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  white-space:nowrap!important;
+}
+html body .home-prayer-card .home-prayer-list > div > span.prayer-icon{
+  width:auto!important;
+  height:auto!important;
+  font-size:17px!important;
+  line-height:1.2!important;
+  color:#397da8!important;
+}
+html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){
+  color:#65798a!important;
+  font-size:clamp(10px,3vw,13px)!important;
+  font-weight:800!important;
+}
+html body .home-prayer-card .home-prayer-list > div > b{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  color:#193f5d!important;
+  font-size:clamp(12px,3.5vw,16px)!important;
+  font-weight:900!important;
+  direction:ltr!important;
+  white-space:nowrap!important;
+}
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer > span:not(.prayer-icon),
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer > b{color:#145b8a!important}
+@media(max-width:390px){
+  html body .home-prayer-card .home-prayer-list > div{min-height:62px!important;gap:3px!important;padding:3px 0!important}
+  html body .home-prayer-card .home-prayer-list > div > span.prayer-icon{font-size:14px!important}
+  html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){font-size:10px!important}
+  html body .home-prayer-card .home-prayer-list > div > b{font-size:12px!important}
+}
+</style>
+<style id="zad-prayer-ruqaa-larger-v1">
+@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap');
+html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){
+  font-family:'Aref Ruqaa',serif!important;
+  font-size:clamp(15px,4.1vw,19px)!important;
+  line-height:1.25!important;
+  font-weight:700!important;
+  color:#183d59!important;
+}
+html body .home-prayer-card .home-prayer-list > div > b{
+  font-family:'Aref Ruqaa',serif!important;
+  font-size:clamp(18px,4.8vw,23px)!important;
+  line-height:1.25!important;
+  font-weight:700!important;
+  color:#102f49!important;
+  letter-spacing:0!important;
+}
+html body .home-prayer-card .home-prayer-list > div{
+  min-height:82px!important;
+  gap:5px!important;
+}
+@media(max-width:390px){
+ html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){font-size:14px!important}
+ html body .home-prayer-card .home-prayer-list > div > b{font-size:17px!important}
+}
+</style>
+<style id="zad-colourful-shortcuts-v1">
+.home-shortcuts .shortcut-icon{border-width:1px!important;box-shadow:inset 0 1px 2px #fff,0 3px 8px #243b2d0b!important}
+.home-shortcuts .tile:nth-child(6n+1) .shortcut-icon{background:#e8f1fb!important;border-color:#d4e4f5!important;color:#386b9b!important}
+.home-shortcuts .tile:nth-child(6n+2) .shortcut-icon{background:#fff0e7!important;border-color:#f5ddcb!important;color:#bb7043!important}
+.home-shortcuts .tile:nth-child(6n+3) .shortcut-icon{background:#eaf5ed!important;border-color:#d6eadb!important;color:#47835b!important}
+.home-shortcuts .tile:nth-child(6n+4) .shortcut-icon{background:#f3ecfb!important;border-color:#e5d9f3!important;color:#805eaa!important}
+.home-shortcuts .tile:nth-child(6n+5) .shortcut-icon{background:#fff5dc!important;border-color:#f2e5bd!important;color:#a17b2f!important}
+.home-shortcuts .tile:nth-child(6n) .shortcut-icon{background:#fcecf1!important;border-color:#f3dce5!important;color:#ae607d!important}
+</style>
+
+<style id="zad-prayer-ruqaa-larger-v2">
+html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){
+ font-size:clamp(17px,4.6vw,21px)!important;
+ line-height:1.2!important;
+}
+html body .home-prayer-card .home-prayer-list > div > b{
+ font-size:clamp(21px,5.4vw,26px)!important;
+ line-height:1.2!important;
+}
+@media(max-width:390px){
+ html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){font-size:16px!important}
+ html body .home-prayer-card .home-prayer-list > div > b{font-size:19px!important}
+}
+</style>
+
+<style id="zad-prayer-ruqaa-larger-v3">
+html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){
+ font-family:'Aref Ruqaa',serif!important;
+ font-size:clamp(19px,5.1vw,24px)!important;
+ line-height:1.15!important;
+ font-weight:700!important;
+}
+html body .home-prayer-card .home-prayer-list > div > b{
+ font-family:'Aref Ruqaa',serif!important;
+ font-size:clamp(24px,6.1vw,29px)!important;
+ line-height:1.15!important;
+ font-weight:700!important;
+}
+html body .home-prayer-card .home-prayer-list > div{
+ min-height:94px!important;
+ gap:7px!important;
+}
+@media(max-width:390px){
+ html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){font-size:17px!important}
+ html body .home-prayer-card .home-prayer-list > div > b{font-size:21px!important}
+}
+</style>
+
+<style id="zad-next-prayer-green-v1">
+html body .home-next-prayer,
+html body .home-next-prayer > span,
+html body .home-next-prayer > span b,
+html body .next-prayer,
+html body .next-prayer > span,
+html body .next-prayer > span b{
+ color:#198754!important;
+}
+</style>
+
+<style id="zad-hide-prayer-extra-lines-v1">
+/* إخفاء الملاحظات النصية من واجهة المواقيت مع إبقاء الحساب وتحديد الموقع يعملان */
+#zad-location-status,
+.zad-use-location,
+.home-prayer-note,
+.home-prayer-more{display:none!important}
+</style>
+
+</head>
+<body>
+<div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
+<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
+<div class="zad-share-bar" aria-label="مشاركة زاد الخير">
+ <button type="button" id="zad-share-button">مشاركة التطبيق</button>
+ <button type="button" id="zad-copy-link">نسخ الرابط</button>
+</div>
+<div class="home-prayer-card">
+ <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div></div>
+ <div class="home-prayer-city"><div class="home-prayer-field"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select></div><div class="home-prayer-field"><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div></div>
+ <button type="button" id="zad-use-location" class="zad-use-location">📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً</button>
+ <p id="zad-location-status" class="home-prayer-note" role="status" aria-live="polite"></p>
+ <div id="home-prayer-list" class="home-prayer-list"><span>الفجر</span><span>الظهر</span><span>العصر</span><span>المغرب</span><span>العشاء</span></div>
+ <div class="home-next-prayer"><span>الصلاة القادمة <b id="home-next-name">—</b></span><strong id="home-next-countdown">—</strong></div>
+
+ </div>
+
+<nav class="nav" aria-label="أقسام الموقع">
+<button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button><button data-page="calendar">الرزنامة</button><button data-page="settings">⚙️ الإعدادات</button>
+</nav>
+<main>
+<section class="view active" id="home">
+<div class="tiles home-shortcuts"><div class="tile" data-go="morning"><span class="shortcut-icon"><img src="https://images.pexels.com/photos/15694717/pexels-photo-15694717.jpeg?auto=compress&cs=tinysrgb&w=320&h=320&fit=crop" alt="مصحف وسبحة لأذكار الصباح" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://images.pexels.com/photos/9325760/pexels-photo-9325760.jpeg?auto=compress&cs=tinysrgb&w=320&h=320&fit=crop'"></span><span>أذكار الصباح</span></div><div class="tile" data-go="evening"><span class="shortcut-icon"><img src="https://alkhaleejonline.net/sites/default/files/styles/facebook_metatag/public/2026-02/ramadan_poetry_1200x675.png?h=5fb83070&itok=zKjUwOSF" alt="فانوس وسبحة" loading="lazy" decoding="async"></span><span>أذكار المساء</span></div><div class="tile" data-go="prayer"><span class="shortcut-icon"><img src="https://cdn.shopify.com/s/files/1/2622/0232/files/Screenshot_2026-01-06_at_11.48.20.png?v=1767674932" alt="الدعاء ورفع اليدين" loading="lazy" decoding="async"></span><span>بعد الصلاة</span></div><div class="tile" data-go="sleep"><span class="shortcut-icon"><img src="https://www.reisereporter.de/resizer/v2/ULH3XYAQ7VABPLWUFR63EHKGNM.jpg?auth=c3ba2eaab87753f1d7271d8d2e489a7effccf18b810456366077b153d2e8ac6b&focal=2627%2C1196&height=1441&quality=70&width=1441" alt="مسجد في المساء" loading="lazy" decoding="async"></span><span>قبل النوم</span></div><div class="tile" data-go="duas"><span class="shortcut-icon"><img src="https://www.meamuk.com/cdn/shop/files/5-IslamicWallArt-MEAM-UK-LoungeRoom.jpg?v=1759227698&width=533" alt="لوحة خط عربي" loading="lazy" decoding="async"></span><span>الأدعية</span></div><div class="tile" data-go="names"><span class="shortcut-icon"><img src="https://static.semrush.com/contentshake/articles/ai-images/de7cdf15-6858-4914-a181-512e34316689/4b5a83ed-fcb1-46e3-a7b8-f6182c01dac8" alt="مصحف وسبحة" loading="lazy" decoding="async"></span><span>الأسماء الحسنى</span></div><div class="tile" data-go="tasbeeh"><span class="shortcut-icon"><img src="https://images.pexels.com/photos/15694717/pexels-photo-15694717.jpeg?auto=compress&cs=tinysrgb&w=320&h=320&fit=crop" alt="مصحف مفتوح" loading="lazy" decoding="async"></span><span>التسبيح</span></div><div class="tile" data-go="tracker"><span class="shortcut-icon"><img src="https://time.now/img/Ramadan_1448_Imsakiah_and_Fasting_Times_81659c5498.jpg" alt="تقويم إسلامي" loading="lazy" decoding="async"></span><span>متابعتي</span></div><div class="tile" data-go="prayer-times"><span class="shortcut-icon"><img src="https://awsimages.detik.net.id/community/media/visual/2025/01/23/ilustrasi-masjid_43.jpeg?w=1200" alt="مئذنة عند الغروب" loading="lazy" decoding="async"></span><span>المواقيت</span></div><div class="tile" data-go="quran"><span class="shortcut-icon"><img src="https://images.pexels.com/photos/9325760/pexels-photo-9325760.jpeg?auto=compress&cs=tinysrgb&w=320&h=320&fit=crop" alt="مصحف على حامل" loading="lazy" decoding="async"></span><span>القرآن الكريم</span></div><div class="tile" data-go="qibla"><span class="shortcut-icon"><img src="https://i.pinimg.com/736x/e3/d8/98/e3d8988c67677e57776b680646411205.jpg" alt="الكعبة المشرفة" loading="lazy" decoding="async"></span><span>القبلة</span></div><div class="tile" data-go="khatma"><span class="shortcut-icon"><img src="https://images.pexels.com/photos/28823661/pexels-photo-28823661.jpeg?auto=compress&cs=tinysrgb&w=320&h=320&fit=crop" alt="مصحف للختمة" loading="lazy" decoding="async"></span><span>الختمة</span></div><div class="tile" data-go="calendar"><span class="shortcut-icon"><img src="https://time.now/img/Ramadan_1448_Imsakiah_and_Fasting_Times_81659c5498.jpg" alt="رزنامة" loading="lazy" decoding="async"></span><span>الرزنامة</span></div><div class="tile" data-go="settings"><span class="shortcut-icon"><img src="https://cdn.mos.cms.futurecdn.net/aggBr2jSDwSzVeex56iBtF.jpg" alt="الهاتف والإعدادات" loading="lazy" decoding="async"></span><span>الإعدادات</span></div></div>
+<div class="card"><h2>آية اليوم</h2><p class="verse">﴿فَسَبِّحْ بِحَمْدِ رَبِّكَ وَكُن مِّنَ السَّاجِدِينَ﴾</p><p class="ref">سورة الحجر: 98</p></div>
+<div class="card"><h2>ابدأ بخير اليوم</h2><p>اجعل لك ورداً من الذكر والقرآن، وحافظ على الصلاة، ولو بالقليل الدائم.</p></div>
+</section>
+<section class="view" id="morning"><div class="card"><h2>أذكار الصباح</h2><p class="muted">اضغط على الذكر بعد إتمامه لتسجيله. مجموعة من الأذكار الواردة في السنة، مع بيان عدد التكرار عند ثبوته.</p><div class="dhikr-tools"><span>أنجزت: <b id="morning-done">0</b> / <b id="morning-total">0</b></span><button type="button" id="morning-show">إظهار المكتمل</button><button type="button" id="morning-reset">إعادة العدّ</button></div><div class="dhikr-progress"><span id="morning-bar"></span></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">آية الكرسي</p><div class="arabic">اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ</div><p class="muted">🔁 مرة واحدة • البقرة: 255</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سورة الإخلاص</p><div class="arabic">قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سورة الفلق</p><div class="arabic">قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِنْ شَرِّ مَا خَلَقَ ۝ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سورة الناس</p><div class="arabic">قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَٰهِ النَّاسِ ۝ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">دعاء الصباح</p><div class="arabic">أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">اللهم بك أصبحنا</p><div class="arabic">اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سيد الاستغفار</p><div class="arabic">اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">الشهادة لله</p><div class="arabic">اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ</div><p class="muted">🔁 أربع مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">شكر نعمة الله</p><div class="arabic">اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سؤال العافية</p><div class="arabic">اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">حسبي الله</p><div class="arabic">حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ</div><p class="muted">🔁 سبع مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سؤال العفو والعافية</p><div class="arabic">اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">دعاء الحفظ من الشر</p><div class="arabic">اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">بسم الله الذي لا يضر</p><div class="arabic">بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">رضيت بالله رباً</p><div class="arabic">رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">يا حي يا قيوم</p><div class="arabic">يَا حَيُّ يَا قَيُّومُ، بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِيَ كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">دعاء خير اليوم</p><div class="arabic">أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ رَبِّ الْعَالَمِينَ، اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ: فَتْحَهُ وَنَصْرَهُ وَنُورَهُ وَبَرَكَتَهُ وَهُدَاهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهِ وَشَرِّ مَا بَعْدَهُ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">على فطرة الإسلام</p><div class="arabic">أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سبحان الله وبحمده</p><div class="arabic">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</div><p class="muted">🔁 مئة مرة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">لا إله إلا الله (عشر مرات)</p><div class="arabic">لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</div><p class="muted">🔁 عشر مرات (ويجوز مرة عند الكسل)</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">لا إله إلا الله (مئة مرة)</p><div class="arabic">لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</div><p class="muted">🔁 مئة مرة إذا أصبح</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">ذكر عظيم جامع</p><div class="arabic">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سؤال العلم والرزق</p><div class="arabic">اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا</div><p class="muted">🔁 إذا أصبح</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">الاستغفار</p><div class="arabic">أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ</div><p class="muted">🔁 مئة مرة في اليوم</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">الصلاة على النبي ﷺ</p><div class="arabic">اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ</div><p class="muted">🔁 عشر مرات</p></div></div></section>
+<section class="view" id="evening"><div class="card"><h2>أذكار المساء</h2><p class="muted">اضغط على الذكر بعد إتمامه لتسجيله. النصوص وعدد التكرار من حصن المسلم.</p><div class="dhikr-tools"><span>أنجزت: <b id="evening-done">0</b> / <b id="evening-total">0</b></span><button type="button" id="evening-show">إظهار المكتمل</button><button type="button" id="evening-reset">إعادة العدّ</button></div><div class="dhikr-progress"><span id="evening-bar"></span></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">آية الكرسي</p><div class="arabic">اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ</div><p class="muted">🔁 مرة واحدة • البقرة: 255</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سورة الإخلاص</p><div class="arabic">قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سورة الفلق</p><div class="arabic">قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِنْ شَرِّ مَا خَلَقَ ۝ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سورة الناس</p><div class="arabic">قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَٰهِ النَّاسِ ۝ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">دعاء المساء</p><div class="arabic">أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">اللهم بك أمسينا</p><div class="arabic">اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سيد الاستغفار</p><div class="arabic">اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">الشهادة لله</p><div class="arabic">اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ</div><p class="muted">🔁 أربع مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">شكر نعمة الله</p><div class="arabic">اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سؤال العافية</p><div class="arabic">اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">حسبي الله</p><div class="arabic">حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ</div><p class="muted">🔁 سبع مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سؤال العفو والعافية</p><div class="arabic">اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">دعاء الحفظ من الشر</p><div class="arabic">اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">بسم الله الذي لا يضر</p><div class="arabic">بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">رضيت بالله رباً</p><div class="arabic">رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">يا حي يا قيوم</p><div class="arabic">يَا حَيُّ يَا قَيُّومُ، بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِيَ كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">دعاء خير الليلة</p><div class="arabic">أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ رَبِّ الْعَالَمِينَ، اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذِهِ اللَّيْلَةِ: فَتْحَهَا وَنَصْرَهَا وَنُورَهَا وَبَرَكَتَهَا وَهُدَاهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهَا وَشَرِّ مَا بَعْدَهَا</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">على فطرة الإسلام</p><div class="arabic">أَمْسَيْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ</div><p class="muted">🔁 مرة واحدة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">سبحان الله وبحمده</p><div class="arabic">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</div><p class="muted">🔁 مئة مرة</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">لا إله إلا الله (عشر مرات)</p><div class="arabic">لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ</div><p class="muted">🔁 عشر مرات (ويجوز مرة عند الكسل)</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">ذكر عظيم جامع</p><div class="arabic">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ</div><p class="muted">🔁 ثلاث مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">الاستغفار</p><div class="arabic">أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ</div><p class="muted">🔁 مئة مرة في اليوم</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">الصلاة على النبي ﷺ</p><div class="arabic">اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ</div><p class="muted">🔁 عشر مرات</p></div><div class="dhikr dhikr-tap" role="button" tabindex="0" aria-label="تسجيل إتمام الذكر"><p class="muted">التعوذ بكلمات الله التامات</p><div class="arabic">أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ</div><p class="muted">🔁 ثلاث مرات إذا أمسى</p></div></div></section>
+<section class="view" id="prayer-times"><div class="card"><h2>مواقيت الصلاة</h2><p class="muted">اختار مدينتك باش تشوف مواقيت اليوم.</p><div class="prayer-controls"><select id="prayer-country"></select><select id="prayer-city"></select><button class="smallbtn" id="prayer-location" type="button">استخدم موقعي</button><button class="smallbtn" id="prayer-refresh" type="button">تحديث</button></div><p id="prayer-date" class="ref">جاري تحميل المواقيت...</p><div id="prayer-list" class="prayer-list"></div><div class="next-prayer"><span>الصلاة القادمة: <b id="next-prayer-name">—</b></span><strong id="next-prayer-countdown">—</strong></div><p class="muted">المواقيت تقريبية حسب طريقة الحساب؛ اعتمد توقيت الجامع المحلي عند الاختلاف.</p></div><div class="card adhan-card"><h2>🔔 إعدادات الأذان والتنبيهات</h2><p class="muted">اختار الصلوات اللي تحب تسمع فيها الأذان أو يوصلك تنبيه.</p><div class="adhan-options"><label><input type="checkbox" data-adhan-prayer="Fajr" checked> الفجر</label><label><input type="checkbox" data-adhan-prayer="Dhuhr" checked> الظهر</label><label><input type="checkbox" data-adhan-prayer="Asr" checked> العصر</label><label><input type="checkbox" data-adhan-prayer="Maghrib" checked> المغرب</label><label><input type="checkbox" data-adhan-prayer="Isha" checked> العشاء</label></div><label class="adhan-mode-label" for="adhan-mode">نوع التنبيه</label><select id="adhan-mode" class="adhan-mode"><option value="audio">الأذان الكامل في الخلفية (أندرويد)</option><option value="notice">إشعار فقط بدون صوت</option></select><label class="adhan-mode-label" for="adhan-sound">اختار صوت الأذان</label><select id="adhan-sound" class="adhan-mode"><option value="default">أذان عام — Adam-synagda</option><option value="mecca">أذان المسجد الحرام — مكة</option><option value="madinah">أذان المسجد النبوي — المدينة</option><option value="general2">أذان عام — Aishatu98</option><option value="tunisia">أذان تونس</option><option value="morocco">أذان مسجد الحسن الثاني — المغرب</option><option value="syria">أذان بصوت صباح فخري — سوريا</option></select><p class="muted">اسمع كل صوت قبل ما تختارو:</p><div class="adhan-preview-list"><button type="button" class="smallbtn" data-adhan-preview="default">▶️ معاينة الأذان العام</button><button type="button" class="smallbtn" data-adhan-preview="mecca">▶️ معاينة أذان مكة</button><button type="button" class="smallbtn" data-adhan-preview="madinah">▶️ معاينة أذان المدينة</button><button type="button" class="smallbtn" data-adhan-preview="general2">▶️ معاينة الأذان العام</button><button type="button" class="smallbtn" data-adhan-preview="tunisia">▶️ معاينة أذان تونس</button><button type="button" class="smallbtn" data-adhan-preview="morocco">▶️ معاينة أذان المغرب</button><button type="button" class="smallbtn" data-adhan-preview="syria">▶️ معاينة أذان سوريا</button></div><div class="actions adhan-actions"><button type="button" id="adhan-permission">تفعيل الإشعارات</button><button type="button" id="adhan-test">تجربة صوت الأذان</button></div><p id="adhan-status" class="muted" role="status">فعّل الإشعارات من الزر. في أندرويد، التنبيهات المحلية تخدم حتى بعد غلق التطبيق؛ الأذان الكامل في الخلفية متاح في نسخة أندرويد بعد تفعيل الإشعارات والمنبّهات الدقيقة.</p><p class="muted">ملاحظة: في تطبيق أندرويد، الأذان الكامل يشتغل بالصوت المختار حتى بعد غلق التطبيق، مع ضرورة السماح بالإشعارات والمنبّهات الدقيقة وعدم تقييد البطارية. في نسخة المتصفح، يلزم بقاء الصفحة مفتوحة حتى تعمل التنبيهات الصوتية.</p><details class="muted"><summary>مصادر وتراخيص أصوات الأذان</summary><p>«Beautiful adhan» — Adam-synagda، ترخيص CC0 1.0. <a href="https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg" target="_blank" rel="noopener">المصدر</a>.</p><p>أذان المسجد الحرام، مكة — Seyfula Islam، ترخيص CC BY 3.0. <a href="https://commons.wikimedia.org/wiki/File:Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm" target="_blank" rel="noopener">المصدر والترخيص</a>.</p><p>أذان المسجد النبوي، المدينة — ejaz215، ترخيص CC BY 3.0. <a href="https://commons.wikimedia.org/wiki/File:33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg" target="_blank" rel="noopener">المصدر والترخيص</a>.</p><p>«Muslim calling to prayer» — Aishatu98، ترخيص CC0 1.0. <a href="https://commons.wikimedia.org/wiki/File:Muslim_calling_to_prayer.ogg" target="_blank" rel="noopener">المصدر</a>.</p><p>أذان من تونس — B9، ملكية عامة حسب صفحة الملف. <a href="https://commons.wikimedia.org/wiki/File:Oraci%C3%B3n_Al-Azzan.ogg" target="_blank" rel="noopener">المصدر والترخيص</a>.</p><p>أذان مسجد الحسن الثاني بالدار البيضاء — Fraguando، CC BY-SA 4.0. <a href="https://commons.wikimedia.org/wiki/File:Llamada_a_oraci%C3%B3n_Mezquita_Hassan_II.wav" target="_blank" rel="noopener">المصدر والترخيص</a>.</p><p>أذان بصوت صباح فخري — ترخيص Public Domain Mark حسب صفحة الملف. <a href="https://commons.wikimedia.org/wiki/File:Call_to_prayer_by_Sabah_Fakhry.mp3" target="_blank" rel="noopener">المصدر والترخيص</a>.</p><p>تسجيلات CC BY-SA مرفقة باسم صاحب التسجيل ورابط الترخيص، وتم تحويل الصيغ الصوتية لتناسب التطبيق دون تغيير محتوى التسجيل.</p></details><audio id="adhan-audio" preload="none" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Beautiful_adhan.ogg"></audio></div></section>
+<section class="view" id="prayer"><div class="card"><h2>أذكار بعد الصلاة</h2><div class="dhikr"><div class="arabic">أَسْتَغْفِرُ اللَّهَ</div><p class="muted">ثلاث مرات</p></div><div class="dhikr"><div class="arabic">اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ</div><p class="muted">مرة واحدة</p></div><div class="dhikr"><div class="arabic">سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ</div><p class="muted">ثلاثة وثلاثون مرة لكل ذكر</p></div></div></section>
+<section class="view" id="sleep"><div class="card"><h2>أذكار قبل النوم</h2><div class="dhikr"><div class="arabic">بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا</div></div><div class="dhikr"><div class="arabic">اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ</div><p class="muted">ثلاث مرات</p></div><div class="dhikr"><div class="arabic">سُبْحَانَ اللَّهِ (٣٣) — الْحَمْدُ لِلَّهِ (٣٣) — اللَّهُ أَكْبَرُ (٣٤)</div></div></div></section>
+<section class="view" id="duas"><div class="card"><h2>أدعية</h2><div class="dhikr"><div class="arabic">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div><p class="muted">سورة البقرة: 201</p></div><div class="dhikr"><div class="arabic">رَبِّ زِدْنِي عِلْمًا</div><p class="muted">سورة طه: 114</p></div><div class="dhikr"><div class="arabic">رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً ۚ إِنَّكَ أَنْتَ الْوَهَّابُ</div><p class="muted">سورة آل عمران: 8</p></div></div></section>
+<section class="view" id="names"><div class="card"><h2>من أسماء الله الحسنى</h2><div class="tiles"><div class="tile">الرَّحْمَٰن<br><small>واسع الرحمة</small></div><div class="tile">الرَّحِيم<br><small>كثير الرحمة</small></div><div class="tile">الْمَلِك<br><small>مالك الملك</small></div><div class="tile">الْقُدُّوس<br><small>المنزّه عن النقائص</small></div><div class="tile">السَّلَام<br><small>المنزَّه عن كل عيب ونقص</small></div><div class="tile">الْعَزِيز<br><small>الغالب الذي لا يُغلب</small></div></div><p class="muted">هذه مجموعة مختارة للتعريف، ويمكن توسيعها لاحقاً مع مراجعة المعاني والمصادر.</p></div></section>
+<section class="view" id="tasbeeh"><div class="card rosary-card"><h2>📿 السبحة الإلكترونية</h2><p id="zikrLabel" class="rosary-zikr">سبحان الله</p><div class="rosary-shell"><div class="rosary-screen"><span class="rosary-caption">عدد التسبيحات</span><div class="counter" id="count">0</div><span class="rosary-unit">تسبيحة</span></div><button class="big rosary-button" id="add" type="button" aria-label="اضغط للتسبيح"><span>●</span><b>سبّح</b></button></div><div class="rosary-actions actions"><button id="minus" type="button">− أنقص</button><button id="reset" type="button">↺ تصفير</button><button id="change" type="button">✧ غيّر الذكر</button></div><p class="muted">اضغط على زرّ السبحة لكل تسبيحة. العدّاد يحفظ العدد على جهازك.</p></div></section>
+<section class="view" id="tracker"><div class="card"><h2>متابعتي اليومية</h2><p>ضع علامة على ما أنجزته اليوم. تُحفظ العلامات على جهازك.</p><label><input type="checkbox" data-task="prayer"> المحافظة على الصلوات</label><br><label><input type="checkbox" data-task="quran"> ورد من القرآن</label><br><label><input type="checkbox" data-task="adhkar"> أذكار الصباح والمساء</label><br><label><input type="checkbox" data-task="kindness"> عمل خير أو صدقة</label></div></section>
+
+<section class="view" id="quran">
+ <div class="card">
+  <h2>📖 القرآن الكريم</h2>
+  <p class="muted">مصحف بالنص العثماني، مع الاستماع للآيات. يلزم الإنترنت أول مرة لتحميل السورة.</p>
+  <div class="quran-controls">
+   <label for="quran-surah">اختار السورة</label><select id="quran-surah"><option value="1">الفاتحة</option></select>
+   <label for="quran-reciter">القارئ</label><select id="quran-reciter"><option value="ar.alafasy">مشاري العفاسي</option><option value="ar.abdulbasitmurattal">عبد الباسط عبد الصمد</option><option value="ar.husary">محمود خليل الحصري</option><option value="ar.minshawi">محمد صديق المنشاوي</option></select>
+  </div>
+  <div class="quran-actions actions"><button id="quran-load" type="button">فتح السورة</button><button id="quran-save" type="button">حفظ نص السورة على الجهاز</button></div>
+  <p class="muted">الحفظ يشمل نصّ السورة فقط. الاستماع الصوتي قد يحتاج إلى الإنترنت.</p>
+  <p id="quran-status" class="muted" role="status">جاري تحضير فهرس السور...</p>
+  <div id="quran-audio-box" class="quran-audio" hidden><p id="quran-now-playing" role="status" aria-live="polite">اختار آية للاستماع</p><audio id="quran-audio" controls preload="none" aria-label="مشغل تلاوة القرآن"></audio></div>
+  <div id="quran-verses" class="quran-verses"><p class="muted">اختار سورة ثم اضغط «فتح السورة».</p></div>
+ </div>
+</section>
+<section class="view" id="qibla">
+ <div class="card qibla-card">
+  <h2>🧭 اتجاه القبلة</h2>
+  <p>اسمح للموقع باستعمال موقعك واتجاه الهاتف لحساب اتجاه القبلة.</p>
+  <div class="qibla-compass"><div class="qibla-north">شمال</div><div id="qibla-arrow">➤</div><div class="qibla-kaaba">🕋</div></div>
+  <p id="qibla-result" class="qibla-result" role="status" aria-live="polite">اضغط على الزر لتحديد اتجاه القبلة.</p>
+  <div class="actions"><button id="qibla-locate" type="button">تحديد موقعي واتجاه القبلة</button><button id="qibla-sensor" type="button">تفعيل بوصلة الهاتف</button></div>
+  <p class="muted">الدقة تعتمد على GPS والبوصلة الموجودة في هاتفك. أبعد الهاتف عن المعادن والمغناطيس، وقارن الاتجاه بعلامة قبلة موثوقة في المسجد.</p>
+ </div>
+</section>
+<section class="view" id="khatma">
+ <div class="card">
+  <h2>🌙 ختمتي مع القرآن</h2>
+  <p>تابع الأجزاء التي قرأتها. التقدم محفوظ على هذا الجهاز.</p>
+  <div class="khatma-progress"><strong id="khatma-count">0</strong><span>من 30 جزءاً</span><div class="dhikr-progress"><span id="khatma-bar"></span></div></div>
+  <div id="khatma-juz" class="khatma-grid"></div>
+  <div class="actions"><button id="khatma-reset" type="button">إعادة ختمة جديدة</button><button id="khatma-share" type="button">مشاركة تقدّمي</button></div>
+  <p id="khatma-status" class="muted">علّم الجزء بعد ما تكمل قراءته.</p>
+ </div>
+ <div class="card khatma-cloud-panel" id="zad-khatma-cloud-panel">
+  <h2>🤝 ختمة جماعية مباشرة</h2>
+  <p>اعمل مجموعة مع العائلة والأصحاب، اقسموا الأجزاء، وكل واحد يحجز الجزء متاعه ويعلّم عليه كي يكمل. التغييرات تظهر للمشاركين في نفس المجموعة.</p>
+  <div id="khatma-cloud-status" class="khatma-cloud-status" role="status">اضغط على «تفعيل المشاركة» للبدء. ما نطلبوش منك بريد إلكتروني ولا كلمة سر.</div>
+  <div class="khatma-cloud-actions" style="margin-top:10px"><button id="khatma-cloud-start" type="button">تفعيل المشاركة</button></div>
+  <div id="khatma-cloud-forms" hidden>
+   <label for="khatma-cloud-name">اسمك اللي يظهر للمشاركين</label>
+   <input id="khatma-cloud-name" maxlength="40" placeholder="مثال: أحمد">
+   <label for="khatma-cloud-title">اسم الختمة الجديدة</label>
+   <input id="khatma-cloud-title" maxlength="80" placeholder="مثال: ختمة العائلة">
+   <div class="khatma-cloud-actions"><button id="khatma-cloud-create" type="button">إنشاء ختمة جديدة</button></div>
+   <div style="margin-top:16px;border-top:1px solid #dce7f1;padding-top:14px">
+    <label for="khatma-cloud-code">رمز دعوة عندك</label>
+    <input id="khatma-cloud-code" maxlength="12" placeholder="أدخل رمز الدعوة من 12 حرفاً" style="text-transform:uppercase;direction:ltr;text-align:center">
+    <div class="khatma-cloud-actions"><button id="khatma-cloud-join" class="secondary" type="button">الانضمام إلى ختمة</button></div>
+   </div>
+  </div>
+  <div id="khatma-cloud-group-area" hidden>
+   <div id="khatma-cloud-groups" class="khatma-cloud-groups"></div>
+   <div id="khatma-cloud-invite-area" class="khatma-cloud-status" hidden></div>
+   <div id="khatma-cloud-progress" class="muted"></div>
+   <div id="khatma-cloud-grid" class="khatma-cloud-grid"></div>
+   <div class="khatma-cloud-actions"><button id="khatma-cloud-share" class="secondary" type="button">مشاركة رمز الدعوة</button><button id="khatma-cloud-refresh" class="secondary" type="button">تحديث</button></div>
+  </div>
+  <p class="muted" style="margin-top:12px">ملاحظة: الحساب المجهول مربوط بهذا المتصفح والجهاز. إذا مسحت بيانات المتصفح أو بدّلت الهاتف، قد تفقد إمكانية الدخول لنفس العضوية. لا تمسح بيانات المتصفح إذا تحب تواصل بنفس الحساب.</p>
+ </div>
+</section>
+
+<section class="view" id="calendar">
+ <div class="card calendar-card">
+  <div class="calendar-heading"><span class="calendar-mark">📅</span><div><h2>الرزنامة الميلادية والهجرية</h2><p class="muted">تابع التاريخين معاً حسب توقيت تونس</p></div></div>
+  <div class="calendar-today" id="calendar-today"></div>
+  <div class="calendar-controls"><button type="button" id="calendar-prev" aria-label="الشهر السابق">‹</button><strong id="calendar-month-title"></strong><button type="button" id="calendar-next" aria-label="الشهر التالي">›</button><button type="button" id="calendar-current">اليوم</button></div>
+  <div class="calendar-weekdays"><span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span><span>الخميس</span><span>الجمعة</span><span>السبت</span></div>
+  <div class="calendar-grid" id="calendar-grid"></div>
+  <div class="calendar-legend"><span><i class="legend-greg"></i> التاريخ الميلادي</span><span><i class="legend-hijri"></i> التاريخ الهجري</span><span><i class="legend-today"></i> اليوم</span></div>
+  <p class="calendar-note">قد يختلف التاريخ الهجري بيوم حسب رؤية الهلال والبلد. يُعرض هنا وفق تقويم أم القرى عند توفره.</p>
+ </div>
+</section>
+<section class="view" id="settings">
+ <div class="card settings-card">
+  <h2>⚙️ إعدادات زاد الخير</h2>
+  <p class="muted">اختار طريقة العرض اللي تريحك. إعداداتك تتحفظ على جهازك وحدك.</p>
+  <div class="setting-row"><div><strong>حجم الكتابة</strong><p class="muted">صغير أو متوسط أو كبير</p></div><select id="zad-font-size" aria-label="حجم الكتابة"><option value="small">صغير</option><option value="medium">متوسط</option><option value="large">كبير</option></select></div>
+  <div class="setting-row"><div><strong>تذكير صوتي عند فتح التطبيق</strong><p class="muted">يقول: اذكر الله، ثم صلِّ على النبي محمد ﷺ</p></div><label class="setting-switch"><input type="checkbox" id="zad-startup-voice"><span>تشغيل</span></label></div>
+  <div class="setting-row"><div><strong>الوضع الليلي 🌙</strong><p class="muted">ألوان مريحة للقراءة في الليل</p></div><label class="setting-switch"><input type="checkbox" id="zad-dark-mode"><span>تشغيل</span></label></div>
+  <div class="setting-row"><div><strong>اهتزاز السبحة</strong><p class="muted">اهتزاز خفيف عند التسبيح إذا هاتفك يدعم ذلك</p></div><label class="setting-switch"><input type="checkbox" id="zad-vibration"><span>تشغيل</span></label></div>
+  <div class="setting-row"><div><strong>مشاركة زاد الخير</strong><p class="muted">ابعث التطبيق لأهلك وأصحابك</p></div><button class="smallbtn" type="button" id="zad-settings-share">مشاركة</button></div>
+  <div class="setting-row"><div><strong>نسخ رابط التطبيق</strong><p class="muted">ابعث الرابط في واتساب أو ماسنجر</p></div><button class="smallbtn" type="button" id="zad-settings-copy">نسخ الرابط</button></div>
+  <p id="zad-settings-status" class="muted" role="status">إعداداتك محفوظة على هذا الجهاز.</p>
+  <div class="actions"><button type="button" id="zad-settings-reset">إرجاع الإعدادات الأصلية</button></div>
+ </div>
+ <div class="card"><h2>عن زاد الخير</h2><p>ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله.</p><p class="muted">نسأل الله أن ينفع به ويتقبّل من كل من ساهم فيه.</p><p class="muted" style="font-size:11px">مصدر صور الأماكن المقدسة: الكعبة — GusJuned (CC BY-SA 3.0)؛ المسجد النبوي — Wadie Al-Houh (CC0)؛ المسجد الأقصى — Nikeman916 (ملكية عامة).</p><p class="muted" style="font-size:11px"><a href="https://commons.wikimedia.org/wiki/File:Kaaba,_Masjid_Al-Haram,_Mecca,_Saudi_Arabia_-_panoramio.jpg" target="_blank" rel="noopener">ترخيص صورة الكعبة</a> · <a href="https://commons.wikimedia.org/wiki/File:Green_Dome,_Masjid_Al_Nabawi.jpg" target="_blank" rel="noopener">صورة المسجد النبوي</a> · <a href="https://commons.wikimedia.org/wiki/File:Al_Aqsa.jpg" target="_blank" rel="noopener">صورة المسجد الأقصى</a></p></div>
+</section>
+</main>
+<footer>زاد الخير • نسأل الله القبول والإخلاص • المحتوى قابل للمراجعة والتطوير</footer>
+<!-- مكتبة الختمة الجماعية تتحمّل عند طلب استعمالها فقط -->
+<script src="./supabase-config.js"></script>
 <script type="module">if(window.Capacitor?.isNativePlatform?.()){try{const [{LocalNotifications},{registerPlugin}]=await Promise.all([import("https://esm.sh/@capacitor/local-notifications@8.0.0"),import("https://esm.sh/@capacitor/core@8.6.0")]);window.ZadLocalNotifications=LocalNotifications;window.ZadPrayerAlarm=registerPlugin("PrayerAlarm")}catch(error){console.warn("تعذّر تحميل خدمات التنبيهات الأصلية",error)}}</script>
 <script>
 (()=>{const $=s=>document.querySelector(s);let count=Number(localStorage.getItem('zad-count')||0),names=['سبحان الله','الحمد لله','الله أكبر','أستغفر الله'];let ni=0;function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(id==='morning'||id==='evening')document.querySelector('#'+id+' .dhikr-start-btn')?.click()}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));document.querySelectorAll('.home-shortcuts [data-go]').forEach(tile=>{tile.setAttribute('role','button');tile.setAttribute('tabindex','0');tile.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show(tile.dataset.go)}})});function paint(){$('#count').textContent=count;localStorage.setItem('zad-count',count)}$('#add').onclick=()=>{count++;paint()};$('#minus').onclick=()=>{count=Math.max(0,count-1);paint()};$('#reset').onclick=()=>{count=0;paint()};$('#change').onclick=()=>{$('#zikrLabel').textContent=names[++ni%names.length]};document.querySelectorAll('[data-task]').forEach(c=>{c.checked=localStorage.getItem('zad-task-'+c.dataset.task)==='1';c.onchange=()=>localStorage.setItem('zad-task-'+c.dataset.task,c.checked?'1':'0')});
