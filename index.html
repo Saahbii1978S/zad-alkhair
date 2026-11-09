@@ -1961,7 +1961,65 @@ homeCountry.onchange=()=>{localStorage.setItem('zad-prayer-location-mode','manua
 citySel.onchange=()=>{localStorage.setItem('zad-prayer-location-mode','manual');homeCity.value=citySel.value;loadPrayerTimes()};
 homeCity.onchange=()=>{localStorage.setItem('zad-prayer-location-mode','manual');citySel.value=homeCity.value;loadPrayerTimes()};
 window.zadLoadPrayerTimes=(...args)=>loadPrayerTimes(...args);
-async function loadPrayerTimes(latitude=null,longitude=null){const requestId=++prayerRequestId;const city=citySel.value,country=countrySel.value;const byLocation=Number.isFinite(latitude)&&Number.isFinite(longitude);if(!byLocation){localStorage.setItem('zad-prayer-city',city);localStorage.setItem('zad-prayer-country',country);}const loading='جاري تحميل المواقيت...';$('#prayer-date').textContent=loading;$('#home-prayer-date').textContent=loading;$('#home-prayer-list').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#fff;padding:8px">جاري جلب المواقيت...</div>';const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);try{const url=byLocation?'https://api.aladhan.com/v1/timings?latitude='+latitude+'&longitude='+longitude+'&method=18':'https://api.aladhan.com/v1/timingsByCity?city='+encodeURIComponent(city)+'&country='+encodeURIComponent(country)+'&method=18';const res=await fetch(url,{cache:'no-store',signal:controller.signal});if(!res.ok)throw new Error('network '+res.status);const json=await res.json();if(requestId!==prayerRequestId)return;if(json.code!==200||!json.data?.timings)throw new Error('invalid API response');prayerTimes=json.data.timings;prayerTimezone=json.data.meta?.timezone||'Africa/Tunis';scheduleNativePrayerAlerts();const dateLabel=(byLocation?'موقعك الحالي':citySel.options[citySel.selectedIndex].text+'، '+countries[country][0])+' • '+json.data.date.readable+' • '+json.data.date.hijri.date+' هـ';$('#prayer-date').textContent=dateLabel;$('#home-prayer-date').textContent=dateLabel;const keys=['Fajr','Dhuhr','Asr','Maghrib','Isha'];const cleanTime=k=>String(prayerTimes[k]||'—').split(' ')[0];const prayerIcons={Fajr:'🌅',Dhuhr:'☀️',Asr:'🌤️',Maghrib:'🌇',Isha:'🌙'};$('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item" data-prayer-key="'+k+'"><span class="prayer-item-name"><span class="prayer-icon" aria-hidden="true">'+prayerIcons[k]+'</span>'+prayerNames[k]+'</span><b>'+cleanTime(k)+'</b></div>').join('');const homeKeys=[['Fajr','الفجر','🌅'],['Sunrise','الشروق','🌄'],['Dhuhr','الظهر','☀️'],['Asr','العصر','🌤️'],['Maghrib','المغرب','🌇'],['Isha','العشاء','🌙']];$('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span>'+label+'</span><b>'+cleanTime(k)+'</b></div>').join('');tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000)}catch(e){if(requestId!==prayerRequestId)return;prayerTimes=null;const msg=e.name==='AbortError'?'تأخّر الاتصال بخدمة المواقيت. أعد المحاولة بعد قليل.':'تعذّر تحميل المواقيت. تثبّت من الإنترنت واضغط «إعادة المحاولة».';$('#prayer-date').textContent=msg;$('#home-prayer-date').textContent=msg;$('#prayer-list').innerHTML='<div class="prayer-item" style="grid-column:1/-1"><span>لم يتم تحميل المواقيت</span><button class="smallbtn" type="button" onclick="document.getElementById(\'prayer-refresh\').click()">إعادة المحاولة</button></div>';$('#home-prayer-list').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#fff;padding:8px">لم يتم تحميل المواقيت<br><button type="button" id="home-prayer-retry" style="margin-top:7px;border:1px solid #f0d99e;background:transparent;color:#f0d99e;border-radius:9px;padding:6px 12px;font:700 12px Tajawal">إعادة المحاولة</button></div>';$('#home-prayer-retry').onclick=loadPrayerTimes;$('#next-prayer-name').textContent='—';$('#next-prayer-countdown').textContent='—';$('#home-next-name').textContent='—';$('#home-next-countdown').textContent='—';if(prayerTicker)clearInterval(prayerTicker)}finally{clearTimeout(timeout)}}function tickPrayer(){if(!prayerTimes)return;const now=new Date(),local=cityClockParts(now),keys=['Fajr','Dhuhr','Asr','Maghrib','Isha'];let next='',target=null;for(const k of keys){const p=String(prayerTimes[k]||'').slice(0,5).split(':').map(Number);if(p.length!==2||p.some(Number.isNaN))continue;const d=cityLocalToDate(local.year,local.month,local.day,p[0],p[1]);if(d>now){next=k;target=d;break}}if(!target){next='Fajr';const tomorrow=new Date(Date.UTC(local.year,local.month-1,local.day+1));const p=String(prayerTimes.Fajr||'').slice(0,5).split(':').map(Number);target=cityLocalToDate(tomorrow.getUTCFullYear(),tomorrow.getUTCMonth()+1,tomorrow.getUTCDate(),p[0],p[1])}const n=Math.max(0,Math.floor((target-now)/1000)),h=Math.floor(n/3600),m=Math.floor(n%3600/60),sec=n%60;$('#next-prayer-name').textContent=prayerNames[next];$('#next-prayer-countdown').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':');$('#home-next-name').textContent=prayerNames[next];$('#home-next-countdown').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':');document.querySelectorAll('[data-prayer-key]').forEach(el=>{const isNext=el.dataset.prayerKey===next;el.classList.toggle('is-next-prayer',isNext);if(isNext)el.setAttribute('aria-current','time');else el.removeAttribute('aria-current')})}
+async function reversePrayerLocation(latitude,longitude){
+ try{
+  const response=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+encodeURIComponent(latitude)+'&longitude='+encodeURIComponent(longitude)+'&localityLanguage=ar',{cache:'no-store'});
+  if(!response.ok)throw new Error('geocode '+response.status);
+  const place=await response.json();
+  const parts=[place.locality||place.city||place.principalSubdivision,place.principalSubdivision,place.countryName].filter((v,i,a)=>v&&a.indexOf(v)===i);
+  return parts.join('، ');
+ }catch(e){return ''}
+}
+async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
+ const requestId=++prayerRequestId,city=citySel.value,country=countrySel.value;
+ const byLocation=Number.isFinite(latitude)&&Number.isFinite(longitude);
+ if(!byLocation){localStorage.setItem('zad-prayer-city',city);localStorage.setItem('zad-prayer-country',country);}
+ const loading='جاري تحميل المواقيت حسب موقعك...';
+ $('#prayer-date').textContent=loading;$('#home-prayer-date').textContent=loading;
+ $('#home-prayer-list').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#fff;padding:8px">جاري جلب المواقيت...</div>';
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),18000);
+ try{
+  const url=byLocation?'https://api.aladhan.com/v1/timings?latitude='+latitude+'&longitude='+longitude+'&method=18':'https://api.aladhan.com/v1/timingsByCity?city='+encodeURIComponent(city)+'&country='+encodeURIComponent(country)+'&method=18';
+  const res=await fetch(url,{cache:'no-store',signal:controller.signal});
+  if(!res.ok)throw new Error('network '+res.status);
+  const json=await res.json();
+  if(requestId!==prayerRequestId)return;
+  if(json.code!==200||!json.data?.timings)throw new Error('invalid API response');
+  prayerTimes=json.data.timings;
+  prayerTimezone=json.data.meta?.timezone||'Africa/Tunis';
+  scheduleNativePrayerAlerts();
+  let locationLabel=citySel.options[citySel.selectedIndex].text+'، '+countries[country][0];
+  if(byLocation){
+   const place=await reversePrayerLocation(latitude,longitude);
+   if(requestId!==prayerRequestId)return;
+   locationLabel=place||('إحداثيات GPS: '+latitude.toFixed(4)+', '+longitude.toFixed(4));
+   const accuracyText=Number.isFinite(accuracy)?' • دقّة GPS حوالي '+Math.round(accuracy)+' م':'';
+   const status=document.getElementById('zad-location-status');
+   if(status)status.textContent='📍 لقاك GPS في: '+locationLabel+accuracyText+' • مواقيت الصلاة حسب التوقيت المحلي للمنطقة ('+prayerTimezone+').';
+  }else{
+   const status=document.getElementById('zad-location-status');
+   if(status&&localStorage.getItem('zad-prayer-location-mode')!=='auto')status.textContent='المواقيت مضبوطة حسب المدينة المختارة: '+locationLabel+' • '+prayerTimezone;
+  }
+  const dateLabel=locationLabel+' • '+json.data.date.readable+' • '+json.data.date.hijri.date+' هـ';
+  $('#prayer-date').textContent=dateLabel;$('#home-prayer-date').textContent=dateLabel;
+  const keys=['Fajr','Dhuhr','Asr','Maghrib','Isha'],cleanTime=k=>String(prayerTimes[k]||'—').split(' ')[0];
+  const prayerIcons={Fajr:'🌅',Dhuhr:'☀️',Asr:'🌤️',Maghrib:'🌇',Isha:'🌙'};
+  $('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item" data-prayer-key="'+k+'"><span class="prayer-item-name"><span class="prayer-icon" aria-hidden="true">'+prayerIcons[k]+'</span>'+prayerNames[k]+'</span><b>'+cleanTime(k)+'</b></div>').join('');
+  const homeKeys=[['Fajr','الفجر','🌅'],['Sunrise','الشروق','🌄'],['Dhuhr','الظهر','☀️'],['Asr','العصر','🌤️'],['Maghrib','المغرب','🌇'],['Isha','العشاء','🌙']];
+  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span>'+label+'</span><b>'+cleanTime(k)+'</b></div>').join('');
+  tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000);
+ }catch(e){
+  if(requestId!==prayerRequestId)return;
+  prayerTimes=null;
+  const msg=e.name==='AbortError'?'تأخّر الاتصال بخدمة المواقيت. أعد المحاولة بعد قليل.':'تعذّر تحميل المواقيت. تثبّت من الإنترنت واضغط «إعادة المحاولة».';
+  $('#prayer-date').textContent=msg;$('#home-prayer-date').textContent=msg;
+  $('#prayer-list').innerHTML='<div class="prayer-item" style="grid-column:1/-1"><span>لم يتم تحميل المواقيت</span><button class="smallbtn" type="button" onclick="document.getElementById(\'prayer-refresh\').click()">إعادة المحاولة</button></div>';
+  $('#home-prayer-list').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#fff;padding:8px">لم يتم تحميل المواقيت<br><button type="button" id="home-prayer-retry" style="margin-top:7px;border:1px solid #f0d99e;background:transparent;color:#f0d99e;border-radius:9px;padding:6px 12px;font:700 12px Tajawal">إعادة المحاولة</button></div>';
+  $('#home-prayer-retry').onclick=()=>byLocation?loadPrayerTimes(latitude,longitude,accuracy):loadPrayerTimes();
+  $('#next-prayer-name').textContent='—';$('#next-prayer-countdown').textContent='—';$('#home-next-name').textContent='—';$('#home-next-countdown').textContent='—';
+  if(prayerTicker)clearInterval(prayerTicker);
+ }finally{clearTimeout(timeout)}
+}function tickPrayer(){if(!prayerTimes)return;const now=new Date(),local=cityClockParts(now),keys=['Fajr','Dhuhr','Asr','Maghrib','Isha'];let next='',target=null;for(const k of keys){const p=String(prayerTimes[k]||'').slice(0,5).split(':').map(Number);if(p.length!==2||p.some(Number.isNaN))continue;const d=cityLocalToDate(local.year,local.month,local.day,p[0],p[1]);if(d>now){next=k;target=d;break}}if(!target){next='Fajr';const tomorrow=new Date(Date.UTC(local.year,local.month-1,local.day+1));const p=String(prayerTimes.Fajr||'').slice(0,5).split(':').map(Number);target=cityLocalToDate(tomorrow.getUTCFullYear(),tomorrow.getUTCMonth()+1,tomorrow.getUTCDate(),p[0],p[1])}const n=Math.max(0,Math.floor((target-now)/1000)),h=Math.floor(n/3600),m=Math.floor(n%3600/60),sec=n%60;$('#next-prayer-name').textContent=prayerNames[next];$('#next-prayer-countdown').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':');$('#home-next-name').textContent=prayerNames[next];$('#home-next-countdown').textContent=[h,m,sec].map(x=>String(x).padStart(2,'0')).join(':');document.querySelectorAll('[data-prayer-key]').forEach(el=>{const isNext=el.dataset.prayerKey===next;el.classList.toggle('is-next-prayer',isNext);if(isNext)el.setAttribute('aria-current','time');else el.removeAttribute('aria-current')})}
 const adhanAudio=$('#adhan-audio'),adhanMode=$('#adhan-mode'),adhanStatus=$('#adhan-status'),adhanSound=$('#adhan-sound');
 const adhanSounds={default:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Beautiful_adhan.ogg',mecca:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm',madinah:'https://commons.wikimedia.org/wiki/Special:Redirect/file/33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg',general2:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Muslim_calling_to_prayer.ogg',tunisia:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Oraci%C3%B3n_Al-Azzan.ogg',morocco:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Llamada_a_oraci%C3%B3n_Mezquita_Hassan_II.wav',syria:'https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3'};
 const adhanPrefs=JSON.parse(localStorage.getItem('zad-adhan-prefs')||'{}');
@@ -2344,15 +2402,15 @@ function requestPrayerLocation(showMessage=true){
   position=>{
    localStorage.setItem('zad-prayer-location-mode','auto');
    if(btn){btn.disabled=false;btn.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';}
-   say('تم تحديد موقعك. جاري ضبط مواقيت الصلاة...');
-   window.zadLoadPrayerTimes(position.coords.latitude,position.coords.longitude);
+   const coords=position.coords;
+   say('تم تحديد GPS بدقة أولية '+Math.round(coords.accuracy)+' متر. جاري معرفة المنطقة وضبط الأذان على توقيتها...');
+   window.zadLoadPrayerTimes(coords.latitude,coords.longitude,coords.accuracy);
   },
   error=>{
    if(btn){btn.disabled=false;btn.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';}
    localStorage.setItem('zad-prayer-location-mode','manual');
-   const message=error.code===1?'إذن الموقع مرفوض. افتح إعدادات الموقع في Chrome واسمح لزاد الخير باستعمال الموقع.':error.code===2?'الهاتف ما قدرش يحدد الموقع. شغّل GPS وحاول في مكان مفتوح.':'تحديد الموقع تأخّر. شغّل GPS والإنترنت وعاود المحاولة.';
-   say(message);
-   window.zadLoadPrayerTimes();
+   const message=error.code===1?'إذن الموقع مرفوض. افتح إعدادات Chrome واسمح لزاد الخير باستعمال الموقع.':error.code===2?'الهاتف ما قدرش يحدد موقعك بدقة. شغّل GPS وجرّب في مكان مفتوح.':'GPS تأخّر في تحديد موقعك. شغّل الموقع عالي الدقة وعاود المحاولة.';
+   say(message+' ما بدّلناش للمواقيت حسب GPS؛ تنجم تختار المدينة يدوياً مؤقتاً.');
   },
   {enableHighAccuracy:true,timeout:25000,maximumAge:0}
  );
