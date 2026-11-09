@@ -173,8 +173,14 @@ manifest.write_text(s,encoding="utf-8")
 main=java/"MainActivity.java"
 ms=main.read_text(encoding="utf-8")
 if "PrayerAlarmPlugin.class" not in ms:
- ms=ms.replace("public class MainActivity extends BridgeActivity {","public class MainActivity extends BridgeActivity {\n    @Override\n    public void onCreate(android.os.Bundle savedInstanceState) {\n        registerPlugin(PrayerAlarmPlugin.class);
-        registerPlugin(WelcomeVoicePlugin.class);\n        super.onCreate(savedInstanceState);\n    }")
+    insertion = """public class MainActivity extends BridgeActivity {
+    @Override
+    public void onCreate(android.os.Bundle savedInstanceState) {
+        registerPlugin(PrayerAlarmPlugin.class);
+        registerPlugin(WelcomeVoicePlugin.class);
+        super.onCreate(savedInstanceState);
+    }"""
+    ms=ms.replace("public class MainActivity extends BridgeActivity {", insertion)
 main.write_text(ms,encoding="utf-8")
 raw=Path("android/app/src/main/res/raw");raw.mkdir(parents=True,exist_ok=True)
 sources={
