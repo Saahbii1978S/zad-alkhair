@@ -144,6 +144,7 @@ sources={
 mecca_webm=raw/"adhan_mecca.webm"
 subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm","-o",str(mecca_webm)],check=True)
 subprocess.run(["ffmpeg","-y","-i",str(mecca_webm),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_mecca.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+mecca_webm.unlink()
 mecca_data=(raw/"adhan_mecca.ogg").read_bytes()
 if len(mecca_data)<10000 or not mecca_data.startswith(b"OggS"):
  raise SystemExit("Mecca adhan conversion failed OGG validation")
