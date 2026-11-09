@@ -1726,7 +1726,7 @@ const adhanEnabled={Fajr:true,Dhuhr:true,Asr:true,Maghrib:true,Isha:true,...(adh
 adhanMode.value=adhanPrefs.mode||'audio';
 adhanSound.value=adhanSounds[adhanPrefs.sound]?adhanPrefs.sound:'default';
 adhanAudio.src=adhanSounds[adhanSound.value];
-adhanSound.onchange=()=>{adhanAudio.pause();adhanAudio.currentTime=0;adhanAudio.src=adhanSounds[adhanSound.value];saveAdhanPrefs();adhanMessage('تم حفظ صوت الأذان المختار على هذا الجهاز. اضغط «تجربة صوت الأذان» للاستماع.');};
+adhanSound.onchange=()=>{adhanAudio.pause();adhanAudio.currentTime=0;adhanAudio.src=adhanSounds[adhanSound.value];saveAdhanPrefs();scheduleNativePrayerAlerts();adhanMessage('تم حفظ صوت الأذان المختار على هذا الجهاز، وسيُستخدم في الأذان الخلفي بعد إعادة ضبط التنبيهات.');};
 document.querySelectorAll('[data-adhan-prayer]').forEach(el=>{el.checked=adhanEnabled[el.dataset.adhanPrayer];el.onchange=()=>{adhanEnabled[el.dataset.adhanPrayer]=el.checked;saveAdhanPrefs();scheduleNativePrayerAlerts()}});
 function saveAdhanPrefs(){localStorage.setItem('zad-adhan-prefs',JSON.stringify({enabled:adhanEnabled,mode:adhanMode.value,sound:adhanSound.value}))}
 adhanMode.onchange=()=>{saveAdhanPrefs();scheduleNativePrayerAlerts()};
