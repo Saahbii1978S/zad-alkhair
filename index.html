@@ -2686,6 +2686,58 @@ header.hero .tag{
  #home .home-shortcuts .tile>span:last-child{font-size:12px!important}
 }
 </style>
+
+<style id="zad-prayer-no-individual-boxes-v7">
+/* الرئيسية: أوقات الصلاة في صف واحد متصل دون مستطيلات لكل صلاة */
+#home #home-prayer-list{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:0!important;padding:10px 0!important;margin:12px 0!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;overflow:visible!important
+}
+#home #home-prayer-list>div{
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;min-width:0!important;min-height:76px!important;
+ gap:5px!important;padding:5px 0!important;margin:0!important;
+ background:transparent!important;background-color:transparent!important;
+ border:0!important;border-left:1px solid #e2eaf0!important;
+ border-radius:0!important;outline:0!important;box-shadow:none!important;
+}
+#home #home-prayer-list>div:last-child{border-left:0!important}
+#home #home-prayer-list>div.is-next-prayer{
+ background:transparent!important;background-color:transparent!important;
+ border:0!important;border-left:1px solid #e2eaf0!important;
+ border-radius:0!important;outline:0!important;box-shadow:inset 0 -3px #438ab7!important
+}
+#home #home-prayer-list>div.is-next-prayer:last-child{border-left:0!important}
+#home #home-prayer-list>div>span:not(.prayer-icon){
+ display:block!important;margin:0!important;padding:0!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ color:#65798a!important;font-size:clamp(9px,2.5vw,12px)!important;
+ font-weight:800!important;white-space:nowrap!important
+}
+#home #home-prayer-list>div>.prayer-icon{
+ display:grid!important;place-items:center!important;width:30px!important;height:30px!important;
+ margin:0!important;padding:0!important;border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;color:#397da8!important;
+ font-size:19px!important;line-height:1!important
+}
+#home #home-prayer-list>div>b{
+ display:block!important;margin:0!important;padding:0!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ color:#193f5d!important;font-size:clamp(10px,2.8vw,14px)!important;
+ font-weight:900!important;direction:ltr!important;white-space:nowrap!important
+}
+#home #home-prayer-list>div.is-next-prayer>span,
+#home #home-prayer-list>div.is-next-prayer>b{color:#145b8a!important}
+@media(max-width:390px){
+ #home #home-prayer-list>div{min-height:70px!important;gap:4px!important}
+ #home #home-prayer-list>div>span:not(.prayer-icon){font-size:8.5px!important}
+ #home #home-prayer-list>div>.prayer-icon{width:25px!important;height:25px!important;font-size:16px!important}
+ #home #home-prayer-list>div>b{font-size:9px!important}
+}
+</style>
+
 </body></html>
 
 <style id="zad-colourful-shortcuts-v1">
