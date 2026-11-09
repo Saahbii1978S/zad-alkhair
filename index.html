@@ -2738,6 +2738,95 @@ header.hero .tag{
 }
 </style>
 
+
+<style id="zad-prayer-unified-final-v8">
+/* توحيد عرض الصلوات الست في صف واحد؛ لا مستطيل مستقل لكل صلاة */
+html body .home-prayer-card .home-prayer-list{
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:0!important;
+  padding:8px 0!important;
+  margin:12px 0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+html body .home-prayer-card .home-prayer-list > div{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:0!important;
+  min-height:68px!important;
+  gap:4px!important;
+  margin:0!important;
+  padding:4px 1px!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-left:1px solid #dce5ec!important;
+  border-radius:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  text-align:center!important;
+}
+html body .home-prayer-card .home-prayer-list > div:last-child{border-left:0!important}
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer{
+  background:transparent!important;
+  border:0!important;
+  border-left:1px solid #dce5ec!important;
+  border-radius:0!important;
+  box-shadow:inset 0 -3px #438ab7!important;
+}
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer:last-child{border-left:0!important}
+html body .home-prayer-card .home-prayer-list > div > span{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  white-space:nowrap!important;
+}
+html body .home-prayer-card .home-prayer-list > div > span.prayer-icon{
+  width:auto!important;
+  height:auto!important;
+  font-size:17px!important;
+  line-height:1.2!important;
+  color:#397da8!important;
+}
+html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){
+  color:#65798a!important;
+  font-size:clamp(8px,2.4vw,11px)!important;
+  font-weight:800!important;
+}
+html body .home-prayer-card .home-prayer-list > div > b{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  color:#193f5d!important;
+  font-size:clamp(9px,2.7vw,13px)!important;
+  font-weight:900!important;
+  direction:ltr!important;
+  white-space:nowrap!important;
+}
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer > span:not(.prayer-icon),
+html body .home-prayer-card .home-prayer-list > div.is-next-prayer > b{color:#145b8a!important}
+@media(max-width:390px){
+  html body .home-prayer-card .home-prayer-list > div{min-height:62px!important;gap:3px!important;padding:3px 0!important}
+  html body .home-prayer-card .home-prayer-list > div > span.prayer-icon{font-size:14px!important}
+  html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){font-size:8px!important}
+  html body .home-prayer-card .home-prayer-list > div > b{font-size:8.5px!important}
+}
+</style>
+
 </body></html>
 
 <style id="zad-colourful-shortcuts-v1">
