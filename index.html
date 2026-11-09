@@ -1678,7 +1678,7 @@ function setupDhikr(id){
    else{step.textContent=(current+1)+' / '+items.length;const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');clone.querySelector('.muted:last-child')?.remove();focusContent.appendChild(clone);const activate=()=>increment(items[current]);clone.addEventListener('click',activate);clone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});focus.querySelector('.dhikr-focus-hint').textContent='اضغط على الذكر أو على العدّاد لتسجيل التكرار';}
   }else{focus.hidden=true;document.body.classList.remove('dhikr-focus-open')}
  }
- function increment(el){const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));showDone=false;render()}
+ function increment(el){const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));showDone=false;render()}
  items.forEach(el=>{el.addEventListener('click',()=>increment(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}})});
  startBtn.onclick=()=>{if(activeIndex()<0){counts={};localStorage.setItem(key,JSON.stringify(counts))}showDone=false;focusMode=true;render()};
  showBtn.onclick=()=>{showDone=!showDone;render()};
