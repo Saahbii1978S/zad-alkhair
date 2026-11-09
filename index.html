@@ -1707,6 +1707,21 @@ html body .home-prayer-card .home-prayer-list > div{
 .home-shortcuts .tile:nth-child(6n+5) .shortcut-icon{background:#fff5dc!important;border-color:#f2e5bd!important;color:#a17b2f!important}
 .home-shortcuts .tile:nth-child(6n) .shortcut-icon{background:#fcecf1!important;border-color:#f3dce5!important;color:#ae607d!important}
 </style>
+
+<style id="zad-prayer-ruqaa-larger-v2">
+html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){
+ font-size:clamp(17px,4.6vw,21px)!important;
+ line-height:1.2!important;
+}
+html body .home-prayer-card .home-prayer-list > div > b{
+ font-size:clamp(21px,5.4vw,26px)!important;
+ line-height:1.2!important;
+}
+@media(max-width:390px){
+ html body .home-prayer-card .home-prayer-list > div > span:not(.prayer-icon){font-size:16px!important}
+ html body .home-prayer-card .home-prayer-list > div > b{font-size:19px!important}
+}
+</style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
