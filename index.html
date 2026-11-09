@@ -1745,7 +1745,7 @@ async function scheduleNativePrayerAlerts(){
    return {key,hour:hm[0],minute:hm[1],enabled:!!adhanEnabled[key]};
   }).filter(x=>x.enabled&&Number.isInteger(x.hour)&&Number.isInteger(x.minute)&&x.hour>=0&&x.hour<24&&x.minute>=0&&x.minute<60);
   if(adhanMode.value==='audio'&&window.ZadPrayerAlarm){
-   await window.ZadPrayerAlarm.schedule({times:JSON.stringify(times.map(x=>({hour:x.hour,minute:x.minute})))});
+   await window.ZadPrayerAlarm.schedule({times:JSON.stringify(times.map(x=>({hour:x.hour,minute:x.minute}))),sound:adhanSound.value});
    adhanMessage('تم ضبط الأذان الكامل في الخلفية للصلوات المفعّلة، مع إعادة ضبطه بعد إعادة تشغيل الهاتف.');
    return;
   }
