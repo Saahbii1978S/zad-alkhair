@@ -2129,8 +2129,8 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
    return;
   }
   if(navigator.share){await navigator.share(data);return;}
-  if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(data.url);alert('تم نسخ رابط زاد الخير. ابعثه لأصحابك.');return;}
-  window.prompt('انسخ رابط زاد الخير:',data.url);
+  const message=(data.text||'زاد الخير')+'\\n'+data.url;
+  window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank','noopener');
  };
  if(shareBtn)shareBtn.addEventListener('click',async function(){
   const data={title:'زاد الخير',text:'زاد الخير — ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله',url:appUrl};
