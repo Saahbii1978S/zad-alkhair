@@ -18,6 +18,9 @@ public class PrayerAlarmPlugin extends Plugin {
   try {
    JSONArray arr=new JSONArray(times);
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("times",arr.toString()).apply();
+   String sound=call.getString("sound","default");
+   if(!"default".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound))sound="default";
+   getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("sound",sound).apply();
    PrayerAlarmReceiver.scheduleAll(getContext(),arr);
    call.resolve();
   } catch(Exception e) { call.reject("تعذّر ضبط أوقات الأذان: "+e.getMessage()); }
@@ -98,7 +101,11 @@ public class AdhanPlaybackService extends Service {
   startForeground(82090,b.setSmallIcon(getApplicationInfo().icon).setContentTitle("زاد الخير").setContentText("حان وقت الصلاة — الأذان يعمل").setContentIntent(pi).setOngoing(true).build());
   try {
    if(player!=null){player.release();player=null;}
-   player=MediaPlayer.create(this,R.raw.adhan);
+   String selected=getSharedPreferences("zad_prayer_alarms",MODE_PRIVATE).getString("sound","default");
+   int audio=R.raw.adhan_default;
+   if("madinah".equals(selected))audio=R.raw.adhan_madinah;
+   else if("general2".equals(selected))audio=R.raw.adhan_general2;
+   player=MediaPlayer.create(this,audio);
    if(player==null){stopSelf(startId);return START_NOT_STICKY;}
    player.setOnCompletionListener(mp->{mp.release();player=null;stopForeground(true);stopSelf();});
    player.setOnErrorListener((mp,what,extra)->{stopForeground(true);stopSelf();return true;});
@@ -128,8 +135,15 @@ if "PrayerAlarmPlugin.class" not in ms:
  ms=ms.replace("public class MainActivity extends BridgeActivity {","public class MainActivity extends BridgeActivity {\n    @Override\n    public void onCreate(android.os.Bundle savedInstanceState) {\n        registerPlugin(PrayerAlarmPlugin.class);\n        super.onCreate(savedInstanceState);\n    }")
 main.write_text(ms,encoding="utf-8")
 raw=Path("android/app/src/main/res/raw");raw.mkdir(parents=True,exist_ok=True)
-url="https://commons.wikimedia.org/wiki/Special:Redirect/file/Beautiful_adhan.ogg"
-subprocess.run(["curl","-fL",url,"-o",str(raw/"adhan.ogg")],check=True)
-data=(raw/"adhan.ogg").read_bytes()
-if len(data)<10000 or not (data.startswith(b"OggS")):raise SystemExit("Downloaded adhan audio failed validation")
-print("Native prayer alarm, foreground audio service, reboot restore, and licensed audio installed.")
+sources={
+ "adhan_default.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Beautiful_adhan.ogg",
+ "adhan_madinah.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg",
+ "adhan_general2.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Muslim_calling_to_prayer.ogg",
+}
+for filename,url in sources.items():
+ target=raw/filename
+ subprocess.run(["curl","-fL",url,"-o",str(target)],check=True)
+ data=target.read_bytes()
+ if len(data)<10000 or not data.startswith(b"OggS"):
+  raise SystemExit("Downloaded audio failed OGG validation: "+filename)
+print("Native prayer alarm, foreground audio service, reboot restore, and three licensed OGG choices installed.")
