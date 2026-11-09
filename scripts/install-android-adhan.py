@@ -33,6 +33,38 @@ public class PrayerAlarmPlugin extends Plugin {
  }
 }
 ''',encoding="utf-8")
+(java/"WelcomeVoicePlugin.java").write_text(r'''package org.zadalkhair.app;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
+import java.util.Locale;
+import com.getcapacitor.*;
+import com.getcapacitor.annotation.*;
+@CapacitorPlugin(name="WelcomeVoice")
+public class WelcomeVoicePlugin extends Plugin {
+ private TextToSpeech tts;
+ private boolean ready=false;
+ @PluginMethod public void speak(PluginCall call) {
+  if(tts==null) {
+   tts=new TextToSpeech(getContext(),status->{
+    if(status==TextToSpeech.SUCCESS) {
+     int lang=tts.setLanguage(new Locale("ar"));
+     ready=lang!=TextToSpeech.LANG_MISSING_DATA && lang!=TextToSpeech.LANG_NOT_SUPPORTED;
+     if(ready) speakNow(call); else call.reject("Arabic speech voice is not installed on this phone. Install Arabic voice data in Android Text-to-Speech settings.");
+    } else call.reject("Android speech engine is unavailable.");
+   });
+  } else if(ready) speakNow(call);
+  else call.reject("Arabic speech voice is not ready.");
+ }
+ private void speakNow(PluginCall call) {
+  tts.setSpeechRate(0.88f);
+  tts.setPitch(0.94f);
+  tts.speak("اذكر الله",TextToSpeech.QUEUE_FLUSH,null,"zad-welcome-1");
+  tts.speak("وصلِّ على النبي محمد صلى الله عليه وسلم",TextToSpeech.QUEUE_ADD,null,"zad-welcome-2");
+  call.resolve();
+ }
+ @Override protected void handleOnDestroy(){if(tts!=null){tts.stop();tts.shutdown();tts=null;}super.handleOnDestroy();}
+}
+''',encoding="utf-8")
 (java/"PrayerAlarmReceiver.java").write_text(r'''package org.zadalkhair.app;
 import android.app.*;
 import android.content.*;
@@ -141,7 +173,8 @@ manifest.write_text(s,encoding="utf-8")
 main=java/"MainActivity.java"
 ms=main.read_text(encoding="utf-8")
 if "PrayerAlarmPlugin.class" not in ms:
- ms=ms.replace("public class MainActivity extends BridgeActivity {","public class MainActivity extends BridgeActivity {\n    @Override\n    public void onCreate(android.os.Bundle savedInstanceState) {\n        registerPlugin(PrayerAlarmPlugin.class);\n        super.onCreate(savedInstanceState);\n    }")
+ ms=ms.replace("public class MainActivity extends BridgeActivity {","public class MainActivity extends BridgeActivity {\n    @Override\n    public void onCreate(android.os.Bundle savedInstanceState) {\n        registerPlugin(PrayerAlarmPlugin.class);
+        registerPlugin(WelcomeVoicePlugin.class);\n        super.onCreate(savedInstanceState);\n    }")
 main.write_text(ms,encoding="utf-8")
 raw=Path("android/app/src/main/res/raw");raw.mkdir(parents=True,exist_ok=True)
 sources={
