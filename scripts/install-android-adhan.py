@@ -19,14 +19,15 @@ public class PrayerAlarmPlugin extends Plugin {
    JSONArray arr=new JSONArray(times);
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("times",arr.toString()).apply();
    String sound=call.getString("sound","default");
-   if(!"default".equals(sound)&&!"mecca".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound))sound="default";
-   getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("sound",sound).apply();
-   PrayerAlarmReceiver.scheduleAll(getContext(),arr);
+   if(!"default".equals(sound)&&!"mecca".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound)&&!"tunisia".equals(sound)&&!"morocco".equals(sound)&&!"syria".equals(sound))sound="default";
+   String timezone=call.getString("timezone","Africa/Tunis");
+   getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("sound",sound).putString("timezone",timezone).apply();
+   PrayerAlarmReceiver.scheduleAll(getContext(),arr,timezone);
    call.resolve();
   } catch(Exception e) { call.reject("تعذّر ضبط أوقات الأذان: "+e.getMessage()); }
  }
  @PluginMethod public void cancel(PluginCall call) {
-  getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().remove("times").apply();
+  getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().remove("times").remove("timezone").apply();
   PrayerAlarmReceiver.cancelAll(getContext());
   call.resolve();
  }
@@ -38,43 +39,46 @@ import android.content.*;
 import android.os.Build;
 import org.json.*;
 import java.util.Calendar;
+import java.util.TimeZone;
 public class PrayerAlarmReceiver extends BroadcastReceiver {
  static final int BASE=82000;
- static PendingIntent pending(Context c,int id,int h,int m) {
-  Intent i=new Intent(c,PrayerAlarmReceiver.class).putExtra("hour",h).putExtra("minute",m).putExtra("alarmId",id);
+ static PendingIntent pending(Context c,int id,int h,int m,String timezone) {
+  Intent i=new Intent(c,PrayerAlarmReceiver.class).putExtra("hour",h).putExtra("minute",m).putExtra("alarmId",id).putExtra("timezone",timezone);
   return PendingIntent.getBroadcast(c,BASE+id,i,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
  }
- static void set(Context c,int id,int h,int m) {
+ static void set(Context c,int id,int h,int m,String timezone) {
   AlarmManager am=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
   if(am==null)return;
-  Calendar at=Calendar.getInstance(); at.set(Calendar.HOUR_OF_DAY,h); at.set(Calendar.MINUTE,m); at.set(Calendar.SECOND,0); at.set(Calendar.MILLISECOND,0);
+  Calendar at=Calendar.getInstance(TimeZone.getTimeZone(timezone)); at.set(Calendar.HOUR_OF_DAY,h); at.set(Calendar.MINUTE,m); at.set(Calendar.SECOND,0); at.set(Calendar.MILLISECOND,0);
   if(at.getTimeInMillis()<=System.currentTimeMillis())at.add(Calendar.DAY_OF_YEAR,1);
   long when=at.getTimeInMillis();
-  PendingIntent pi=pending(c,id,h,m);
+  PendingIntent pi=pending(c,id,h,m,timezone);
   if(Build.VERSION.SDK_INT>=23)am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,when,pi);
   else am.setExact(AlarmManager.RTC_WAKEUP,when,pi);
  }
- static void scheduleAll(Context c,JSONArray a) throws Exception {
+ static void scheduleAll(Context c,JSONArray a,String timezone) throws Exception {
   cancelAll(c);
   AlarmManager am=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
   if(Build.VERSION.SDK_INT>=31 && am!=null && !am.canScheduleExactAlarms())throw new IllegalStateException("فعّل إذن المنبّهات الدقيقة من إعدادات الهاتف");
-  for(int i=0;i<a.length();i++){JSONObject o=a.getJSONObject(i);set(c,i,o.getInt("hour"),o.getInt("minute"));}
+  for(int i=0;i<a.length();i++){JSONObject o=a.getJSONObject(i);set(c,i,o.getInt("hour"),o.getInt("minute"),timezone);}
  }
  static void cancelAll(Context c) {
   AlarmManager am=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
-  for(int i=0;i<5;i++){PendingIntent pi=pending(c,i,0,0);if(am!=null)am.cancel(pi);pi.cancel();}
+  for(int i=0;i<5;i++){PendingIntent pi=pending(c,i,0,0,"Africa/Tunis");if(am!=null)am.cancel(pi);pi.cancel();}
  }
  @Override public void onReceive(Context c,Intent i) {
   int h=i.getIntExtra("hour",-1),m=i.getIntExtra("minute",-1),id=i.getIntExtra("alarmId",-1);
+  String timezone=i.getStringExtra("timezone");if(timezone==null)timezone="Africa/Tunis";
   if(h<0||m<0)return;
-  set(c,id,h,m);
+  set(c,id,h,m,timezone);
   Intent service=new Intent(c,AdhanPlaybackService.class);
   if(Build.VERSION.SDK_INT>=26)c.startForegroundService(service);else c.startService(service);
  }
  static void restore(Context c) {
   try {
    String s=c.getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).getString("times","[]");
-   scheduleAll(c,new JSONArray(s));
+   String timezone=c.getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).getString("timezone","Africa/Tunis");
+   scheduleAll(c,new JSONArray(s),timezone);
   } catch(Exception ignored) {}
  }
 }
@@ -106,6 +110,9 @@ public class AdhanPlaybackService extends Service {
    if("mecca".equals(selected))audio=R.raw.adhan_mecca;
    else if("madinah".equals(selected))audio=R.raw.adhan_madinah;
    else if("general2".equals(selected))audio=R.raw.adhan_general2;
+   else if("tunisia".equals(selected))audio=R.raw.adhan_tunisia;
+   else if("morocco".equals(selected))audio=R.raw.adhan_morocco;
+   else if("syria".equals(selected))audio=R.raw.adhan_syria;
    player=MediaPlayer.create(this,audio);
    if(player==null){stopSelf(startId);return START_NOT_STICKY;}
    player.setOnCompletionListener(mp->{mp.release();player=null;stopForeground(true);stopSelf();});
@@ -140,6 +147,8 @@ sources={
  "adhan_default.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Beautiful_adhan.ogg",
  "adhan_madinah.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg",
  "adhan_general2.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Muslim_calling_to_prayer.ogg",
+ "adhan_tunisia.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Oraci%C3%B3n_Al-Azzan.ogg",
+ "adhan_syria.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3",
 }
 mecca_webm=raw/"adhan_mecca.webm"
 subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm","-o",str(mecca_webm)],check=True)
@@ -154,4 +163,12 @@ for filename,url in sources.items():
  data=target.read_bytes()
  if len(data)<10000 or not data.startswith(b"OggS"):
   raise SystemExit("Downloaded audio failed OGG validation: "+filename)
-print("Native prayer alarm, foreground audio service, reboot restore, and three licensed OGG choices installed.")
+morocco_wav=raw/"adhan_morocco.wav"
+subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Llamada_a_oraci%C3%B3n_Mezquita_Hassan_II.wav","-o",str(morocco_wav)],check=True)
+subprocess.run(["ffmpeg","-y","-i",str(morocco_wav),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_morocco.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+morocco_wav.unlink()
+for name in ("adhan_tunisia.ogg","adhan_syria.ogg","adhan_morocco.ogg"):
+ data=(raw/name).read_bytes()
+ if len(data)<10000 or not data.startswith(b"OggS"):
+  raise SystemExit("Downloaded or converted audio failed OGG validation: "+name)
+print("Native prayer alarm, foreground audio service, reboot restore, timezone-aware scheduling, and seven licensed adhan choices installed.")
