@@ -1794,6 +1794,56 @@ html body .next-prayer > span b{
 .home-prayer-more{display:none!important}
 </style>
 
+
+<style id="zad-mobile-viewport-containment-v1">
+/* إصلاح خروج واجهة زاد الخير عن عرض شاشة الهاتف */
+html,body{
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ margin:0!important;
+ overflow-x:hidden!important;
+}
+body{position:relative!important}
+body>*{max-width:100%!important}
+.hero,.live-clock-bar,.zad-share-bar,.home-prayer-card,.nav,main,footer{
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ box-sizing:border-box!important;
+}
+.home-prayer-card{
+ width:calc(100% - 20px)!important;
+ margin-left:auto!important;
+ margin-right:auto!important;
+}
+.home-prayer-list,#home-prayer-list{
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ overflow:hidden!important;
+}
+.home-prayer-list>div,#home-prayer-list>div{
+ min-width:0!important;
+ max-width:100%!important;
+}
+.nav{margin-left:auto!important;margin-right:auto!important}
+main{margin-left:auto!important;margin-right:auto!important}
+img,video,iframe{max-width:100%!important}
+@media(max-width:480px){
+ .home-prayer-card{padding:12px 8px!important}
+ .home-prayer-list>div>b,#home-prayer-list>div>b{
+  font-size:clamp(10px,2.8vw,12px)!important;
+  letter-spacing:-.35px!important;
+ }
+ .home-prayer-list>div>span:not(.prayer-icon),
+ #home-prayer-list>div>span:not(.prayer-icon){
+  font-size:clamp(9px,2.4vw,11px)!important;
+ }
+}
+</style>
+
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
