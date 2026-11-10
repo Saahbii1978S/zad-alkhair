@@ -169,7 +169,7 @@ jobs:
           import zipfile
 
           # Some backups encode the ZIP container rather than the JKS file itself.
-          if decoded.startswith(b"PK\\x03\\x04"):
+          if decoded.startswith(b"PK\x03\x04"):
               with zipfile.ZipFile(io.BytesIO(decoded)) as archive:
                   candidates = [n for n in archive.namelist() if n.lower().endswith((".jks", ".keystore", ".p12", ".pfx"))]
                   if not candidates:
@@ -188,9 +188,11 @@ jobs:
                   f"(bytes={len(decoded)}, header={decoded[:4].hex()})."
               )
           Path(os.environ["ANDROID_KEYSTORE_PATH"]).write_bytes(decoded)
-          Path(os.environ["GITHUB_ENV"]).open("a").write(f"ANDROID_KEYSTORE_TYPE={store_type}\n")
+          Path("/tmp/zad-alkhair-keystore-type").write_text(store_type, encoding="ascii")
           print(f"Decoded keystore safely ({len(decoded)} bytes; format={store_type}); secret content was not printed.")
           PY
+          export ANDROID_KEYSTORE_TYPE="$(cat /tmp/zad-alkhair-keystore-type)"
+          echo "ANDROID_KEYSTORE_TYPE=$ANDROID_KEYSTORE_TYPE" >> "$GITHUB_ENV"
           python3 - <<'PY'
           from pathlib import Path
           p = Path('android/app/build.gradle')
