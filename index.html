@@ -3131,10 +3131,14 @@ header.hero .tag{
   try{
    const voices=speechSynthesis.getVoices();
    const arabic=voices.filter(v=>/^ar([_-]|$)/i.test(v.lang));
-   const voice=arabic.find(v=>/male|maged|majid|tarik|hamed|naif|mansour/i.test(v.name))||arabic[0];
+   // Prefer an explicitly male Arabic voice; avoid known female voice labels.
+   const male=arabic.find(v=>/male|maged|majid|tarik|hamed|naif|mansour|khalid|hamza|omar|ahmed/i.test(v.name));
+   const neutral=arabic.find(v=>!/female|woman|zira|hoda|laila|sara|amira|mariam/i.test(v.name));
+   const voice=male||neutral||arabic[0];
    const first=new SpeechSynthesisUtterance('اذكر الله');
    const second=new SpeechSynthesisUtterance('وصلِّ على النبي محمد صلى الله عليه وسلم');
-   [first,second].forEach(u=>{u.lang='ar';u.rate=.88;u.pitch=.94;if(voice)u.voice=voice;});
+   // Lower pitch for a deeper, masculine-sounding delivery when the device has no male Arabic voice.
+   [first,second].forEach(u=>{u.lang='ar';u.rate=.88;u.pitch=.70;if(voice)u.voice=voice;});
    first.onend=()=>{if(!started){mark();speechSynthesis.speak(second);}};
    first.onstart=mark;
    speechSynthesis.cancel();speechSynthesis.speak(first);
