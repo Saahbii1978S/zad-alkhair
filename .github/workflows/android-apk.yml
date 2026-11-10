@@ -200,6 +200,7 @@ jobs:
               signingConfigs {
                   release {
                       storeFile file(System.getenv("ANDROID_KEYSTORE_PATH"))
+                      storeType System.getenv("ANDROID_KEYSTORE_TYPE")
                       storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
                       keyAlias System.getenv("ANDROID_KEY_ALIAS")
                       keyPassword System.getenv("ANDROID_KEY_PASSWORD")
@@ -225,6 +226,7 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/zad-alkhair-release.jks
+          ANDROID_KEYSTORE_TYPE: ${{ env.ANDROID_KEYSTORE_TYPE }}
         run: |
           cd android
           ./gradlew assembleRelease bundleRelease --no-daemon
