@@ -1991,19 +1991,32 @@ async function reversePrayerLocation(latitude,longitude){
 }
 async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
  const requestId=++prayerRequestId,city=citySel.value,country=countrySel.value;
- const byLocation=Number.isFinite(latitude)&&Number.isFinite(longitude);
+ let byLocation=Number.isFinite(latitude)&&Number.isFinite(longitude);
  if(!byLocation){localStorage.setItem('zad-prayer-city',city);localStorage.setItem('zad-prayer-country',country);}
  const loading='جاري تحميل مواقيت الصلاة...';
  $('#prayer-date').textContent=loading;$('#home-prayer-date').textContent=loading;
  $('#home-prayer-list').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#fff;padding:8px">جاري جلب المواقيت...</div>';
  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),18000);
  try{
-  const url=byLocation?'https://api.aladhan.com/v1/timings?latitude='+latitude+'&longitude='+longitude+'&method=18':'https://api.aladhan.com/v1/timingsByCity?city='+encodeURIComponent(city)+'&country='+encodeURIComponent(country)+'&method=18';
-  const res=await fetch(url,{cache:'no-store',signal:controller.signal});
-  if(!res.ok)throw new Error('network '+res.status);
-  const json=await res.json();
+  const cityUrl='https://api.aladhan.com/v1/timingsByCity?city='+encodeURIComponent(city)+'&country='+encodeURIComponent(country)+'&method=18';
+  let json;
+  try{
+   const url=byLocation?'https://api.aladhan.com/v1/timings?latitude='+latitude+'&longitude='+longitude+'&method=18':cityUrl;
+   const res=await fetch(url,{cache:'no-store',signal:controller.signal});
+   if(!res.ok)throw new Error('network '+res.status);
+   json=await res.json();
+   if(json.code!==200||!json.data?.timings)throw new Error('invalid API response');
+  }catch(locationError){
+   if(!byLocation)throw locationError;
+   const fallbackRes=await fetch(cityUrl,{cache:'no-store',signal:controller.signal});
+   if(!fallbackRes.ok)throw new Error('city fallback '+fallbackRes.status);
+   json=await fallbackRes.json();
+   if(json.code!==200||!json.data?.timings)throw new Error('city fallback invalid response');
+   byLocation=false;
+   const status=document.getElementById('zad-location-status');
+   if(status)status.textContent='تم تحديد موقعك، لكن خدمة المواقيت حسب الإحداثيات لم تستجب. عرضنا مواقيت '+citySel.options[citySel.selectedIndex].text+' مؤقتاً.';
+  }
   if(requestId!==prayerRequestId)return;
-  if(json.code!==200||!json.data?.timings)throw new Error('invalid API response');
   prayerTimes=json.data.timings;
   prayerTimezone=json.data.meta?.timezone||'Africa/Tunis';
   scheduleNativePrayerAlerts();
