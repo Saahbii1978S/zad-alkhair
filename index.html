@@ -2412,8 +2412,8 @@ function requestPrayerLocation(showMessage=true){
  const btn=document.getElementById('zad-use-location');
  const status=document.getElementById('zad-location-status');
  const say=(message)=>{if(status)status.textContent=message; if(showMessage&&!status)alert(message);};
- if(!window.isSecureContext){say('يلزم فتح زاد الخير عبر الرابط الآمن https:// باش يخدم تحديد الموقع.');return;}
- if(!navigator.geolocation){say('المتصفح لا يدعم تحديد الموقع. اختار المدينة يدوياً.');return;}
+ if(!window.isSecureContext){say('تعذّر استعمال GPS؛ نعرض مواقيت صفاقس.');window.zadLoadPrayerTimes();return;}
+ if(!navigator.geolocation){say('تحديد الموقع غير متاح؛ نعرض مواقيت المدينة المختارة.');window.zadLoadPrayerTimes();return;}
  if(typeof window.zadLoadPrayerTimes!=='function'){say('صار خلل في تحميل مواقيت الصلاة. حدّث الصفحة وعاود.');return;}
  if(btn){btn.disabled=true;btn.textContent='جاري تحديد موقعك...';}
  say('نستناو في تحديد موقعك...');
@@ -2429,14 +2429,15 @@ function requestPrayerLocation(showMessage=true){
    if(btn){btn.disabled=false;btn.textContent='📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً';}
    localStorage.setItem('zad-prayer-location-mode','manual');
    const message=error.code===1?'إذن الموقع مرفوض. افتح إعدادات Chrome واسمح لزاد الخير باستعمال الموقع.':error.code===2?'الهاتف ما قدرش يحدد موقعك بدقة. شغّل GPS وجرّب في مكان مفتوح.':'GPS تأخّر في تحديد موقعك. شغّل الموقع عالي الدقة وعاود المحاولة.';
-   say(message+' ما بدّلناش للمواقيت حسب GPS؛ تنجم تختار المدينة يدوياً مؤقتاً.');
+   say(message+' نعرض توا مواقيت المدينة المختارة.');
+   window.zadLoadPrayerTimes();
   },
   {enableHighAccuracy:true,timeout:25000,maximumAge:0}
  );
 }
 const zadLocationButton=document.getElementById('zad-use-location');
 if(zadLocationButton)zadLocationButton.onclick=()=>requestPrayerLocation(true);
-if(localStorage.getItem('zad-prayer-location-mode')==='manual')window.zadLoadPrayerTimes();else requestPrayerLocation(false);
+if(localStorage.getItem('zad-prayer-location-mode')==='auto')requestPrayerLocation(false);else window.zadLoadPrayerTimes();
 
 let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))show(initial);paint()})();
 </script>
