@@ -1981,7 +1981,6 @@ main{padding-left:10px!important;padding-right:10px!important}
   <h2>⚙️ إعدادات زاد الخير</h2>
   <p class="muted">اختار طريقة العرض اللي تريحك. إعداداتك تتحفظ على جهازك وحدك.</p>
   <div class="setting-row"><div><strong>حجم الكتابة</strong><p class="muted">صغير أو متوسط أو كبير</p></div><select id="zad-font-size" aria-label="حجم الكتابة"><option value="small">صغير</option><option value="medium">متوسط</option><option value="large">كبير</option></select></div>
-  <div class="setting-row"><div><strong>تذكير صوتي عند فتح التطبيق</strong><p class="muted">يقول: اذكر الله، ثم صلِّ على النبي محمد ﷺ</p></div><label class="setting-switch"><input type="checkbox" id="zad-startup-voice"><span>تشغيل</span></label></div>
   <div class="setting-row"><div><strong>الوضع الليلي 🌙</strong><p class="muted">ألوان مريحة للقراءة في الليل</p></div><label class="setting-switch"><input type="checkbox" id="zad-dark-mode"><span>تشغيل</span></label></div>
   <div class="setting-row"><div><strong>اهتزاز السبحة</strong><p class="muted">اهتزاز خفيف عند التسبيح إذا هاتفك يدعم ذلك</p></div><label class="setting-switch"><input type="checkbox" id="zad-vibration"><span>تشغيل</span></label></div>
   <div class="setting-row"><div><strong>مشاركة زاد الخير</strong><p class="muted">ابعث التطبيق لأهلك وأصحابك</p></div><button class="smallbtn" type="button" id="zad-settings-share">مشاركة</button></div>
@@ -3228,54 +3227,7 @@ header.hero .tag{
  const key='zad-startup-voice';
  const toggle=document.getElementById('zad-startup-voice');
  if(!toggle)return;
- if(localStorage.getItem(key)===null)localStorage.setItem(key,'1');
- toggle.checked=localStorage.getItem(key)!=='0';
- toggle.addEventListener('change',()=>localStorage.setItem(key,toggle.checked?'1':'0'));
- if(!toggle.checked||sessionStorage.getItem('zad-startup-voice-played')==='1')return;
- let started=false,trying=false;
- const mark=()=>{started=true;sessionStorage.setItem('zad-startup-voice-played','1');};
- function browserVoice(){
-  if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window))return;
-  try{
-   const voices=speechSynthesis.getVoices();
-   const arabic=voices.filter(v=>/^ar([_-]|$)/i.test(v.lang));
-   // Prefer an explicitly male Arabic voice; avoid known female voice labels.
-   const male=arabic.find(v=>/male|maged|majid|tarik|hamed|naif|mansour|khalid|hamza|omar|ahmed/i.test(v.name));
-   const neutral=arabic.find(v=>!/female|woman|zira|hoda|laila|sara|amira|mariam/i.test(v.name));
-   const voice=male||neutral||arabic[0];
-   const first=new SpeechSynthesisUtterance('اذكر الله');
-   const second=new SpeechSynthesisUtterance('وصلِّ على النبي محمد صلى الله عليه وسلم');
-   // Lower pitch for a deeper, masculine-sounding delivery when the device has no male Arabic voice.
-   [first,second].forEach(u=>{u.lang='ar';u.rate=.88;u.pitch=.70;if(voice)u.voice=voice;});
-   first.onend=()=>{if(!started){mark();speechSynthesis.speak(second);}};
-   first.onstart=mark;
-   speechSynthesis.cancel();speechSynthesis.speak(first);
-  }catch(e){}
- }
- async function speak(){
-  if(started||trying||localStorage.getItem(key)==='0')return;
-  trying=true;
-  const native=window.Capacitor?.Plugins?.WelcomeVoice;
-  if(native?.speak){
-   try{await native.speak();mark();trying=false;return;}catch(e){}
-  }
-  browserVoice();trying=false;
- }
- const events=['pointerdown','touchstart','click','keydown'];
- const fallback=()=>{if(!started)speak();};
- events.forEach(type=>document.addEventListener(type,fallback,{capture:true,passive:true,once:true}));
- setTimeout(speak,900);
-})();;;
-</script>
-</body></html>
-
-
-
-
-<style id="zad-prayer-time-compact-v2">
-/* إخفاء سطر المدينة الافتراضي وتصغير أرقام المواقيت لمنع التداخل */
-#zad-location-status:empty{display:none!important;margin:0!important;padding:0!important;min-height:0!important}
-#home #home-prayer-list>div>b{font-size:clamp(11px,3.1vw,13.5px)!important;line-height:1.2!important;letter-spacing:-.2px!important;white-space:nowrap!important}
+ if(localStorage.getItem(key)===null)localSt#home #home-prayer-list>div>b{font-size:clamp(11px,3.1vw,13.5px)!important;line-height:1.2!important;letter-spacing:-.2px!important;white-space:nowrap!important}
 @media(max-width:390px){#home #home-prayer-list>div>b{font-size:12px!important;letter-spacing:-.25px!important}}
 
 /* ضبط حجم أرقام مواقيت الصلاة */
