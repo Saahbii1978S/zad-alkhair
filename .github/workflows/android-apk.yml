@@ -145,13 +145,25 @@ jobs:
           raw = raw.replace("-", "+").replace("_", "/")
           # Remove harmless copy/paste separators (spaces, bullets, punctuation).
           # The decoded keystore is still verified by keytool immediately below.
-          compact = "".join(ch for ch in raw if ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
-          compact = compact.rstrip("=")
-          compact += "=" * ((4 - len(compact) % 4) % 4)
+          alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+          compact = "".join(ch for ch in raw if ch in alphabet)
+          # Padding is not data: rebuild it from the normalized payload so
+          # copied line-wraps or misplaced '=' characters cannot break decoding.
+          remainder = len(compact) % 4
+          if remainder == 1:
+              raise SystemExit(
+                  "ANDROID_KEYSTORE_BASE64 has an invalid normalized length "
+                  f"(characters={len(compact)}, remainder={remainder}); "
+                  "the secret appears truncated or contains a missing Base64 character."
+              )
+          padded = compact + ("=" * ((4 - remainder) % 4))
           try:
-              decoded = base64.b64decode(compact, validate=True)
+              decoded = base64.b64decode(padded, validate=True)
           except Exception as exc:
-              raise SystemExit(f"ANDROID_KEYSTORE_BASE64 could not be decoded ({type(exc).__name__}).")
+              raise SystemExit(
+                  "ANDROID_KEYSTORE_BASE64 decoding failed after safe normalization "
+                  f"(characters={len(compact)}, remainder={remainder}, error={type(exc).__name__})."
+              )
 
           if len(decoded) < 100:
               raise SystemExit("Decoded keystore is unexpectedly small; refusing to use it.")
