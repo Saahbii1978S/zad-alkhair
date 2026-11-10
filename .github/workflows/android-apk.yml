@@ -150,18 +150,18 @@ jobs:
           raw = os.environ["ANDROID_KEYSTORE_BASE64"].strip().lstrip("\\ufeff")
           raw = re.sub(r"^data:[^,]*;base64,", "", raw, flags=re.IGNORECASE)
           raw = raw.strip().strip('"').strip("'")
-          compact = re.sub(r"\\s+", "", raw).replace("-", "+").replace("_", "/")
+          raw = raw.replace("\\r", "").replace("\\n", "").replace("\\t", "")
+          raw = raw.replace("-", "+").replace("_", "/")
+          # Remove harmless copy/paste separators (spaces, bullets, punctuation).
+          # The decoded keystore is still verified by keytool immediately below.
+          compact = "".join(ch for ch in raw if ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
+          compact = compact.rstrip("=")
           compact += "=" * ((4 - len(compact) % 4) % 4)
           try:
               decoded = base64.b64decode(compact, validate=True)
-          except Exception:
-              invalid = sorted(set(ch for ch in compact if ch not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="))
-              raise SystemExit(
-                  "ANDROID_KEYSTORE_BASE64 is not clean Base64. "
-                  f"Length after whitespace cleanup: {len(compact)}; "
-                  f"invalid character count: {len(invalid)}. "
-                  "Update the secret using the Base64 file contents only."
-              )
+          except Exception as exc:
+              raise SystemExit(f"ANDROID_KEYSTORE_BASE64 could not be decoded ({type(exc).__name__}).")
+
           if len(decoded) < 100:
               raise SystemExit("Decoded keystore is unexpectedly small; refusing to use it.")
           Path(os.environ["ANDROID_KEYSTORE_PATH"]).write_bytes(decoded)
