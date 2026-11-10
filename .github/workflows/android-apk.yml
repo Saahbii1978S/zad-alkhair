@@ -114,18 +114,8 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Prepare direct APK download
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk zad-alkhair.apk
-
-      - name: Publish direct APK release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: android-latest
-          name: Zad Alkhair - Latest APK
-          body: "آخر نسخة APK من تطبيق زاد الخير. حمّل الملف وثبّته على هاتف Android."
-          files: zad-alkhair.apk
-          overwrite_files: true
-          make_latest: true
+      # Debug APK is retained only as a private workflow artifact.
+      # Never publish an unsigned/debug APK as the public direct download.
 
       - name: Check release signing secrets
         id: signing_check
@@ -151,7 +141,32 @@ jobs:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/zad-alkhair-release.jks
         run: |
           set -euo pipefail
-          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_PATH"
+          python3 - <<'PY'
+          import base64
+          import os
+          import re
+          from pathlib import Path
+
+          raw = os.environ["ANDROID_KEYSTORE_BASE64"].strip().lstrip("\\ufeff")
+          raw = re.sub(r"^data:[^,]*;base64,", "", raw, flags=re.IGNORECASE)
+          raw = raw.strip().strip('"').strip("'")
+          compact = re.sub(r"\\s+", "", raw).replace("-", "+").replace("_", "/")
+          compact += "=" * ((4 - len(compact) % 4) % 4)
+          try:
+              decoded = base64.b64decode(compact, validate=True)
+          except Exception:
+              invalid = sorted(set(ch for ch in compact if ch not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="))
+              raise SystemExit(
+                  "ANDROID_KEYSTORE_BASE64 is not clean Base64. "
+                  f"Length after whitespace cleanup: {len(compact)}; "
+                  f"invalid character count: {len(invalid)}. "
+                  "Update the secret using the Base64 file contents only."
+              )
+          if len(decoded) < 100:
+              raise SystemExit("Decoded keystore is unexpectedly small; refusing to use it.")
+          Path(os.environ["ANDROID_KEYSTORE_PATH"]).write_bytes(decoded)
+          print(f"Decoded keystore file safely ({len(decoded)} bytes); secret content was not printed.")
+          PY
           python3 - <<'PY'
           from pathlib import Path
           p = Path('android/app/build.gradle')
