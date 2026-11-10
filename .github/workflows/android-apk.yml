@@ -188,7 +188,7 @@ jobs:
                   f"(bytes={len(decoded)}, header={decoded[:4].hex()})."
               )
           Path(os.environ["ANDROID_KEYSTORE_PATH"]).write_bytes(decoded)
-          Path(os.environ["GITHUB_ENV"]).open("a").write(f"ANDROID_KEYSTORE_TYPE={store_type}\\n")
+          Path(os.environ["GITHUB_ENV"]).open("a").write(f"ANDROID_KEYSTORE_TYPE={store_type}\n")
           print(f"Decoded keystore safely ({len(decoded)} bytes; format={store_type}); secret content was not printed.")
           PY
           python3 - <<'PY'
