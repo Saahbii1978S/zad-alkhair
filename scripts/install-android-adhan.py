@@ -18,8 +18,8 @@ public class PrayerAlarmPlugin extends Plugin {
   try {
    JSONArray arr=new JSONArray(times);
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("times",arr.toString()).apply();
-   String sound=call.getString("sound","mecca");
-   if(!"default".equals(sound)&&!"mecca".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound)&&!"tunisia".equals(sound)&&!"morocco".equals(sound)&&!"syria".equals(sound))sound="mecca";
+   String sound=call.getString("sound","syria");
+   if(!"default".equals(sound)&&!"mecca".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound)&&!"tunisia".equals(sound)&&!"morocco".equals(sound)&&!"syria".equals(sound))sound="syria";
    String timezone=call.getString("timezone","Africa/Tunis");
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("sound",sound).putString("timezone",timezone).apply();
    PrayerAlarmReceiver.scheduleAll(getContext(),arr,timezone);
@@ -137,9 +137,9 @@ public class AdhanPlaybackService extends Service {
   startForeground(82090,b.setSmallIcon(getApplicationInfo().icon).setContentTitle("زاد الخير").setContentText("حان وقت الصلاة — الأذان يعمل").setContentIntent(pi).setOngoing(true).build());
   try {
    if(player!=null){player.release();player=null;}
-   String selected=getSharedPreferences("zad_prayer_alarms",MODE_PRIVATE).getString("sound","mecca");
-   int audio=R.raw.adhan_mecca;
-   if("mecca".equals(selected))audio=R.raw.adhan_mecca;
+   String selected=getSharedPreferences("zad_prayer_alarms",MODE_PRIVATE).getString("sound","syria");
+   int audio=R.raw.adhan_syria;
+   if("mecca".equals(selected)||"syria".equals(selected))audio=R.raw.adhan_syria;
    else if("madinah".equals(selected))audio=R.raw.adhan_madinah;
    else if("general2".equals(selected))audio=R.raw.adhan_general2;
    else if("tunisia".equals(selected))audio=R.raw.adhan_tunisia;
