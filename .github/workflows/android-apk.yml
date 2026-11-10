@@ -165,10 +165,31 @@ jobs:
                   f"(characters={len(compact)}, remainder={remainder}, error={type(exc).__name__})."
               )
 
+          import io
+          import zipfile
+
+          # Some backups encode the ZIP container rather than the JKS file itself.
+          if decoded.startswith(b"PK\\x03\\x04"):
+              with zipfile.ZipFile(io.BytesIO(decoded)) as archive:
+                  candidates = [n for n in archive.namelist() if n.lower().endswith((".jks", ".keystore", ".p12", ".pfx"))]
+                  if not candidates:
+                      raise SystemExit("Decoded ZIP does not contain a recognized Android keystore file.")
+                  decoded = archive.read(candidates[0])
+
           if len(decoded) < 100:
               raise SystemExit("Decoded keystore is unexpectedly small; refusing to use it.")
+          if decoded.startswith(bytes.fromhex("feedfeed")):
+              store_type = "JKS"
+          elif decoded.startswith(b"0"):
+              store_type = "PKCS12"
+          else:
+              raise SystemExit(
+                  "Decoded data is not a recognized JKS/PKCS12 keystore "
+                  f"(bytes={len(decoded)}, header={decoded[:4].hex()})."
+              )
           Path(os.environ["ANDROID_KEYSTORE_PATH"]).write_bytes(decoded)
-          print(f"Decoded keystore file safely ({len(decoded)} bytes); secret content was not printed.")
+          Path(os.environ["GITHUB_ENV"]).open("a").write(f"ANDROID_KEYSTORE_TYPE={store_type}\\n")
+          print(f"Decoded keystore safely ({len(decoded)} bytes; format={store_type}); secret content was not printed.")
           PY
           python3 - <<'PY'
           from pathlib import Path
@@ -194,7 +215,7 @@ jobs:
           PY
           echo "Checking decoded keystore and configured alias (no passwords will be printed)."
           ls -l "$ANDROID_KEYSTORE_PATH"
-          keytool -list -keystore "$ANDROID_KEYSTORE_PATH" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS"
+          keytool -list -storetype "$ANDROID_KEYSTORE_TYPE" -keystore "$ANDROID_KEYSTORE_PATH" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS"
 
       - name: Build signed release APK and Play Store bundle
         if: ${{ steps.signing_check.outputs.enabled == 'true' }}
