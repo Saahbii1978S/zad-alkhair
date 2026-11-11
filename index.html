@@ -731,6 +731,7 @@ footer{color:#8495a1}
 
 
 /* رزنامة ميلادية وهجرية */
+.calendar-mode{display:flex;gap:8px;margin:12px 0}.calendar-mode button{flex:1;border:1px solid #dce5eb;border-radius:12px;padding:10px;background:#f4f7f9;color:#284458;font-weight:800}.calendar-mode button[aria-pressed="true"]{background:#123b50;color:#fff;border-color:#123b50}
 .calendar-card{overflow:hidden}
 .calendar-heading{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .calendar-heading h2{margin:0 0 4px;font-size:19px}
@@ -2045,10 +2046,11 @@ main{padding-left:10px!important;padding-right:10px!important}
  <div class="card calendar-card">
   <div class="calendar-heading"><span class="calendar-mark">📅</span><div><h2>الرزنامة الميلادية والهجرية</h2><p class="muted">تابع التاريخين معاً حسب توقيت تونس</p></div></div>
   <div class="calendar-today" id="calendar-today"></div>
+  <div class="calendar-mode" role="group" aria-label="نوع التقويم"><button type="button" id="calendar-mode-greg" aria-pressed="true">ميلادي</button><button type="button" id="calendar-mode-hijri" aria-pressed="false">هجري</button></div>
   <div class="calendar-controls"><button type="button" id="calendar-prev" aria-label="الشهر السابق">‹</button><strong id="calendar-month-title"></strong><button type="button" id="calendar-next" aria-label="الشهر التالي">›</button><button type="button" id="calendar-current">اليوم</button></div>
   <div class="calendar-weekdays"><span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span><span>الخميس</span><span>الجمعة</span><span>السبت</span></div>
   <div class="calendar-grid" id="calendar-grid"></div>
-  <div class="calendar-legend"><span><i class="legend-greg"></i> التاريخ الميلادي</span><span><i class="legend-hijri"></i> التاريخ الهجري</span><span><i class="legend-today"></i> اليوم</span></div>
+  <div class="calendar-legend"><span><i class="legend-today"></i> اليوم</span><span id="calendar-mode-note">التقويم الميلادي</span></div>
   <p class="calendar-note">قد يختلف التاريخ الهجري بيوم حسب رؤية الهلال والبلد. يُعرض هنا وفق تقويم أم القرى عند توفره.</p>
  </div>
 </section>
@@ -2638,31 +2640,71 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateZadL
 (function initDualCalendar(){
  const grid=document.getElementById('calendar-grid');if(!grid)return;
  const monthTitle=document.getElementById('calendar-month-title'),todayBox=document.getElementById('calendar-today');
- const today=new Date(),todayKey=[today.getFullYear(),today.getMonth(),today.getDate()].join('-');
- let shown=new Date(today.getFullYear(),today.getMonth(),1);
- const gregFmt=new Intl.DateTimeFormat('ar-TN',{day:'numeric'});
- let hijriFmt;
- try{hijriFmt=new Intl.DateTimeFormat('ar-TN-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'});hijriFmt.format(today)}
- catch(e){hijriFmt=new Intl.DateTimeFormat('ar-TN-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'})}
+ const today=new Date();today.setHours(12,0,0,0);
+ const todayKey=[today.getFullYear(),today.getMonth(),today.getDate()].join('-');
+ let mode=localStorage.getItem('zad-calendar-mode')==='hijri'?'hijri':'greg';
+ let shown=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+ const gregDayFmt=new Intl.DateTimeFormat('ar-TN',{day:'numeric'});
+ const gregFullFmt=new Intl.DateTimeFormat('ar-TN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ let hijriFmt,hijriPartsFmt;
+ try{
+  hijriFmt=new Intl.DateTimeFormat('ar-TN-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'});
+  hijriPartsFmt=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'});
+  hijriFmt.format(today);hijriPartsFmt.format(today);
+ }catch(e){
+  hijriFmt=new Intl.DateTimeFormat('ar-TN-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'});
+  hijriPartsFmt=new Intl.DateTimeFormat('en-US-u-ca-islamic',{day:'numeric',month:'numeric',year:'numeric'});
+ }
+ const gregMonthFmt=new Intl.DateTimeFormat('ar-TN',{month:'long',year:'numeric'});
  function dateKey(d){return [d.getFullYear(),d.getMonth(),d.getDate()].join('-')}
+ function hijriParts(d){const p={};hijriPartsFmt.formatToParts(d).forEach(x=>{if(x.type==='day'||x.type==='month'||x.type==='year')p[x.type]=Number(x.value)});return p}
+ function sameHijriMonth(a,b){const x=hijriParts(a),y=hijriParts(b);return x.month===y.month&&x.year===y.year}
+ function hijriMonthStart(anchor){const d=new Date(anchor);for(let i=0;i<31&&hijriParts(d).day!==1;i++)d.setDate(d.getDate()-1);return d}
  function draw(){
   const fullHijri=hijriFmt.format(today);
-  todayBox.innerHTML='<div class="cal-greg">'+new Intl.DateTimeFormat('ar-TN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(today)+'</div><div class="cal-hijri">'+fullHijri+' هـ</div>';
-  monthTitle.textContent=new Intl.DateTimeFormat('ar-TN',{month:'long',year:'numeric'}).format(shown);
-  const first=new Date(shown.getFullYear(),shown.getMonth(),1);
-  const start=new Date(first);start.setDate(1-first.getDay());
+  todayBox.innerHTML='<div class="cal-greg">'+(mode==='greg'?gregFullFmt.format(today):fullHijri+' هـ')+'</div><div class="cal-hijri">'+(mode==='greg'?fullHijri+' هـ':gregFullFmt.format(today))+'</div>';
+  document.getElementById('calendar-mode-greg').setAttribute('aria-pressed',String(mode==='greg'));
+  document.getElementById('calendar-mode-hijri').setAttribute('aria-pressed',String(mode==='hijri'));
+  document.getElementById('calendar-mode-note').textContent=mode==='greg'?'التقويم الميلادي':'التقويم الهجري (أم القرى عند توفره)';
+  let first,start,monthKey;
+  if(mode==='greg'){
+   first=new Date(shown.getFullYear(),shown.getMonth(),1);
+   monthTitle.textContent=gregMonthFmt.format(first);
+   start=new Date(first);start.setDate(1-first.getDay());
+   monthKey=d=>d.getFullYear()===first.getFullYear()&&d.getMonth()===first.getMonth();
+  }else{
+   first=hijriMonthStart(shown);
+   const parts=hijriParts(first);
+   monthTitle.textContent=hijriFmt.format(first).replace(/\d+/g,'').trim()+' '+parts.year+' هـ';
+   start=new Date(first);start.setDate(first.getDate()-first.getDay());
+   monthKey=d=>sameHijriMonth(d,first);
+  }
   let html='';
   for(let i=0;i<42;i++){
    const d=new Date(start);d.setDate(start.getDate()+i);
-   const hijri=hijriFmt.formatToParts(d).find(p=>p.type==='day')?.value||'';
-   const outside=d.getMonth()!==shown.getMonth(),isToday=dateKey(d)===todayKey;
-   html+='<div class="calendar-day'+(outside?' outside':'')+(isToday?' today':'')+'"'+(isToday?' aria-label="اليوم"':'')+'><span class="greg">'+gregFmt.format(d)+'</span><span class="hijri">'+hijri+'</span></div>';
+   const outside=!monthKey(d),isToday=dateKey(d)===todayKey;
+   const number=mode==='greg'?gregDayFmt.format(d):hijriFmt.formatToParts(d).find(p=>p.type==='day')?.value||'';
+   html+='<div class="calendar-day'+(outside?' outside':'')+(isToday?' today':'')+'"'+(isToday?' aria-label="اليوم"':'')+'><span class="greg">'+number+'</span></div>';
   }
   grid.innerHTML=html;
  }
- document.getElementById('calendar-prev').onclick=()=>{shown=new Date(shown.getFullYear(),shown.getMonth()-1,1);draw()};
- document.getElementById('calendar-next').onclick=()=>{shown=new Date(shown.getFullYear(),shown.getMonth()+1,1);draw()};
- document.getElementById('calendar-current').onclick=()=>{shown=new Date(today.getFullYear(),today.getMonth(),1);draw()};
+ function moveMonth(amount){
+  if(mode==='greg')shown=new Date(shown.getFullYear(),shown.getMonth()+amount,15);
+  else{
+   const start=hijriMonthStart(shown);
+   const target=new Date(start);target.setDate(start.getDate()+(amount*30));
+   let candidate=hijriMonthStart(target);
+   if(amount>0&&sameHijriMonth(candidate,start)){target.setDate(target.getDate()+3);candidate=hijriMonthStart(target)}
+   if(amount<0&&sameHijriMonth(candidate,start)){target.setDate(target.getDate()-3);candidate=hijriMonthStart(target)}
+   shown=candidate;
+  }
+  draw();
+ }
+ document.getElementById('calendar-mode-greg').onclick=()=>{mode='greg';localStorage.setItem('zad-calendar-mode',mode);shown=new Date(today);draw()};
+ document.getElementById('calendar-mode-hijri').onclick=()=>{mode='hijri';localStorage.setItem('zad-calendar-mode',mode);shown=new Date(today);draw()};
+ document.getElementById('calendar-prev').onclick=()=>moveMonth(-1);
+ document.getElementById('calendar-next').onclick=()=>moveMonth(1);
+ document.getElementById('calendar-current').onclick=()=>{shown=new Date(today);draw()};
  draw();
 })();
 
