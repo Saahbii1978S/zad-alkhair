@@ -139,7 +139,8 @@ public class AdhanPlaybackService extends Service {
    if(player!=null){player.release();player=null;}
    String selected=getSharedPreferences("zad_prayer_alarms",MODE_PRIVATE).getString("sound","syria");
    int audio=R.raw.adhan_syria;
-   if("mecca".equals(selected)||"syria".equals(selected))audio=R.raw.adhan_syria;
+   if("default".equals(selected))audio=R.raw.adhan_default;
+   else if("mecca".equals(selected))audio=R.raw.adhan_mecca;
    else if("madinah".equals(selected))audio=R.raw.adhan_madinah;
    else if("general2".equals(selected))audio=R.raw.adhan_general2;
    else if("tunisia".equals(selected))audio=R.raw.adhan_tunisia;
