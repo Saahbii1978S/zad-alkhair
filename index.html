@@ -3769,3 +3769,15 @@ header.hero{position:relative!important}
  .dhikr-focus-card .dhikr-count-progress strong{font-size:19px!important}
 }
 </style>
+
+
+<style id="zad-dhikr-counter-visible-v25">
+/* Keep the repetition counter visible at the bottom while the dhikr text scrolls */
+.dhikr-focus-card{overflow-y:auto!important;overscroll-behavior:contain!important}
+.dhikr-focus-card .dhikr-count-progress{
+ position:sticky!important;bottom:0!important;z-index:5!important;
+ flex:0 0 auto!important;align-self:center!important;
+ margin-top:auto!important;
+ box-shadow:0 0 0 10px #111317!important
+}
+</style>
