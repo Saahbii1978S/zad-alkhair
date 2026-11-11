@@ -2118,16 +2118,15 @@ main{padding-left:10px!important;padding-right:10px!important}
 (()=>{const $=s=>document.querySelector(s);let count=Number(localStorage.getItem('zad-count')||0);function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===id));history.replaceState(null,'','#'+id);window.scrollTo(0,0);if(id==='morning'||id==='evening')document.querySelector('#'+id+' .dhikr-start-btn')?.click()}document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>show(b.dataset.page));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));document.querySelectorAll('.home-shortcuts [data-go]').forEach(tile=>{tile.setAttribute('role','button');tile.setAttribute('tabindex','0');tile.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show(tile.dataset.go)}})});function paint(){$('#count').textContent=count;localStorage.setItem('zad-count',count)}$('#add').onclick=()=>{count++;paint()};$('#minus').onclick=()=>{count=Math.max(0,count-1);paint()};$('#reset').onclick=()=>{count=0;paint()};const zikrNames=['سبحان الله','الحمد لله','الله أكبر','لا إله إلا الله','سبحان الله وبحمده','سبحان الله العظيم','أستغفر الله وأتوب إليه','لا حول ولا قوة إلا بالله','اللهم صل وسلم على نبينا محمد'];let ni=Math.max(0,Math.min(zikrNames.length-1,Number(localStorage.getItem('zad-zikr-index')||0)));const zikrLabel=document.getElementById('zikrLabel'),changeZikr=document.getElementById('change');if(zikrLabel)zikrLabel.textContent=zikrNames[ni];if(changeZikr){changeZikr.onclick=null;changeZikr.addEventListener('click',event=>{event.preventDefault();ni=(ni+1)%zikrNames.length;if(zikrLabel)zikrLabel.textContent=zikrNames[ni];count=0;paint();localStorage.setItem('zad-zikr-index',String(ni));changeZikr.setAttribute('aria-label','الذكر الحالي: '+zikrNames[ni]);});};document.querySelectorAll('[data-task]').forEach(c=>{c.checked=localStorage.getItem('zad-task-'+c.dataset.task)==='1';c.onchange=()=>localStorage.setItem('zad-task-'+c.dataset.task,c.checked?'1':'0')});
 function setupDhikr(id){
  const root=document.getElementById(id),items=[...root.querySelectorAll('.dhikr-tap')];
- const key='zad-'+id+'-counts-v4',legacyKey='zad-'+id+'-counts-v3';
- const saved=()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return {}}};
- let counts=saved(),showDone=false,focusMode=false,selectedIndex=0;
- if(!localStorage.getItem(key)){
-  try{const legacy=JSON.parse(localStorage.getItem(legacyKey)||'{}');if(Object.keys(legacy).length){
-   counts[0]=legacy[0]||0;counts[1]=legacy[1]||0;counts[2]=legacy[1]||0;counts[3]=legacy[1]||0;
-   Object.keys(legacy).forEach(k=>{const i=Number(k);if(i>=2)counts[i+2]=legacy[k]});
-   localStorage.setItem(key,JSON.stringify(counts));
-  }}catch(e){}
- }
+ // v5 deliberately starts with fresh counts; each count is tied to the dhikr text, not its list position.
+ const key='zad-'+id+'-counts-v5';
+ const itemKey=el=>{
+  const title=el.querySelector('.muted:first-child')?.textContent?.trim()||'';
+  const text=el.querySelector('.arabic')?.textContent?.replace(/\\s+/g,' ').trim()||'';
+  return title+'|'+text;
+ };
+ let counts={},showDone=false,focusMode=false,selectedIndex=0;
+ try{counts=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){counts={}}
  const doneEl=document.getElementById(id+'-done'),totalEl=document.getElementById(id+'-total'),bar=document.getElementById(id+'-bar'),showBtn=document.getElementById(id+'-show');
  const intro=root.querySelector('.card > .muted');
  const tools=root.querySelector('.dhikr-tools');
@@ -2142,9 +2141,17 @@ function setupDhikr(id){
  root.querySelector('.dhikr-progress')?.after(finish);
  const required=items.map(el=>{const label=el.querySelector('.muted:last-child')?.textContent||'';if(/مئة مرة/.test(label))return 100;if(/عشر مرات/.test(label))return 10;if(/سبع مرات/.test(label))return 7;if(/أربع مرات/.test(label))return 4;if(/ثلاث مرات/.test(label))return 3;if(/مرتين/.test(label))return 2;return 1});
  totalEl.textContent=items.length;
- function activeIndex(){return items.findIndex((el,i)=>Number(counts[i]||0)<required[i])}
+ function countAt(i){return Math.max(0,Number(counts[itemKey(items[i])]||0))}
+ function activeIndex(){return items.findIndex((el,i)=>countAt(i)<required[i])}
  function render(){
-  let completed=0;items.forEach((el,i)=>{const n=Math.min(required[i],Math.max(0,Number(counts[i]||0))),complete=n>=required[i];if(complete)completed++;el.style.display=showDone||i===activeIndex()?'':'none';el.style.opacity='1';el.setAttribute('aria-pressed',complete?'true':'false');let progress=el.querySelector('.dhikr-count-progress');if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}progress.innerHTML='عدد التكرار<br><strong>'+n+' / '+required[i]+'</strong>';const repeatLabel=el.querySelector(':scope > .muted:last-of-type');if(repeatLabel)repeatLabel.style.display='none'});
+  let completed=0;
+  items.forEach((el,i)=>{
+   const n=Math.min(required[i],countAt(i)),complete=n>=required[i];if(complete)completed++;
+   el.style.display=showDone||i===activeIndex()?'':'none';el.style.opacity='1';el.setAttribute('aria-pressed',complete?'true':'false');
+   let progress=el.querySelector('.dhikr-count-progress');if(!progress){progress=document.createElement('span');progress.className='dhikr-count-progress';el.appendChild(progress)}
+   progress.innerHTML='عدد التكرار<br><strong>'+n+' / '+required[i]+'</strong>';
+   const repeatLabel=el.querySelector(':scope > .muted:last-of-type');if(repeatLabel)repeatLabel.style.display='none';
+  });
   doneEl.textContent=completed;bar.style.width=(items.length?completed/items.length*100:0)+'%';showBtn.textContent=showDone?'العودة للذكر الحالي':'عرض جميع الأذكار';finish.hidden=completed!==items.length||showDone;
   if(intro)intro.textContent=showDone?'قائمة الأذكار كاملة. للمتابعة بالترتيب ارجع إلى الذكر الحالي.':'ابدأ القراءة لتظهر الأذكار واحداً تلو الآخر، كل ذكر في شاشة مستقلة.';
   startBtn.textContent=completed===items.length?'إعادة قراءة الأذكار':(focusMode?'متابعة القراءة':'ابدأ قراءة الأذكار');
@@ -2152,15 +2159,31 @@ function setupDhikr(id){
   if(focusMode){
    focus.hidden=false;document.body.classList.add('dhikr-focus-open');focusContent.innerHTML='';
    if(current>=items.length){step.textContent='اكتملت الأذكار';const msg=document.createElement('div');msg.className='dhikr-focus-complete';msg.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';focusContent.appendChild(msg);focus.querySelector('.dhikr-focus-hint').textContent='بارك الله فيك';}
-   else{step.textContent=(current+1)+' / '+items.length;const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');clone.querySelector('.muted:last-child')?.remove();focusContent.appendChild(clone);const activate=()=>increment(items[current]);clone.addEventListener('click',activate);clone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});focus.querySelector('.dhikr-focus-hint').textContent='اضغط على الذكر أو على العدّاد لتسجيل التكرار';}
+   else{
+    step.textContent=(current+1)+' / '+items.length;
+    const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');
+    clone.querySelector('.muted:last-child')?.remove();clone.querySelector('.dhikr-count-progress')?.remove();
+    focusContent.appendChild(clone);
+    const counter=document.createElement('button');counter.type='button';counter.className='dhikr-focus-counter-outside';counter.innerHTML='عدد التكرار <strong>'+countAt(current)+' / '+required[current]+'</strong>';
+    focusContent.appendChild(counter);
+    const activate=()=>increment(items[current]);clone.addEventListener('click',activate);clone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});counter.addEventListener('click',activate);
+    focus.querySelector('.dhikr-focus-hint').textContent='اضغط على الذكر أو على العدّاد لتسجيل التكرار';
+   }
    const prev=focus.querySelector('.dhikr-focus-prev'),next=focus.querySelector('.dhikr-focus-next');prev.disabled=current<=0;next.disabled=current>=items.length;prev.onclick=()=>{selectedIndex=Math.max(0,selectedIndex-1);render()};next.onclick=()=>{selectedIndex=Math.min(items.length,selectedIndex+1);render()};
   }else{focus.hidden=true;document.body.classList.remove('dhikr-focus-open')}
  }
- function increment(el){const i=items.indexOf(el);if(i<0)return;showDone=false;if(Number(counts[i]||0)>=required[i]){if(focusMode){const next=activeIndex();selectedIndex=next<0?items.length:next;render()}return}try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));if(Number(counts[i])>=required[i]){const next=activeIndex();selectedIndex=next<0?items.length:next}render()}
+ function increment(el){
+  const i=items.indexOf(el);if(i<0)return;showDone=false;const k=itemKey(el);
+  if(countAt(i)>=required[i]){if(focusMode){const next=activeIndex();selectedIndex=next<0?items.length:next;render()}return}
+  try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}
+  counts[k]=Math.min(required[i],countAt(i)+1);localStorage.setItem(key,JSON.stringify(counts));
+  if(countAt(i)>=required[i]){const next=activeIndex();selectedIndex=next<0?items.length:next}
+  render();
+ }
  items.forEach(el=>{el.addEventListener('click',()=>increment(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}})});
  startBtn.onclick=()=>{showDone=false;selectedIndex=0;focusMode=true;render()};
  showBtn.onclick=()=>{showDone=!showDone;render()};
- document.getElementById(id+'-reset').onclick=()=>{counts={};localStorage.removeItem(key);showDone=false;render()};
+ document.getElementById(id+'-reset').onclick=()=>{counts={};localStorage.removeItem(key);showDone=false;selectedIndex=0;render()};
  render();
 }
 setupDhikr('morning');setupDhikr('evening');
@@ -3779,5 +3802,42 @@ header.hero{position:relative!important}
  flex:0 0 auto!important;align-self:center!important;
  margin-top:auto!important;
  box-shadow:0 0 0 10px #111317!important
+}
+</style>
+
+<style id="zad-dhikr-layout-v27">
+/* النص كامل داخل البطاقة، والعداد منفصل تحتها */
+.dhikr-focus-content{
+ display:flex!important;flex:1 1 auto!important;min-height:0!important;
+ flex-direction:column!important;align-items:stretch!important;justify-content:center!important;
+ gap:9px!important;padding:8px 0!important;overflow:hidden!important
+}
+.dhikr-focus-card{
+ flex:0 1 auto!important;width:100%!important;height:auto!important;min-height:0!important;
+ max-height:100%!important;overflow:hidden!important;overscroll-behavior:none!important;
+ margin:0!important;padding:12px 12px!important;gap:7px!important;justify-content:center!important
+}
+.dhikr-focus-card .arabic{
+ font-size:clamp(14px,3.65vw,18px)!important;line-height:1.5!important;
+ overflow-wrap:anywhere!important;word-break:normal!important
+}
+.dhikr-focus-card>.muted:first-child{font-size:12px!important;margin:0!important;padding:4px 10px!important}
+.dhikr-focus-counter-outside{
+ flex:0 0 auto!important;align-self:center!important;display:flex!important;flex-direction:column!important;
+ align-items:center!important;justify-content:center!important;gap:2px!important;
+ min-width:116px!important;min-height:48px!important;padding:5px 14px!important;
+ border:1px solid #494c53!important;border-radius:13px!important;background:#111317!important;
+ color:#fff!important;font:700 12px Tajawal,Arial,sans-serif!important
+}
+.dhikr-focus-counter-outside strong{font-size:17px!important;color:#f0d38e!important;direction:ltr!important}
+.dhikr-focus-hint{flex:0 0 auto!important;margin:0!important;padding:2px!important;font-size:11px!important}
+.dhikr-focus-actions{flex:0 0 auto!important;padding:0 0 3px!important}
+.dhikr-focus-card .dhikr-count-progress{display:none!important}
+@media(max-height:700px){
+ .dhikr-focus-content{gap:6px!important;padding:5px 0!important}
+ .dhikr-focus-card{padding:8px 10px!important;gap:5px!important}
+ .dhikr-focus-card .arabic{font-size:14px!important;line-height:1.42!important}
+ .dhikr-focus-counter-outside{min-height:42px!important}
+ .dhikr-focus-hint{display:none!important}
 }
 </style>
