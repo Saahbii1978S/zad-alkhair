@@ -2165,6 +2165,13 @@ function setupDhikr(id){
     const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');
     clone.querySelector('.muted:last-child')?.remove();clone.querySelector('.dhikr-count-progress')?.remove();
     focusContent.appendChild(clone);
+    requestAnimationFrame(()=>{
+     const textNode=clone.querySelector('.arabic');if(!textNode)return;
+     let size=18;textNode.style.fontSize=size+'px';textNode.style.lineHeight='1.38';
+     while(size>11&&(textNode.scrollHeight>textNode.clientHeight+2||clone.scrollHeight>clone.clientHeight+2)){
+      size-=0.5;textNode.style.fontSize=size+'px';
+     }
+    });
     const counter=document.createElement('button');counter.type='button';counter.className='dhikr-focus-counter-outside';counter.innerHTML='عدد التكرار <strong>'+countAt(current)+' / '+required[current]+'</strong>';
     focusContent.appendChild(counter);
     const activate=()=>increment(items[current]);clone.addEventListener('click',activate);clone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});counter.addEventListener('click',activate);
@@ -3918,3 +3925,41 @@ html[data-theme="dark"] .zad-theme-toggle{background:#263746!important;color:#f5
  });
 })();
 </script>
+
+
+<style id="zad-dhikr-layout-v28">
+/* مساحة مرنة للنص الطويل: يصغر الخط تلقائياً حتى تظهر الآية والذكر كاملين */
+.dhikr-focus{overflow:hidden!important}
+.dhikr-focus-content{
+ flex:1 1 0!important;min-height:0!important;max-height:100%!important;
+ overflow:visible!important;justify-content:center!important;padding:6px 0!important
+}
+.dhikr-focus-card{
+ min-height:0!important;max-height:100%!important;height:auto!important;
+ overflow:hidden!important;flex:0 1 auto!important;gap:5px!important;
+ padding:10px 12px!important
+}
+.dhikr-focus-card .arabic{
+ flex:0 1 auto!important;min-height:0!important;max-height:100%!important;
+ font-size:18px!important;line-height:1.38!important;overflow-wrap:normal!important
+}
+.dhikr-focus-counter-outside{
+ width:82px!important;height:82px!important;min-width:82px!important;min-height:82px!important;
+ max-width:82px!important;padding:7px!important;border:3px double #d5b66f!important;
+ border-radius:50%!important;background:radial-gradient(circle at 35% 25%,#34495b,#111923 72%)!important;
+ color:#f3dfaa!important;box-shadow:0 0 0 4px #d5b66f35,0 5px 15px #14253630!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:3px!important;font-size:10px!important
+}
+.dhikr-focus-counter-outside strong{
+ font-size:16px!important;color:#fff!important;line-height:1.2!important
+}
+@media(max-height:700px){
+ .dhikr-focus-content{padding:3px 0!important;gap:5px!important}
+ .dhikr-focus-card{padding:7px 9px!important;gap:3px!important}
+ .dhikr-focus-counter-outside{width:72px!important;height:72px!important;min-width:72px!important;min-height:72px!important}
+}
+html[data-theme="dark"] .dhikr-focus{background:linear-gradient(160deg,#111820,#1b2b38)!important}
+html[data-theme="dark"] .dhikr-focus-card{background:#202c36!important;border-color:#465969!important}
+html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
+</style>
