@@ -4156,3 +4156,23 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
  .dhikr-focus-card.zad-long-text{padding:4px 7px!important;gap:2px!important}
 }
 </style>
+
+<style id="zad-prayer-labels-readable-final-v3">
+/* آخر أولوية للأسماء والأوقات: لا تسمح لقواعد الهاتف القديمة بتصغيرها */
+#home-prayer-list{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:2px!important}
+#home-prayer-list>div{min-width:0!important;padding:8px 0!important}
+#home-prayer-list>div>span:not(.prayer-icon){
+ font-size:clamp(12px,3.65vw,15px)!important;line-height:1.35!important;
+ white-space:nowrap!important;letter-spacing:0!important;
+}
+#home-prayer-list>div>b{
+ font-size:clamp(14px,4.25vw,18px)!important;line-height:1.35!important;
+ white-space:nowrap!important;letter-spacing:0!important;
+}
+#home-prayer-list .prayer-icon{width:32px!important;height:32px!important;font-size:17px!important}
+@media(max-width:350px){
+ #home-prayer-list>div>span:not(.prayer-icon){font-size:11px!important}
+ #home-prayer-list>div>b{font-size:13px!important}
+ #home-prayer-list .prayer-icon{width:28px!important;height:28px!important;font-size:15px!important}
+}
+</style>
