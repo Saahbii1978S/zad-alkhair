@@ -1883,7 +1883,8 @@ main{padding-left:10px!important;padding-right:10px!important}
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
-<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p><button type="button" id="zad-location-picker" class="zad-location-picker" aria-label="اختيار البلد والمدينة" title="اختيار البلد والمدينة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.7"/></svg></button></header>
+<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p><button type="button" id="zad-theme-toggle" class="zad-theme-toggle" aria-label="تفعيل الوضع الليلي" aria-pressed="false">🌙 ليلي</button>
+<button type="button" id="zad-location-picker" class="zad-location-picker" aria-label="اختيار البلد والمدينة" title="اختيار البلد والمدينة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.7"/></svg></button></header>
 <div class="zad-share-bar" aria-label="مشاركة زاد الخير">
  <button type="button" id="zad-share-button">مشاركة التطبيق</button>
  <button type="button" id="zad-copy-link">نسخ الرابط</button>
@@ -3841,3 +3842,79 @@ header.hero{position:relative!important}
  .dhikr-focus-hint{display:none!important}
 }
 </style>
+
+<style id="zad-theme-toggle-v1">
+.zad-theme-toggle{
+ position:absolute!important;top:15px!important;left:15px!important;z-index:9!important;
+ min-height:39px!important;padding:7px 12px!important;border:1px solid #ffffff75!important;
+ border-radius:22px!important;background:rgba(255,255,255,.92)!important;color:#315f91!important;
+ box-shadow:0 3px 12px #102f2830!important;font:700 13px Tajawal,Arial,sans-serif!important;cursor:pointer!important
+}
+html[data-theme="dark"] body{background:#111820!important;color:#e7edf2!important}
+html[data-theme="dark"] .nav{background:#1b2630!important;border-color:#34424d!important;box-shadow:0 5px 20px #0005!important}
+html[data-theme="dark"] .nav button{color:#c3d0da!important}
+html[data-theme="dark"] .nav button.active{background:#315f91!important;color:#fff!important}
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .tile,
+html[data-theme="dark"] .home-prayer-card,
+html[data-theme="dark"] .home-prayer-list>div,
+html[data-theme="dark"] .prayer-item,
+html[data-theme="dark"] .adhan-options label,
+html[data-theme="dark"] .dhikr-tools,
+html[data-theme="dark"] .home-next-prayer{
+ background:#202c36!important;color:#e7edf2!important;border-color:#3b4a56!important;box-shadow:none!important
+}
+html[data-theme="dark"] .card h2,
+html[data-theme="dark"] .home-prayer-head h2,
+html[data-theme="dark"] .home-prayer-list span,
+html[data-theme="dark"] .prayer-item-name,
+html[data-theme="dark"] .home-prayer-city,
+html[data-theme="dark"] .home-next-prayer,
+html[data-theme="dark"] .tile,
+html[data-theme="dark"] .adhan-mode-label{color:#d8e6f2!important}
+html[data-theme="dark"] .home-prayer-list b,
+html[data-theme="dark"] .home-next-prayer b,
+html[data-theme="dark"] .home-next-prayer strong,
+html[data-theme="dark"] .prayer-item b{color:#f0d99e!important}
+html[data-theme="dark"] .home-prayer-list .prayer-icon,
+html[data-theme="dark"] .prayer-item-name .prayer-icon{background:#2c3d4b!important;border-color:#465969!important}
+html[data-theme="dark"] .home-prayer-city select,
+html[data-theme="dark"] .prayer-controls select,
+html[data-theme="dark"] .adhan-mode,
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select{
+ background:#18232c!important;color:#e7edf2!important;border-color:#465663!important
+}
+html[data-theme="dark"] .actions button,
+html[data-theme="dark"] .smallbtn,
+html[data-theme="dark"] .dhikr-tools button{background:#314252!important;color:#e7edf2!important}
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] footer,
+html[data-theme="dark"] .home-prayer-head p,
+html[data-theme="dark"] .home-prayer-note{color:#aab9c4!important}
+html[data-theme="dark"] .verse,
+html[data-theme="dark"] .arabic{color:#f0e7d5!important}
+html[data-theme="dark"] .dhikr{border-color:#394752!important}
+html[data-theme="dark"] .zad-theme-toggle{background:#263746!important;color:#f5d98e!important;border-color:#536575!important}
+@media(max-width:390px){.zad-theme-toggle{top:13px!important;left:12px!important;padding:6px 9px!important;font-size:12px!important}}
+</style>
+<script id="zad-theme-toggle-script-v1">
+(()=>{const button=document.getElementById('zad-theme-toggle');if(!button)return;
+ const meta=document.querySelector('meta[name="theme-color"]');
+ const apply=theme=>{
+  document.documentElement.setAttribute('data-theme',theme);
+  const dark=theme==='dark';
+  button.textContent=dark?'☀️ نهاري':'🌙 ليلي';
+  button.setAttribute('aria-label',dark?'تفعيل الوضع النهاري':'تفعيل الوضع الليلي');
+  button.setAttribute('aria-pressed',String(dark));
+  if(meta)meta.setAttribute('content',dark?'#111820':'#0f4535');
+ };
+ let saved='light';try{saved=localStorage.getItem('zad-theme-mode')||'light'}catch(e){}
+ apply(saved==='dark'?'dark':'light');
+ button.addEventListener('click',()=>{
+  const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  apply(next);try{localStorage.setItem('zad-theme-mode',next)}catch(e){}
+ });
+})();
+</script>
