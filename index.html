@@ -2167,9 +2167,17 @@ function setupDhikr(id){
     focusContent.appendChild(clone);
     requestAnimationFrame(()=>{
      const textNode=clone.querySelector('.arabic');if(!textNode)return;
-     let size=18;textNode.style.fontSize=size+'px';textNode.style.lineHeight='1.38';
-     while(size>11&&(textNode.scrollHeight>textNode.clientHeight+2||clone.scrollHeight>clone.clientHeight+2)){
-      size-=0.5;textNode.style.fontSize=size+'px';
+     const longText=clone.classList.contains('zad-long-ayat')||clone.classList.contains('zad-long-morning-dua');
+     let size=longText?20:24;
+     const minSize=15;
+     const lineHeight=longText?'1.5':'1.65';
+     const applyFit=()=>{
+      textNode.style.setProperty('font-size',size+'px','important');
+      textNode.style.setProperty('line-height',lineHeight,'important');
+     };
+     applyFit();
+     while(size>minSize&&(textNode.scrollHeight>textNode.clientHeight+3||clone.scrollHeight>clone.clientHeight+3)){
+      size-=0.5;applyFit();
      }
     });
     const counter=document.createElement('button');counter.type='button';counter.className='dhikr-focus-counter-outside';counter.innerHTML='عدد التكرار <strong>'+countAt(current)+' / '+required[current]+'</strong>';
@@ -2279,7 +2287,7 @@ async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
   const prayerIcons={Fajr:'🌅',Dhuhr:'☀️',Asr:'🌤️',Maghrib:'🌇',Isha:'🌙'};
   $('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item" data-prayer-key="'+k+'"><span class="prayer-item-name"><span class="prayer-icon" aria-hidden="true">'+prayerIcons[k]+'</span>'+prayerNames[k]+'</span><b>'+cleanTime(k)+'</b></div>').join('');
   const homeKeys=[['Fajr','الفجر','🌅'],['Sunrise','الشروق','🌄'],['Dhuhr','الظهر','☀️'],['Asr','العصر','🌤️'],['Maghrib','المغرب','🌇'],['Isha','العشاء','🌙']];
-  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'" style="text-align:center"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:18px!important;line-height:1.35!important;font-weight:900!important;white-space:nowrap!important">'+label+'</span><b style="display:block;font-family:\'Aref Ruqaa\',serif!important;font-size:20px!important;line-height:1.35!important;font-weight:700!important">'+cleanTime(k)+'</b></div>').join('');
+  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'" style="text-align:center"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:clamp(16px,4.8vw,19px)!important;line-height:1.35!important;font-weight:900!important;white-space:nowrap!important">'+label+'</span><b style="display:block;font-family:\'Aref Ruqaa\',serif!important;font-size:clamp(18px,5.2vw,21px)!important;line-height:1.35!important;font-weight:800!important">'+cleanTime(k)+'</b></div>').join('');
   tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000);
  }catch(e){
   if(requestId!==prayerRequestId)return;
