@@ -3667,3 +3667,46 @@ header.hero{position:relative!important}
  #home .home-prayer-list>div>b{font-size:18px!important}
 }
 </style>
+
+
+<style id="zad-prayer-labels-final-2026-11">
+/* إصلاح نهائي بعد قواعد التصميم القديمة: تكبير أسماء الصلوات والأوقات على الهاتف */
+#home #home-prayer-list{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+}
+#home #home-prayer-list>div{
+  min-width:0!important;
+  padding:7px 1px!important;
+}
+#home #home-prayer-list>div>span:not(.prayer-icon){
+  font-family:Tajawal,Arial,sans-serif!important;
+  font-size:14px!important;
+  line-height:1.4!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  color:#24445d!important;
+}
+#home #home-prayer-list>div>b{
+  font-family:Tajawal,Arial,sans-serif!important;
+  font-size:16px!important;
+  line-height:1.4!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  color:#183f5c!important;
+}
+#prayer-times .prayer-item-name{
+  font-size:20px!important;
+  font-weight:900!important;
+}
+#prayer-times .prayer-item>b,
+#prayer-times .prayer-item>strong{
+  font-size:20px!important;
+  font-weight:900!important;
+}
+@media(max-width:390px){
+  #home #home-prayer-list>div>span:not(.prayer-icon){font-size:14px!important}
+  #home #home-prayer-list>div>b{font-size:15px!important}
+}
+</style>
