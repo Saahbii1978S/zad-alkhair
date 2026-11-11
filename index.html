@@ -3736,3 +3736,36 @@ header.hero{position:relative!important}
  line-height:1.85!important;
 }
 </style>
+
+<style id="zad-dhikr-focus-layout-final-v24">
+/* إصلاح نهائي لشاشة القراءة: فصل العنوان عن البطاقة ومنع تمددها */
+.dhikr-focus{padding-top:calc(env(safe-area-inset-top) + 10px)!important}
+.dhikr-focus-top{flex:0 0 auto!important;position:relative!important;z-index:2!important;margin:0!important;padding:8px 2px 12px!important}
+.dhikr-focus-content{
+ flex:1 1 auto!important;min-height:0!important;width:100%!important;
+ margin:0 auto!important;padding:14px 0 10px!important;box-sizing:border-box!important;
+ display:flex!important;align-items:center!important;justify-content:center!important
+}
+.dhikr-focus-card{
+ flex:0 1 auto!important;height:auto!important;min-height:0!important;
+ max-height:calc(100% - 4px)!important;overflow-y:auto!important;
+ width:100%!important;margin:0!important;padding:18px 15px!important;
+ gap:12px!important;justify-content:center!important;box-sizing:border-box!important
+}
+.dhikr-focus-card .arabic{
+ font-size:clamp(17px,4.5vw,21px)!important;
+ line-height:1.75!important;overflow-wrap:normal!important
+}
+.dhikr-focus-card>.muted:first-child{font-size:13px!important;margin:0 0 2px!important}
+.dhikr-focus-card .dhikr-count-progress{width:88px!important;height:88px!important;min-width:88px!important;margin:6px auto 0!important}
+.dhikr-focus-card .dhikr-count-progress strong{font-size:21px!important}
+.dhikr-focus-hint{flex:0 0 auto!important;margin:0!important;padding:7px 4px 9px!important}
+.dhikr-focus-actions{flex:0 0 auto!important;padding:0 0 6px!important}
+@media(max-height:650px){
+ .dhikr-focus-content{padding:8px 0!important}
+ .dhikr-focus-card{padding:12px!important;gap:8px!important}
+ .dhikr-focus-card .arabic{font-size:17px!important;line-height:1.65!important}
+ .dhikr-focus-card .dhikr-count-progress{width:76px!important;height:76px!important;min-width:76px!important}
+ .dhikr-focus-card .dhikr-count-progress strong{font-size:19px!important}
+}
+</style>
