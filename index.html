@@ -2558,33 +2558,45 @@ function playQuranAyahInSequence(index,request,sourceIndex=0){
  const ayahs=currentSurahData.ayahs;
  if(index>=ayahs.length){
   $('#quran-now-playing').textContent='تمّت تلاوة سورة '+currentSurahData.name+' كاملة.';
+  quranStatus.textContent='اكتملت التلاوة بفضل الله.';
   return;
  }
  const ayah=ayahs[index],edition=quranReciter.value;
+ const reciterFolders={
+  'ar.alafasy':'Alafasy_128kbps',
+  'ar.abdulbasit':'Abdul_Basit_Murattal_192kbps',
+  'ar.husary':'Husary_128kbps',
+  'ar.minshawi':'Minshawy_Murattal_128kbps'
+ };
+ const surahNo=String(currentSurahData.number).padStart(3,'0');
+ const ayahNo=String(ayah.numberInSurah).padStart(3,'0');
+ const everyAyahFolder=reciterFolders[edition];
  const sources=[
   'https://cdn.islamic.network/quran/audio/128/'+encodeURIComponent(edition)+'/'+ayah.number+'.mp3',
   'https://cdn.islamic.network/quran/audio/64/'+encodeURIComponent(edition)+'/'+ayah.number+'.mp3',
-  'https://cdn.alquran.cloud/media/audio/ayah/'+encodeURIComponent(edition)+'/'+ayah.number
+  'https://cdn.alquran.cloud/media/audio/ayah/'+encodeURIComponent(edition)+'/'+ayah.number,
+  ...(everyAyahFolder?['https://everyayah.com/data/'+everyAyahFolder+'/'+surahNo+ayahNo+'.mp3']:[]
  ];
  if(sourceIndex>=sources.length){
-  $('#quran-now-playing').textContent='توقفت التلاوة عند الآية '+ayah.numberInSurah+' بسبب تعذّر تحميل صوتها.';
-  quranStatus.textContent='تعذّر تحميل إحدى الآيات. تثبّت من الإنترنت ثم أعد تشغيل السورة.';
+  $('#quran-now-playing').textContent='تعذّر تحميل صوت الآية '+ayah.numberInSurah+' من مصادر الصوت المتاحة.';
+  quranStatus.textContent='تحقّق من اتصال الإنترنت، أو جرّب قارئاً آخر. لم نتجاوز الآية بصمت.';
   return;
  }
+ let retryStarted=false;
+ const retry=()=>{
+  if(retryStarted||request!==quranAudioRequest)return;
+  retryStarted=true;
+  playQuranAyahInSequence(index,request,sourceIndex+1);
+ };
  quranAudio.onended=()=>{
   if(request!==quranAudioRequest)return;
   playQuranAyahInSequence(index+1,request,0);
  };
- quranAudio.onerror=()=>{
-  if(request===quranAudioRequest)playQuranAyahInSequence(index,request,sourceIndex+1);
- };
- quranAudio.src=sources[sourceIndex];quranAudio.load();
+ quranAudio.onerror=retry;
+ quranAudio.src=sources[sourceIndex];
+ quranAudio.load();
  const playPromise=quranAudio.play();
- if(playPromise&&typeof playPromise.catch==='function'){
-  playPromise.catch(()=>{
-   if(request===quranAudioRequest)playQuranAyahInSequence(index,request,sourceIndex+1);
-  });
- }
+ if(playPromise&&typeof playPromise.catch==='function')playPromise.catch(retry);
  $('#quran-now-playing').textContent='القارئ: '+quranReciter.options[quranReciter.selectedIndex].text+' • سورة '+currentSurahData.name+' • الآية '+ayah.numberInSurah+' من '+ayahs.length;
 }
 $('#quran-play-surah').onclick=()=>{
