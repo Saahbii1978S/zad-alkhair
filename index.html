@@ -3541,3 +3541,23 @@ header.hero{position:relative!important}
  });
 })();
 </script>
+
+
+<style id="zad-prayer-names-readable-final-v2">
+/* استرجاع واضح وكبير لأسماء الصلوات دون تغيير أرقام المواقيت */
+#home .home-prayer-list>div>span:not(.prayer-icon){
+  font-size:clamp(16px,4.5vw,19px)!important;
+  line-height:1.4!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+#prayer-times .prayer-item-name{
+  font-size:18px!important;
+  line-height:1.4!important;
+  font-weight:800!important;
+}
+@media(max-width:390px){
+  #home .home-prayer-list>div>span:not(.prayer-icon){font-size:15px!important}
+  #prayer-times .prayer-item-name{font-size:17px!important}
+}
+</style>
