@@ -1882,11 +1882,11 @@ main{padding-left:10px!important;padding-right:10px!important}
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
-<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p></header>
+<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p><button type="button" id="zad-location-picker" class="zad-location-picker" aria-label="اختيار البلد والمدينة" title="اختيار البلد والمدينة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.7"/></svg></button></header>
 <div class="zad-share-bar" aria-label="مشاركة زاد الخير">
  <button type="button" id="zad-share-button">مشاركة التطبيق</button>
  <button type="button" id="zad-copy-link">نسخ الرابط</button>
-</div>
+</div><div id="zad-location-modal" class="zad-location-modal" aria-hidden="true"><div class="zad-location-dialog" role="dialog" aria-modal="true" aria-labelledby="zad-location-title"><div class="zad-location-dialog-head"><div><span>الموقع</span><h3 id="zad-location-title">اختار البلد والمدينة</h3></div><button type="button" id="zad-location-close" class="zad-location-close" aria-label="إغلاق">×</button></div><div id="zad-location-fields"></div><p class="zad-location-hint">تتبدّل مواقيت الصلاة آلياً حسب اختيارك.</p></div></div>
 <div class="home-prayer-card">
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div></div>
  <div class="home-prayer-city"><div class="home-prayer-field"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select></div><div class="home-prayer-field"><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div></div>
@@ -3368,3 +3368,24 @@ header.hero .tag{
 }
 </style>
 
+<style id="zad-location-picker-design-v1">
+header.hero{position:relative!important}
+.zad-location-picker{position:absolute!important;top:15px!important;right:15px!important;z-index:8!important;display:grid!important;place-items:center!important;width:39px!important;height:39px!important;padding:0!important;border:1px solid #ffffff75!important;border-radius:50%!important;background:rgba(255,255,255,.9)!important;color:#315f91!important;box-shadow:0 3px 12px #102f2830!important;cursor:pointer!important}
+.zad-location-picker svg{width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.home-prayer-card .home-prayer-city{display:none!important}
+.zad-location-modal{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:18px;background:rgba(14,35,49,.48);backdrop-filter:blur(4px)}
+.zad-location-modal.is-open{display:flex}
+.zad-location-dialog{width:min(100%,390px);padding:20px;border-radius:21px;background:#fff;border:1px solid #e2eaf0;box-shadow:0 18px 55px #102f2840;color:#29465d}
+.zad-location-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}
+.zad-location-dialog-head span{font-size:12px;color:#8b7040;font-weight:800}
+.zad-location-dialog-head h3{margin:3px 0 0;font:800 21px Tajawal,Arial,sans-serif;color:#315f91}
+.zad-location-close{width:34px;height:34px;border:0;border-radius:50%;background:#edf3f8;color:#315f91;font:24px Arial;cursor:pointer}
+#zad-location-fields .home-prayer-city{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;width:100%!important;margin:0!important}
+#zad-location-fields .home-prayer-field{display:flex!important;flex-direction:column!important;gap:6px!important;width:100%!important}
+#zad-location-fields .home-prayer-field label{display:block!important;color:#526b7e!important;font-size:14px!important;font-weight:800!important}
+#zad-location-fields .home-prayer-field select{width:100%!important;min-width:0!important;padding:12px!important;border:1px solid #dce6ee!important;border-radius:12px!important;background:#f8fafc!important;color:#294d68!important;font:700 16px Tajawal,Arial,sans-serif!important}
+.zad-location-hint{margin:14px 0 0;color:#778895;font-size:12px;text-align:center}
+@media(max-width:480px){.zad-location-picker{top:12px!important;right:12px!important;width:36px!important;height:36px!important}}
+</style><script id="zad-location-picker-behavior-v1">
+(()=>{const init=()=>{const modal=document.getElementById('zad-location-modal'),open=document.getElementById('zad-location-picker'),close=document.getElementById('zad-location-close'),fields=document.getElementById('zad-location-fields'),selectors=document.querySelector('.home-prayer-card .home-prayer-city');if(!modal||!open||!close||!fields||!selectors)return;fields.appendChild(selectors);const show=()=>{modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';};const hide=()=>{modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';};open.addEventListener('click',show);close.addEventListener('click',hide);modal.addEventListener('click',e=>{if(e.target===modal)hide();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('is-open'))hide();});};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();})();
+</script>
