@@ -2239,7 +2239,7 @@ function setupDhikr(id){
     const activate=()=>increment(items[current]);clone.addEventListener('click',activate);clone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});counter.addEventListener('click',activate);
     focus.querySelector('.dhikr-focus-hint').textContent='اضغط على الذكر أو على العدّاد لتسجيل التكرار';
    }
-   const prev=focus.querySelector('.dhikr-focus-prev'),next=focus.querySelector('.dhikr-focus-next');prev.disabled=current<=0;next.disabled=current>=items.length;prev.onclick=()=>{selectedIndex=Math.max(0,selectedIndex-1);render()};next.onclick=()=>{selectedIndex=Math.min(items.length,selectedIndex+1);render()};
+   const prev=focus.querySelector('.dhikr-focus-prev'),next=focus.querySelector('.dhikr-focus-next');prev.disabled=current<=0;next.disabled=current>=items.length-1;prev.onclick=()=>{selectedIndex=Math.max(0,selectedIndex-1);render()};next.onclick=()=>{selectedIndex=Math.min(items.length-1,selectedIndex+1);render()};
   }else{focus.hidden=true;document.body.classList.remove('dhikr-focus-open')}
  }
  function increment(el){
