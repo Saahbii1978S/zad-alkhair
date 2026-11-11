@@ -3625,3 +3625,45 @@ header.hero{position:relative!important}
   #home .home-prayer-list>div>b{font-size:16px!important}
 }
 </style>
+
+
+<style id="zad-prayer-cards-large-mobile-v7">
+/* وضوح قوي على الهاتف: ثلاث بطاقات في كل صف ومساحة أكبر للاسم والوقت */
+@media(max-width:600px){
+ #home #home-prayer-list,
+ #home .home-prayer-list{
+   display:grid!important;
+   grid-template-columns:repeat(3,minmax(0,1fr))!important;
+   gap:8px!important;
+ }
+ #home #home-prayer-list>div,
+ #home .home-prayer-list>div{
+   min-width:0!important;
+   min-height:88px!important;
+   padding:10px 4px!important;
+   gap:6px!important;
+ }
+ #home #home-prayer-list>div>span:not(.prayer-icon),
+ #home .home-prayer-list>div>span:not(.prayer-icon){
+   font-family:Tajawal,Arial,sans-serif!important;
+   font-size:22px!important;
+   line-height:1.35!important;
+   font-weight:900!important;
+   white-space:nowrap!important;
+ }
+ #home #home-prayer-list>div>b,
+ #home .home-prayer-list>div>b{
+   font-family:Tajawal,Arial,sans-serif!important;
+   font-size:21px!important;
+   line-height:1.35!important;
+   font-weight:900!important;
+   white-space:nowrap!important;
+ }
+}
+@media(max-width:360px){
+ #home #home-prayer-list>div>span:not(.prayer-icon),
+ #home .home-prayer-list>div>span:not(.prayer-icon){font-size:19px!important}
+ #home #home-prayer-list>div>b,
+ #home .home-prayer-list>div>b{font-size:18px!important}
+}
+</style>
