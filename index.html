@@ -1894,7 +1894,7 @@ main{padding-left:10px!important;padding-right:10px!important}
  <button type="button" id="zad-use-location" class="zad-use-location">📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً</button>
  <p id="zad-location-status" class="home-prayer-note" role="status" aria-live="polite"></p>
  <div id="home-prayer-list" class="home-prayer-list"><span>الفجر</span><span>الظهر</span><span>العصر</span><span>المغرب</span><span>العشاء</span></div>
- <div class="home-next-prayer"><span>الصلاة القادمة <b id="home-next-name">—</b></span><strong id="home-next-countdown">—</strong></div>
+ <div class="home-next-prayer"><span style="font-family:Tajawal,Arial,sans-serif!important;font-size:17px!important;font-weight:900!important">الصلاة القادمة <b id="home-next-name" style="font-size:17px!important;font-weight:900!important">—</b></span><strong id="home-next-countdown" style="font-size:16px!important;font-weight:900!important">—</strong></div>
 
  </div>
 
@@ -2247,7 +2247,7 @@ async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
   const prayerIcons={Fajr:'🌅',Dhuhr:'☀️',Asr:'🌤️',Maghrib:'🌇',Isha:'🌙'};
   $('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item" data-prayer-key="'+k+'"><span class="prayer-item-name"><span class="prayer-icon" aria-hidden="true">'+prayerIcons[k]+'</span>'+prayerNames[k]+'</span><b>'+cleanTime(k)+'</b></div>').join('');
   const homeKeys=[['Fajr','الفجر','🌅'],['Sunrise','الشروق','🌄'],['Dhuhr','الظهر','☀️'],['Asr','العصر','🌤️'],['Maghrib','المغرب','🌇'],['Isha','العشاء','🌙']];
-  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'" style="text-align:center"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:18px;line-height:1.35;font-weight:900;white-space:nowrap">'+label+'</span><b style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:13px;line-height:1.35;font-weight:800">'+cleanTime(k)+'</b></div>').join('');
+  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'" style="text-align:center"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:18px!important;line-height:1.35!important;font-weight:900!important;white-space:nowrap!important">'+label+'</span><b style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:13px!important;line-height:1.35!important;font-weight:800!important">'+cleanTime(k)+'</b></div>').join('');
   tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000);
  }catch(e){
   if(requestId!==prayerRequestId)return;
