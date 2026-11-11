@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: zad-alkhair-android
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -233,7 +237,7 @@ jobs:
                       storeType System.getenv("ANDROID_KEYSTORE_TYPE")
                       storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
                       keyAlias System.getenv("ANDROID_KEY_ALIAS")
-                      keyPassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                      keyPassword System.getenv("ANDROID_KEY_PASSWORD")
                   }
               }
               '''
