@@ -2120,7 +2120,7 @@ function setupDhikr(id){
  const root=document.getElementById(id),items=[...root.querySelectorAll('.dhikr-tap')];
  const key='zad-'+id+'-counts-v4',legacyKey='zad-'+id+'-counts-v3';
  const saved=()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return {}}};
- let counts=saved(),showDone=false,focusMode=false;
+ let counts=saved(),showDone=false,focusMode=false,selectedIndex=0;
  if(!localStorage.getItem(key)){
   try{const legacy=JSON.parse(localStorage.getItem(legacyKey)||'{}');if(Object.keys(legacy).length){
    counts[0]=legacy[0]||0;counts[1]=legacy[1]||0;counts[2]=legacy[1]||0;counts[3]=legacy[1]||0;
@@ -2133,7 +2133,7 @@ function setupDhikr(id){
  const tools=root.querySelector('.dhikr-tools');
  const startBtn=document.createElement('button');startBtn.type='button';startBtn.className='dhikr-start-btn';startBtn.textContent='ابدأ قراءة الأذكار';tools.appendChild(startBtn);
  const focus=document.createElement('div');focus.className='dhikr-focus';focus.hidden=true;focus.setAttribute('role','dialog');focus.setAttribute('aria-modal','true');focus.setAttribute('aria-label',id==='morning'?'قراءة أذكار الصباح':'قراءة أذكار المساء');
- focus.innerHTML='<div class="dhikr-focus-top"><button type="button" class="dhikr-focus-back">رجوع ✕</button><span class="dhikr-focus-title">'+(id==='morning'?'أذكار الصباح':'أذكار المساء')+'</span><span class="dhikr-focus-step"></span></div><div class="dhikr-focus-content"></div><p class="dhikr-focus-hint">اضغط على الذكر أو على العدّاد لتسجيل التكرار</p><div class="dhikr-focus-actions"><button type="button" class="dhikr-focus-exit">إنهاء القراءة</button></div>';
+ focus.innerHTML='<div class="dhikr-focus-top"><button type="button" class="dhikr-focus-back">رجوع ✕</button><span class="dhikr-focus-title">'+(id==='morning'?'أذكار الصباح':'أذكار المساء')+'</span><span class="dhikr-focus-step"></span></div><div class="dhikr-focus-content"></div><p class="dhikr-focus-hint">اضغط على الذكر أو على العدّاد لتسجيل التكرار</p><div class="dhikr-focus-actions"><button type="button" class="dhikr-focus-prev">السابق</button><button type="button" class="dhikr-focus-next">التالي</button><button type="button" class="dhikr-focus-exit">إنهاء القراءة</button></div>';
  document.body.appendChild(focus);
  const focusContent=focus.querySelector('.dhikr-focus-content'),step=focus.querySelector('.dhikr-focus-step');
  const closeFocus=()=>{focusMode=false;focus.hidden=true;document.body.classList.remove('dhikr-focus-open')};
@@ -2148,16 +2148,17 @@ function setupDhikr(id){
   doneEl.textContent=completed;bar.style.width=(items.length?completed/items.length*100:0)+'%';showBtn.textContent=showDone?'العودة للذكر الحالي':'عرض جميع الأذكار';finish.hidden=completed!==items.length||showDone;
   if(intro)intro.textContent=showDone?'قائمة الأذكار كاملة. للمتابعة بالترتيب ارجع إلى الذكر الحالي.':'ابدأ القراءة لتظهر الأذكار واحداً تلو الآخر، كل ذكر في شاشة مستقلة.';
   startBtn.textContent=completed===items.length?'إعادة قراءة الأذكار':(focusMode?'متابعة القراءة':'ابدأ قراءة الأذكار');
-  const current=activeIndex();
+  const current=focusMode?selectedIndex:activeIndex();
   if(focusMode){
    focus.hidden=false;document.body.classList.add('dhikr-focus-open');focusContent.innerHTML='';
-   if(current<0){step.textContent='اكتملت الأذكار';const msg=document.createElement('div');msg.className='dhikr-focus-complete';msg.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';focusContent.appendChild(msg);focus.querySelector('.dhikr-focus-hint').textContent='بارك الله فيك';}
+   if(current>=items.length){step.textContent='اكتملت الأذكار';const msg=document.createElement('div');msg.className='dhikr-focus-complete';msg.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';focusContent.appendChild(msg);focus.querySelector('.dhikr-focus-hint').textContent='بارك الله فيك';}
    else{step.textContent=(current+1)+' / '+items.length;const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');clone.querySelector('.muted:last-child')?.remove();focusContent.appendChild(clone);const activate=()=>increment(items[current]);clone.addEventListener('click',activate);clone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate()}});focus.querySelector('.dhikr-focus-hint').textContent='اضغط على الذكر أو على العدّاد لتسجيل التكرار';}
+   const prev=focus.querySelector('.dhikr-focus-prev'),next=focus.querySelector('.dhikr-focus-next');prev.disabled=current<=0;next.disabled=current>=items.length;prev.onclick=()=>{selectedIndex=Math.max(0,selectedIndex-1);render()};next.onclick=()=>{selectedIndex=Math.min(items.length,selectedIndex+1);render()};
   }else{focus.hidden=true;document.body.classList.remove('dhikr-focus-open')}
  }
- function increment(el){const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));showDone=false;render()}
+ function increment(el){const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));showDone=false;if(Number(counts[i])>=required[i]){const next=activeIndex();selectedIndex=next<0?items.length:next}render()}
  items.forEach(el=>{el.addEventListener('click',()=>increment(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}})});
- startBtn.onclick=()=>{if(activeIndex()<0){counts={};localStorage.setItem(key,JSON.stringify(counts))}showDone=false;focusMode=true;render()};
+ startBtn.onclick=()=>{if(activeIndex()<0){counts={};localStorage.setItem(key,JSON.stringify(counts))}showDone=false;selectedIndex=Math.max(0,activeIndex());focusMode=true;render()};
  showBtn.onclick=()=>{showDone=!showDone;render()};
  document.getElementById(id+'-reset').onclick=()=>{counts={};localStorage.removeItem(key);showDone=false;render()};
  render();
