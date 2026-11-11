@@ -2691,12 +2691,14 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateZadL
  function moveMonth(amount){
   if(mode==='greg')shown=new Date(shown.getFullYear(),shown.getMonth()+amount,15);
   else{
-   const start=hijriMonthStart(shown);
-   const target=new Date(start);target.setDate(start.getDate()+(amount*30));
-   let candidate=hijriMonthStart(target);
-   if(amount>0&&sameHijriMonth(candidate,start)){target.setDate(target.getDate()+3);candidate=hijriMonthStart(target)}
-   if(amount<0&&sameHijriMonth(candidate,start)){target.setDate(target.getDate()-3);candidate=hijriMonthStart(target)}
-   shown=candidate;
+   const start=hijriMonthStart(shown),edge=new Date(start);
+   if(amount>0){
+    do{edge.setDate(edge.getDate()+1)}while(sameHijriMonth(edge,start));
+    shown=hijriMonthStart(edge);
+   }else{
+    edge.setDate(edge.getDate()-1);
+    shown=hijriMonthStart(edge);
+   }
   }
   draw();
  }
