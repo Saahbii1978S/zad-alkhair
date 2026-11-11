@@ -2063,7 +2063,7 @@ main{padding-left:10px!important;padding-right:10px!important}
   <p class="muted">مصحف بالنص العثماني، مع الاستماع للآيات. يلزم الإنترنت أول مرة لتحميل السورة.</p>
   <div class="quran-controls">
    <label for="quran-surah">اختار السورة</label><select id="quran-surah"><option value="1">الفاتحة</option></select>
-   <label for="quran-reciter">القارئ</label><select id="quran-reciter"><option value="ar.alafasy">مشاري العفاسي</option><option value="ar.abdulbasitmurattal">عبد الباسط عبد الصمد</option><option value="ar.husary">محمود خليل الحصري</option><option value="ar.minshawi">محمد صديق المنشاوي</option></select>
+   <label for="quran-reciter">القارئ</label><select id="quran-reciter"><option value="ar.alafasy">مشاري العفاسي</option><option value="ar.abdulbasit">عبد الباسط عبد الصمد</option><option value="ar.husary">محمود خليل الحصري</option><option value="ar.minshawi">محمد صديق المنشاوي</option></select>
   </div>
   <div class="quran-actions actions"><button id="quran-load" type="button">فتح السورة</button><button id="quran-save" type="button">حفظ نص السورة على الجهاز</button></div>
   <p class="muted">الحفظ يشمل نصّ السورة فقط. الاستماع الصوتي قد يحتاج إلى الإنترنت.</p>
@@ -2549,33 +2549,41 @@ let quranAudioRequest=0;
 quranVerses.addEventListener('click',async e=>{
  const b=e.target.closest('[data-quran-audio]');if(!b)return;
  const ayah=Number(b.dataset.quranAudio),edition=quranReciter.value;
- if(!Number.isInteger(ayah)||ayah<1){quranStatus.textContent='رقم الآية غير صحيح.';return}
+ if(!Number.isInteger(ayah)||ayah<1||ayah>6236){quranStatus.textContent='رقم الآية غير صحيح.';return}
  const request=++quranAudioRequest;
  $('#quran-audio-box').hidden=false;
- $('#quran-now-playing').textContent='جاري تجهيز تلاوة الآية '+ayah+'...';
+ $('#quran-now-playing').textContent='جاري تجهيز التلاوة...';
  quranStatus.textContent='';
  quranAudio.pause();quranAudio.removeAttribute('src');quranAudio.load();
- try{
-  const response=await fetch('https://api.alquran.cloud/v1/ayah/'+ayah+'/'+encodeURIComponent(edition));
-  if(!response.ok)throw new Error('audio metadata request failed');
-  const json=await response.json();
+ b.disabled=true;
+ const sources=[
+  'https://cdn.islamic.network/quran/audio/128/'+encodeURIComponent(edition)+'/'+ayah+'.mp3',
+  'https://cdn.islamic.network/quran/audio/64/'+encodeURIComponent(edition)+'/'+ayah+'.mp3',
+  'https://cdn.alquran.cloud/media/audio/ayah/'+encodeURIComponent(edition)+'/'+ayah
+ ];
+ let sourceIndex=0;
+ const tryNextSource=async()=>{
   if(request!==quranAudioRequest)return;
-  const audioUrl=json?.data?.audio||json?.data?.audioSecondary?.[0];
-  if(json.code!==200||!audioUrl)throw new Error('audio URL unavailable');
-  quranAudio.src=audioUrl;
+  if(sourceIndex>=sources.length){
+   $('#quran-now-playing').textContent='تعذّر تحميل التلاوة.';
+   quranStatus.textContent='خادم التلاوة لم يستجب. تثبّت من الإنترنت وحاول من جديد.';
+   b.disabled=false;return;
+  }
+  quranAudio.src=sources[sourceIndex++];
   quranAudio.load();
-  $('#quran-now-playing').textContent='القارئ: '+(json.data.edition?.name||edition)+' • الآية '+ayah;
-  await quranAudio.play();
- }catch(error){
-  if(request!==quranAudioRequest)return;
-  $('#quran-now-playing').textContent='تعذّر تشغيل هذه التلاوة.';
-  quranStatus.textContent='ما خدمش الصوت. تثبّت من الإنترنت أو اختار قارئاً آخر، ثم أعد المحاولة.';
- }
-});
-quranAudio.addEventListener('error',()=>{
- if(!quranAudio.src)return;
- $('#quran-now-playing').textContent='تعذّر تحميل الملف الصوتي.';
- quranStatus.textContent='خادم الصوت ما جاوبش. جرّب بعد قليل أو اختار قارئاً آخر.';
+  try{
+   await quranAudio.play();
+   if(request!==quranAudioRequest)return;
+   $('#quran-now-playing').textContent='القارئ: '+quranReciter.options[quranReciter.selectedIndex].text+' • الآية '+ayah;
+   b.disabled=false;
+  }catch(error){
+   if(request!==quranAudioRequest)return;
+   tryNextSource();
+  }
+ };
+ quranAudio.onended=()=>{if(request===quranAudioRequest)$('#quran-now-playing').textContent='انتهت تلاوة الآية.'};
+ quranAudio.onerror=()=>{if(request===quranAudioRequest&&sourceIndex<sources.length)tryNextSource();else if(request===quranAudioRequest){$('#quran-now-playing').textContent='تعذّر تحميل التلاوة.';quranStatus.textContent='جرّب الاتصال بالإنترنت أو قارئاً آخر.';b.disabled=false}};
+ tryNextSource();
 });
 loadSurahIndex();
 
