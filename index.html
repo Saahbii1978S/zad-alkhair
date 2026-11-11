@@ -2162,7 +2162,7 @@ function setupDhikr(id){
    if(current>=items.length){step.textContent='اكتملت الأذكار';const msg=document.createElement('div');msg.className='dhikr-focus-complete';msg.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';focusContent.appendChild(msg);focus.querySelector('.dhikr-focus-hint').textContent='بارك الله فيك';}
    else{
     step.textContent=(current+1)+' / '+items.length;
-    const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');
+    const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');const dhikrTitle=clone.querySelector('.muted:first-child')?.textContent?.trim()||'';if(dhikrTitle.includes('آية الكرسي'))clone.classList.add('zad-long-ayat');if(dhikrTitle.includes('دعاء الصباح')||dhikrTitle.includes('أصبحنا وأصبح الملك لله'))clone.classList.add('zad-long-morning-dua');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');
     clone.querySelector('.muted:last-child')?.remove();clone.querySelector('.dhikr-count-progress')?.remove();
     focusContent.appendChild(clone);
     requestAnimationFrame(()=>{
@@ -3962,4 +3962,16 @@ html[data-theme="dark"] .zad-theme-toggle{background:#263746!important;color:#f5
 html[data-theme="dark"] .dhikr-focus{background:linear-gradient(160deg,#111820,#1b2b38)!important}
 html[data-theme="dark"] .dhikr-focus-card{background:#202c36!important;border-color:#465969!important}
 html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
+</style>
+
+<style id="zad-long-dhikr-readable-v29">
+/* نصوص آية الكرسي ودعاء الصباح أصغر ومضبوطة داخل البطاقة */
+.dhikr-focus-card.zad-long-ayat .arabic{
+ font-size:14px!important;line-height:1.48!important;letter-spacing:0!important;
+ overflow-wrap:anywhere!important;word-break:normal!important
+}
+.dhikr-focus-card.zad-long-morning-dua .arabic{
+ font-size:15px!important;line-height:1.5!important;letter-spacing:0!important;
+ overflow-wrap:anywhere!important;word-break:normal!important
+}
 </style>
