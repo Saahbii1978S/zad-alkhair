@@ -2392,7 +2392,7 @@ async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
   const prayerIcons={Fajr:'🌅',Dhuhr:'☀️',Asr:'🌤️',Maghrib:'🌇',Isha:'🌙'};
   $('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item" data-prayer-key="'+k+'"><span class="prayer-item-name"><span class="prayer-icon" aria-hidden="true">'+prayerIcons[k]+'</span>'+prayerNames[k]+'</span><b>'+cleanTime(k)+'</b></div>').join('');
   const homeKeys=[['Fajr','الفجر','🌅'],['Sunrise','الشروق','🌄'],['Dhuhr','الظهر','☀️'],['Asr','العصر','🌤️'],['Maghrib','المغرب','🌇'],['Isha','العشاء','🌙']];
-  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'" style="text-align:center"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:clamp(16px,4.8vw,19px)!important;line-height:1.35!important;font-weight:900!important;white-space:nowrap!important">'+label+'</span><b style="display:block;font-family:\'Aref Ruqaa\',serif!important;font-size:clamp(18px,5.2vw,21px)!important;line-height:1.35!important;font-weight:800!important">'+cleanTime(k)+'</b></div>').join('');
+  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div class="home-prayer-time-item" data-prayer-key="'+k+'"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span class="home-prayer-time-name">'+label+'</span><b class="home-prayer-time-value">'+cleanTime(k)+'</b></div>').join('');
   tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000);
  }catch(e){
   if(requestId!==prayerRequestId)return;
@@ -4157,22 +4157,25 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
 }
 </style>
 
-<style id="zad-prayer-labels-readable-final-v3">
-/* آخر أولوية للأسماء والأوقات: لا تسمح لقواعد الهاتف القديمة بتصغيرها */
+
+<style id="zad-prayer-labels-readable-final-v4">
+/* أسماء الصلوات والأرقام دون أحجام inline تمنع تكبيرها */
 #home-prayer-list{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:2px!important}
-#home-prayer-list>div{min-width:0!important;padding:8px 0!important}
-#home-prayer-list>div>span:not(.prayer-icon){
- font-size:clamp(12px,3.65vw,15px)!important;line-height:1.35!important;
- white-space:nowrap!important;letter-spacing:0!important;
+#home-prayer-list>.home-prayer-time-item{min-width:0!important;padding:8px 0!important;text-align:center!important}
+#home-prayer-list>.home-prayer-time-item>.home-prayer-time-name{
+ display:block!important;font-family:Tajawal,Arial,sans-serif!important;
+ font-size:clamp(13px,3.8vw,16px)!important;line-height:1.35!important;
+ font-weight:900!important;white-space:nowrap!important;letter-spacing:0!important;
 }
-#home-prayer-list>div>b{
- font-size:clamp(14px,4.25vw,18px)!important;line-height:1.35!important;
- white-space:nowrap!important;letter-spacing:0!important;
+#home-prayer-list>.home-prayer-time-item>.home-prayer-time-value{
+ display:block!important;font-family:'Aref Ruqaa',serif!important;
+ font-size:clamp(15px,4.5vw,19px)!important;line-height:1.35!important;
+ font-weight:900!important;white-space:nowrap!important;letter-spacing:0!important;
 }
 #home-prayer-list .prayer-icon{width:32px!important;height:32px!important;font-size:17px!important}
 @media(max-width:350px){
- #home-prayer-list>div>span:not(.prayer-icon){font-size:11px!important}
- #home-prayer-list>div>b{font-size:13px!important}
+ #home-prayer-list>.home-prayer-time-item>.home-prayer-time-name{font-size:12px!important}
+ #home-prayer-list>.home-prayer-time-item>.home-prayer-time-value{font-size:14px!important}
  #home-prayer-list .prayer-icon{width:28px!important;height:28px!important;font-size:15px!important}
 }
 </style>
