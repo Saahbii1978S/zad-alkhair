@@ -1931,6 +1931,20 @@ main{padding-left:10px!important;padding-right:10px!important}
  word-break:normal!important;letter-spacing:0!important;
 }
 </style>
+<style id="zad-home-six-prayers-one-row-v1">
+/* عرض الصلوات الست، بما فيها الشروق، في صف واحد على الهاتف */
+#home-prayer-list{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:3px!important}
+#home-prayer-list>div{min-width:0!important;padding:8px 1px!important}
+#home-prayer-list>div>span:not(.prayer-icon){font-size:clamp(14px,4.2vw,17px)!important;white-space:nowrap!important}
+#home-prayer-list>div>b{font-size:clamp(16px,4.5vw,19px)!important;white-space:nowrap!important}
+#home-prayer-list .prayer-icon{width:34px!important;height:34px!important;font-size:18px!important;margin-bottom:4px!important}
+@media(max-width:360px){
+ #home-prayer-list{gap:1px!important}
+ #home-prayer-list>div>span:not(.prayer-icon){font-size:13px!important}
+ #home-prayer-list>div>b{font-size:15px!important}
+ #home-prayer-list .prayer-icon{width:30px!important;height:30px!important;font-size:16px!important}
+}
+</style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
