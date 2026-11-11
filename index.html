@@ -2158,7 +2158,7 @@ function setupDhikr(id){
  }
  function increment(el){const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));showDone=false;if(Number(counts[i])>=required[i]){const next=activeIndex();selectedIndex=next<0?items.length:next}render()}
  items.forEach(el=>{el.addEventListener('click',()=>increment(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}})});
- startBtn.onclick=()=>{if(activeIndex()<0){counts={};localStorage.setItem(key,JSON.stringify(counts))}showDone=false;selectedIndex=Math.max(0,activeIndex());focusMode=true;render()};
+ startBtn.onclick=()=>{showDone=false;selectedIndex=0;focusMode=true;render()};
  showBtn.onclick=()=>{showDone=!showDone;render()};
  document.getElementById(id+'-reset').onclick=()=>{counts={};localStorage.removeItem(key);showDone=false;render()};
  render();
