@@ -2684,7 +2684,21 @@ function updateZadLiveClock(){
 }
 updateZadLiveClock();
 setInterval(updateZadLiveClock,1000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateZadLiveClock()});
+document.addEventListener('visibilitychange',async()=>{
+ if(document.hidden)return;
+ updateZadLiveClock();
+ if(!window.Capacitor?.isNativePlatform?.()||!prayerTimes||adhanMode.value!=='audio')return;
+ const Local=window.ZadLocalNotifications;
+ if(!Local)return;
+ try{
+  const permission=await Local.checkPermissions();
+  if(permission.display!=='granted')return;
+  const exact=await Local.checkExactNotificationSetting();
+  if(exact.exactAlarm==='granted')await scheduleNativePrayerAlerts();
+ }catch(e){
+  adhanMessage('تعذّر التحقق من أذونات الأذان بعد الرجوع للتطبيق. افتح إعدادات الأذان وتثبّت من الأذونات.');
+ }
+});
 
 /* رزنامة التاريخين: ميلادي مع التاريخ الهجري لكل يوم */
 (function initDualCalendar(){
