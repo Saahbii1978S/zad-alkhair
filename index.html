@@ -3733,20 +3733,32 @@ header.hero{position:relative!important}
 </style>
 
 
-<style id="zad-home-next-prayer-size-final-v11">
-/* قاعدة نهائية موحّدة: العبارة واسم الصلاة بنفس حجم أسماء المواقيت */
-html body #home .home-next-prayer,
-html body #home .home-next-prayer>span,
-html body #home .home-next-prayer>span b{
+<style id="zad-home-next-prayer-size-final-v12">
+/* توحيد واضح لحجم أسماء الصلوات وعبارة الصلاة القادمة على الهاتف */
+#home #home-prayer-list>div>span:not(.prayer-icon),
+#home .home-next-prayer,
+#home .home-next-prayer>span,
+#home .home-next-prayer>span b{
   font-family:Tajawal,Arial,sans-serif!important;
-  font-size:14px!important;
-  line-height:1.4!important;
+  font-size:17px!important;
+  line-height:1.35!important;
   font-weight:900!important;
+  letter-spacing:0!important;
 }
-html body #home .home-next-prayer>strong{
+#home #home-prayer-list>div>b,
+#home .home-next-prayer>strong{
   font-family:Tajawal,Arial,sans-serif!important;
-  font-size:16px!important;
-  line-height:1.4!important;
+  font-size:15px!important;
+  line-height:1.35!important;
   font-weight:900!important;
+  letter-spacing:0!important;
+}
+@media(max-width:390px){
+  #home #home-prayer-list>div>span:not(.prayer-icon),
+  #home .home-next-prayer,
+  #home .home-next-prayer>span,
+  #home .home-next-prayer>span b{font-size:16px!important}
+  #home #home-prayer-list>div>b,
+  #home .home-next-prayer>strong{font-size:14px!important}
 }
 </style>
