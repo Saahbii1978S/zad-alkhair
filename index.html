@@ -2342,7 +2342,8 @@ function renderQibla(){
  if(qiblaBearing!==null){
   const angle=deviceHeading===null?qiblaBearing:(qiblaBearing-deviceHeading+360)%360;
   $('#qibla-arrow').style.transform='translate(-50%,-50%) rotate('+(angle-90)+'deg)';
-  $('#qibla-result').textContent='اتجاه القبلة: '+Math.round(qiblaBearing)+'° من الشمال'+(deviceHeading===null?' • فعّل البوصلة لتوجيه السهم حسب الهاتف':' • وجّه السهم نحو الكعبة');
+  const hint=deviceHeading!==null?' • وجّه السهم نحو الكعبة':(qiblaSensorMessage.startsWith('لم تصل')?' • '+qiblaSensorMessage:' • فعّل البوصلة لتوجيه السهم حسب الهاتف');
+  $('#qibla-result').textContent='اتجاه القبلة: '+Math.round(qiblaBearing)+'° من الشمال'+hint;
  }else{
   $('#qibla-result').textContent=qiblaSensorMessage;
  }
