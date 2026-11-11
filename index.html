@@ -2247,7 +2247,7 @@ async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
   const prayerIcons={Fajr:'🌅',Dhuhr:'☀️',Asr:'🌤️',Maghrib:'🌇',Isha:'🌙'};
   $('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item" data-prayer-key="'+k+'"><span class="prayer-item-name"><span class="prayer-icon" aria-hidden="true">'+prayerIcons[k]+'</span>'+prayerNames[k]+'</span><b>'+cleanTime(k)+'</b></div>').join('');
   const homeKeys=[['Fajr','الفجر','🌅'],['Sunrise','الشروق','🌄'],['Dhuhr','الظهر','☀️'],['Asr','العصر','🌤️'],['Maghrib','المغرب','🌇'],['Isha','العشاء','🌙']];
-  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span>'+label+'</span><b>'+cleanTime(k)+'</b></div>').join('');
+  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block!important;font-family:Tajawal,Arial,sans-serif!important;font-size:18px!important;line-height:1.3!important;font-weight:900!important;white-space:nowrap!important">'+label+'</span><b style="font-family:Tajawal,Arial,sans-serif!important;font-size:13px!important;line-height:1.3!important;font-weight:800!important">'+cleanTime(k)+'</b></div>').join('');
   tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000);
  }catch(e){
   if(requestId!==prayerRequestId)return;
