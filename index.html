@@ -3302,15 +3302,43 @@ header.hero .tag{
 </style>
 
 <script>
-/* صور متعاقبة للكعبة والمسجد النبوي والمسجد الأقصى */
+/* تبديل مضمون وناعم بين صور مكة والمدينة والمسجد الأقصى */
 (()=>{
  const photos=[
-  {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600',alt:'الكعبة المشرفة كاملة في المسجد الحرام'},
+  {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600',alt:'الكعبة المشرفة في المسجد الحرام بمكة'},
   {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Green_Dome%2C_Masjid_Al_Nabawi.jpg?width=1500',alt:'المسجد النبوي والقبة الخضراء في المدينة المنورة'},
   {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Al_Aqsa.jpg?width=1600',alt:'المسجد الأقصى المبارك في القدس'}
  ];
- const a=document.getElementById('hero-photo-a'),b=document.getElementById('hero-photo-b');
- if(a&&b){let index=0,active=a,inactive=b;const rotate=()=>{const next=(index+1)%photos.length;inactive.onload=()=>{active.classList.remove('is-active');inactive.classList.add('is-active');const old=active;active=inactive;inactive=old;index=next;};inactive.onerror=()=>{index=next;};inactive.src=photos[next].src;inactive.alt=photos[next].alt;};window.setInterval(rotate,8500);}
+ const first=document.getElementById('hero-photo-a');
+ const second=document.getElementById('hero-photo-b');
+ if(!first||!second)return;
+ let index=0,active=first,inactive=second,busy=false;
+ const schedule=()=>window.setTimeout(rotate,8500);
+ function rotate(){
+  if(busy)return;
+  busy=true;
+  const next=(index+1)%photos.length;
+  const probe=new Image();
+  probe.onload=()=>{
+   inactive.onload=()=>{
+    active.classList.remove('is-active');
+    inactive.classList.add('is-active');
+    const previous=active;active=inactive;inactive=previous;
+    index=next;busy=false;schedule();
+   };
+   inactive.onerror=()=>{busy=false;index=next;schedule();};
+   inactive.alt=photos[next].alt;
+   inactive.src=photos[next].src;
+  };
+  probe.onerror=()=>{busy=false;index=next;schedule();};
+  probe.src=photos[next].src;
+ }
+ const begin=()=>{
+  if(first.complete&&first.naturalWidth>0){schedule();return;}
+  first.addEventListener('load',schedule,{once:true});
+  first.addEventListener('error',()=>{index=0;schedule();},{once:true});
+ };
+ begin();
 })();
 /* صوت ترحيب ثابت عند فتح التطبيق: محرك أندرويد الأصلي أولاً، ثم محرك المتصفح كاحتياط */
 (()=>{
