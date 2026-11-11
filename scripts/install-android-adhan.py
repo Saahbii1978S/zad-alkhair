@@ -192,7 +192,7 @@ sources={
  "adhan_syria.mp3":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3",
 }
 mecca_webm=raw/"adhan_mecca.webm"
-subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm","-o",str(mecca_webm)],check=True)
+subprocess.run(["curl","-fL","--retry","5","--retry-all-errors","--retry-delay","2","--connect-timeout","20","https://commons.wikimedia.org/wiki/Special:Redirect/file/Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm","-o",str(mecca_webm)],check=True)
 subprocess.run(["ffmpeg","-y","-i",str(mecca_webm),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_mecca.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 mecca_webm.unlink()
 mecca_data=(raw/"adhan_mecca.ogg").read_bytes()
@@ -200,7 +200,7 @@ if len(mecca_data)<10000 or not mecca_data.startswith(b"OggS"):
  raise SystemExit("Mecca adhan conversion failed OGG validation")
 for filename,url in sources.items():
  target=raw/filename
- subprocess.run(["curl","-fL",url,"-o",str(target)],check=True)
+ subprocess.run(["curl","-fL","--retry","5","--retry-all-errors","--retry-delay","2","--connect-timeout","20",url,"-o",str(target)],check=True)
  data=target.read_bytes()
  if filename.endswith(".ogg") and (len(data)<10000 or not data.startswith(b"OggS")):
   raise SystemExit("Downloaded audio failed OGG validation: "+filename)
@@ -208,11 +208,11 @@ syria_mp3=raw/"adhan_syria.mp3"
 subprocess.run(["ffmpeg","-y","-i",str(syria_mp3),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_syria.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 syria_mp3.unlink()
 syria_mp3=raw/"adhan_syria.mp3"
-subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3","-o",str(syria_mp3)],check=True)
+subprocess.run(["curl","-fL","--retry","5","--retry-all-errors","--retry-delay","2","--connect-timeout","20","https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3","-o",str(syria_mp3)],check=True)
 subprocess.run(["ffmpeg","-y","-i",str(syria_mp3),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_syria.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 syria_mp3.unlink()
 morocco_wav=raw/"adhan_morocco.wav"
-subprocess.run(["curl","-fL","https://commons.wikimedia.org/wiki/Special:Redirect/file/Llamada_a_oraci%C3%B3n_Mezquita_Hassan_II.wav","-o",str(morocco_wav)],check=True)
+subprocess.run(["curl","-fL","--retry","5","--retry-all-errors","--retry-delay","2","--connect-timeout","20","https://commons.wikimedia.org/wiki/Special:Redirect/file/Llamada_a_oraci%C3%B3n_Mezquita_Hassan_II.wav","-o",str(morocco_wav)],check=True)
 subprocess.run(["ffmpeg","-y","-i",str(morocco_wav),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_morocco.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 morocco_wav.unlink()
 for name in ("adhan_tunisia.ogg","adhan_syria.ogg","adhan_morocco.ogg"):
