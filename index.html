@@ -2174,14 +2174,14 @@ main{padding-left:10px!important;padding-right:10px!important}
 function setupDhikr(id){
  const root=document.getElementById(id),items=[...root.querySelectorAll('.dhikr-tap')];
  // v5 deliberately starts with fresh counts; each count is tied to the dhikr text, not its list position.
- const key='zad-'+id+'-counts-v5';
+ const key='zad-'+id+'-counts-v6';
  const itemKey=el=>{
   const title=el.querySelector('.muted:first-child')?.textContent?.trim()||'';
   const text=el.querySelector('.arabic')?.textContent?.replace(/\\s+/g,' ').trim()||'';
   return title+'|'+text;
  };
- let counts={},showDone=false,focusMode=false,selectedIndex=0;
- try{counts=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){counts={}}
+ let counts={},legacyCounts=null,showDone=false,focusMode=false,selectedIndex=0;
+ try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(saved&&typeof saved==='object')counts=saved;else{legacyCounts=JSON.parse(localStorage.getItem('zad-'+id+'-counts-v5')||'{}')||{};counts={...legacyCounts}}}catch(e){counts={};legacyCounts=null}
  const doneEl=document.getElementById(id+'-done'),totalEl=document.getElementById(id+'-total'),bar=document.getElementById(id+'-bar'),showBtn=document.getElementById(id+'-show');
  const intro=root.querySelector('.card > .muted');
  const tools=root.querySelector('.dhikr-tools');
@@ -2194,7 +2194,37 @@ function setupDhikr(id){
  focus.querySelector('.dhikr-focus-back').onclick=closeFocus;focus.querySelector('.dhikr-focus-exit').onclick=closeFocus;
  const finish=document.createElement('div');finish.className='dhikr-finish-message';finish.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';finish.hidden=true;
  root.querySelector('.dhikr-progress')?.after(finish);
- const required=items.map(el=>{const title=el.querySelector(':scope > .muted:first-child')?.textContent?.trim()||'';if(title.includes('آية الكرسي'))return 1;const fixed={'سورة الإخلاص':3,'سورة الفلق':3,'سورة الناس':3,'الشهادة لله':4,'سؤال العافية':3,'حسبي الله':7,'بسم الله الذي لا يضر':3,'رضيت بالله رباً':3,'سبحان الله وبحمده':100,'ذكر عظيم جامع':3,'الاستغفار':100,'التعوذ بكلمات الله التامات':3};if(Object.prototype.hasOwnProperty.call(fixed,title))return fixed[title];const label=(el.querySelector(':scope > .muted:last-of-type')?.textContent||title).replace(/[٠-٩۰-۹]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)>=0?'٠١٢٣٤٥٦٧٨٩'.indexOf(d):'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/\s+/g,' ');const numeric=label.match(/(\d{1,3})\s*(?:مرة|مرات)/);if(numeric)return Math.max(1,Number(numeric[1]));if(/مئة|مائة/.test(label))return 100;if(/عشر/.test(label))return 10;if(/سبع/.test(label))return 7;if(/أربع/.test(label))return 4;if(/ثلاث/.test(label))return 3;if(/مرتين/.test(label))return 2;return 1});
+ const exactRequired={
+  'آية الكرسي':1,
+  'سورة الإخلاص':3,'سورة الفلق':3,'سورة الناس':3,
+  'دعاء الصباح':1,'دعاء المساء':1,'اللهم بك أصبحنا':1,'اللهم بك أمسينا':1,
+  'سيد الاستغفار':1,'الشهادة لله':4,'شكر نعمة الله':1,
+  'سؤال العافية':3,'حسبي الله':7,'سؤال العفو والعافية':1,
+  'دعاء الحفظ من الشر':1,'بسم الله الذي لا يضر':3,'رضيت بالله رباً':3,
+  'يا حي يا قيوم':1,'دعاء خير اليوم':1,'دعاء خير الليلة':1,
+  'على فطرة الإسلام':1,'سبحان الله وبحمده':100,
+  'لا إله إلا الله (عشر مرات)':10,'لا إله إلا الله (مئة مرة)':100,
+  'ذكر عظيم جامع':3,'سؤال العلم والرزق':1,'الاستغفار':100,
+  'التعوذ بكلمات الله التامات':3,'الصلاة على النبي ﷺ':10
+ };
+ const required=items.map(el=>{
+  const title=el.querySelector(':scope > .muted:first-child')?.textContent?.trim()||'';
+  return Object.prototype.hasOwnProperty.call(exactRequired,title)?exactRequired[title]:1;
+ });
+ // Migrate old progress safely: preserve counts where the previous target was correct;
+ // reset only items whose old target was too low, so one tap cannot masquerade as 3/7/100.
+ if(legacyCounts){
+  const legacyFixed={'سورة الإخلاص':3,'سورة الفلق':3,'سورة الناس':3,'الشهادة لله':4,'سؤال العافية':3,'حسبي الله':7,'بسم الله الذي لا يضر':3,'رضيت بالله رباً':3,'سبحان الله وبحمده':100,'ذكر عظيم جامع':3,'الاستغفار':100,'التعوذ بكلمات الله التامات':3};
+  items.forEach((el,i)=>{
+   const title=el.querySelector(':scope > .muted:first-child')?.textContent?.trim()||'';
+   const label=(el.querySelector(':scope > .muted:last-of-type')?.textContent||title).replace(/[٠-٩۰-۹]/g,d=>{const a='٠١٢٣٤٥٦٧٨٩'.indexOf(d);return String(a>=0?a:'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))}).replace(/\\s+/g,' ');
+   const match=label.match(/(\\d{1,3})\\s*(?:مرة|مرات)/);
+   let previous=legacyFixed[title]|| (match?Math.max(1,Number(match[1])):(/مئة|مائة/.test(label)?100:/عشر/.test(label)?10:/سبع/.test(label)?7:/أربع/.test(label)?4:/ثلاث/.test(label)?3:/مرتين/.test(label)?2:1));
+   const k=itemKey(el),oldValue=Math.max(0,Number(legacyCounts[k]||0));
+   counts[k]=previous<required[i]?0:Math.min(required[i],oldValue);
+  });
+  try{localStorage.setItem(key,JSON.stringify(counts))}catch(e){}
+ }
  totalEl.textContent=items.length;
  function countAt(i){return Math.max(0,Number(counts[itemKey(items[i])]||0))}
  function activeIndex(){return items.findIndex((el,i)=>countAt(i)<required[i])}
