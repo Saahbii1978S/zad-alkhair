@@ -2545,12 +2545,37 @@ $('#quran-save').onclick=async()=>{
  try{const url='https://api.alquran.cloud/v1/surah/'+currentSurahData.number+'/quran-uthmani';const cache=await caches.open(quranCacheName);await cache.put(url,new Response(JSON.stringify({code:200,status:'OK',data:currentSurahData}),{headers:{'Content-Type':'application/json'}}));quranStatus.textContent='تم حفظ نص '+currentSurahData.name+' على هذا الجهاز للقراءة دون إنترنت.'}
  catch(e){quranStatus.textContent='المتصفح ما سمحش بالحفظ. جرّب تحديث المتصفح.'}
 };
-quranVerses.addEventListener('click',e=>{
+let quranAudioRequest=0;
+quranVerses.addEventListener('click',async e=>{
  const b=e.target.closest('[data-quran-audio]');if(!b)return;
  const ayah=Number(b.dataset.quranAudio),edition=quranReciter.value;
- quranAudio.src='https://cdn.islamic.network/quran/audio/128/'+edition+'/'+ayah+'.mp3';
- $('#quran-audio-box').hidden=false;$('#quran-now-playing').textContent='استماع للآية رقم '+ayah;
- quranAudio.play().catch(()=>{quranStatus.textContent='تعذّر تشغيل التلاوة. تثبّت من الإنترنت أو جرّب قارئاً آخر.'});
+ if(!Number.isInteger(ayah)||ayah<1){quranStatus.textContent='رقم الآية غير صحيح.';return}
+ const request=++quranAudioRequest;
+ $('#quran-audio-box').hidden=false;
+ $('#quran-now-playing').textContent='جاري تجهيز تلاوة الآية '+ayah+'...';
+ quranStatus.textContent='';
+ quranAudio.pause();quranAudio.removeAttribute('src');quranAudio.load();
+ try{
+  const response=await fetch('https://api.alquran.cloud/v1/ayah/'+ayah+'/'+encodeURIComponent(edition));
+  if(!response.ok)throw new Error('audio metadata request failed');
+  const json=await response.json();
+  if(request!==quranAudioRequest)return;
+  const audioUrl=json?.data?.audio||json?.data?.audioSecondary?.[0];
+  if(json.code!==200||!audioUrl)throw new Error('audio URL unavailable');
+  quranAudio.src=audioUrl;
+  quranAudio.load();
+  $('#quran-now-playing').textContent='القارئ: '+(json.data.edition?.name||edition)+' • الآية '+ayah;
+  await quranAudio.play();
+ }catch(error){
+  if(request!==quranAudioRequest)return;
+  $('#quran-now-playing').textContent='تعذّر تشغيل هذه التلاوة.';
+  quranStatus.textContent='ما خدمش الصوت. تثبّت من الإنترنت أو اختار قارئاً آخر، ثم أعد المحاولة.';
+ }
+});
+quranAudio.addEventListener('error',()=>{
+ if(!quranAudio.src)return;
+ $('#quran-now-playing').textContent='تعذّر تحميل الملف الصوتي.';
+ quranStatus.textContent='خادم الصوت ما جاوبش. جرّب بعد قليل أو اختار قارئاً آخر.';
 });
 loadSurahIndex();
 
