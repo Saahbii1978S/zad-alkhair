@@ -160,7 +160,7 @@ public class AdhanPlaybackService extends Service {
 ''',encoding="utf-8")
 manifest=root/"AndroidManifest.xml"
 s=manifest.read_text(encoding="utf-8")
-for perm in ['android.permission.RECEIVE_BOOT_COMPLETED','android.permission.FOREGROUND_SERVICE','android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK']:
+for perm in ['android.permission.RECEIVE_BOOT_COMPLETED','android.permission.WAKE_LOCK','android.permission.FOREGROUND_SERVICE','android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK']:
  if perm not in s:s=s.replace('    <application',f'    <uses-permission android:name="{perm}" />\n    <application',1)
 if 'AdhanPlaybackService' not in s:
  s=s.replace('    </application>','''        <service android:name=".AdhanPlaybackService" android:exported="false" android:foregroundServiceType="mediaPlayback" />
