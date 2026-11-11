@@ -2575,7 +2575,7 @@ function playQuranAyahInSequence(index,request,sourceIndex=0){
   'https://cdn.islamic.network/quran/audio/128/'+encodeURIComponent(edition)+'/'+ayah.number+'.mp3',
   'https://cdn.islamic.network/quran/audio/64/'+encodeURIComponent(edition)+'/'+ayah.number+'.mp3',
   'https://cdn.alquran.cloud/media/audio/ayah/'+encodeURIComponent(edition)+'/'+ayah.number,
-  ...(everyAyahFolder?['https://everyayah.com/data/'+everyAyahFolder+'/'+surahNo+ayahNo+'.mp3']:[]
+  ...(everyAyahFolder?['https://everyayah.com/data/'+everyAyahFolder+'/'+surahNo+ayahNo+'.mp3']:[])
  ];
  if(sourceIndex>=sources.length){
   $('#quran-now-playing').textContent='تعذّر تحميل صوت الآية '+ayah.numberInSurah+' من مصادر الصوت المتاحة.';
