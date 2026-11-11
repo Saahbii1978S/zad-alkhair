@@ -3596,3 +3596,32 @@ header.hero{position:relative!important}
  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&modal.classList.contains('is-open'))hide()});
 };if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()})();
 </script>
+
+
+<style id="zad-prayer-labels-and-times-readable-v6">
+/* تكبير أسماء الصلوات وأرقام التوقيت في بطاقات الرئيسية معاً */
+#home .home-prayer-card .home-prayer-list>div>span:not(.prayer-icon),
+#home #home-prayer-list>div>span:not(.prayer-icon),
+#home .home-prayer-list>div>span:not(.prayer-icon){
+  font-size:19px!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+}
+#home .home-prayer-card .home-prayer-list>div>b,
+#home #home-prayer-list>div>b,
+#home .home-prayer-list>div>b{
+  font-size:17px!important;
+  line-height:1.3!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+}
+@media(max-width:480px){
+  #home .home-prayer-card .home-prayer-list>div>span:not(.prayer-icon),
+  #home #home-prayer-list>div>span:not(.prayer-icon),
+  #home .home-prayer-list>div>span:not(.prayer-icon){font-size:18px!important}
+  #home .home-prayer-card .home-prayer-list>div>b,
+  #home #home-prayer-list>div>b,
+  #home .home-prayer-list>div>b{font-size:16px!important}
+}
+</style>
