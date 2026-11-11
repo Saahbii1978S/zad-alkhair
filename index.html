@@ -1910,6 +1910,25 @@ main{padding-left:10px!important;padding-right:10px!important}
  .home-prayer-card .zad-use-location{font-size:11px!important;padding:5px 9px!important}
 }
 </style>
+<style id="zad-long-dhikr-fit-one-screen-v1">
+/* اجعل الذكر الطويل والعداد خارج البطاقة في شاشة واحدة دون تمرير */
+.dhikr-focus-content{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ justify-content:center!important;min-height:0!important;overflow:hidden!important;
+}
+.dhikr-focus-card.zad-long-ayat,
+.dhikr-focus-card.zad-long-morning-dua{
+ flex:1 1 0!important;width:100%!important;height:auto!important;
+ min-height:0!important;max-height:100%!important;overflow:hidden!important;
+ justify-content:center!important;padding:10px 12px!important;gap:5px!important;
+}
+.dhikr-focus-card.zad-long-ayat .arabic,
+.dhikr-focus-card.zad-long-morning-dua .arabic{
+ flex:1 1 auto!important;min-height:0!important;max-height:100%!important;
+ width:100%!important;overflow:hidden!important;overflow-wrap:normal!important;
+ word-break:normal!important;letter-spacing:0!important;
+}
+</style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
