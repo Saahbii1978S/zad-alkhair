@@ -1917,13 +1917,15 @@ main{padding-left:10px!important;padding-right:10px!important}
  justify-content:center!important;min-height:0!important;overflow:hidden!important;
 }
 .dhikr-focus-card.zad-long-ayat,
-.dhikr-focus-card.zad-long-morning-dua{
+.dhikr-focus-card.zad-long-morning-dua,
+.dhikr-focus-card.zad-long-text{
  flex:1 1 0!important;width:100%!important;height:auto!important;
  min-height:0!important;max-height:100%!important;overflow:hidden!important;
  justify-content:center!important;padding:10px 12px!important;gap:5px!important;
 }
 .dhikr-focus-card.zad-long-ayat .arabic,
-.dhikr-focus-card.zad-long-morning-dua .arabic{
+.dhikr-focus-card.zad-long-morning-dua .arabic,
+.dhikr-focus-card.zad-long-text .arabic{
  flex:1 1 auto!important;min-height:0!important;max-height:100%!important;
  width:100%!important;overflow:hidden!important;overflow-wrap:normal!important;
  word-break:normal!important;letter-spacing:0!important;
@@ -2214,12 +2216,12 @@ function setupDhikr(id){
    if(current>=items.length){step.textContent='اكتملت الأذكار';const msg=document.createElement('div');msg.className='dhikr-focus-complete';msg.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';focusContent.appendChild(msg);focus.querySelector('.dhikr-focus-hint').textContent='بارك الله فيك';}
    else{
     step.textContent=(current+1)+' / '+items.length;
-    const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');const dhikrTitle=clone.querySelector('.muted:first-child')?.textContent?.trim()||'';if(dhikrTitle.includes('آية الكرسي'))clone.classList.add('zad-long-ayat');if(dhikrTitle.includes('دعاء الصباح')||dhikrTitle.includes('دعاء المساء')||dhikrTitle.includes('أصبحنا وأصبح الملك لله'))clone.classList.add('zad-long-morning-dua');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');
+    const clone=items[current].cloneNode(true);clone.style.display='flex';clone.classList.add('dhikr-focus-card');const dhikrTitle=clone.querySelector('.muted:first-child')?.textContent?.trim()||'';if(dhikrTitle.includes('آية الكرسي'))clone.classList.add('zad-long-ayat');if(dhikrTitle.includes('دعاء الصباح')||dhikrTitle.includes('دعاء المساء')||dhikrTitle.includes('أصبحنا وأصبح الملك لله'))clone.classList.add('zad-long-morning-dua');if((clone.querySelector('.arabic')?.textContent||'').length>145)clone.classList.add('zad-long-text');clone.setAttribute('role','button');clone.setAttribute('tabindex','0');
     clone.querySelector('.muted:last-child')?.remove();clone.querySelector('.dhikr-count-progress')?.remove();
     focusContent.appendChild(clone);
     requestAnimationFrame(()=>{
      const textNode=clone.querySelector('.arabic');if(!textNode)return;
-     const longText=clone.classList.contains('zad-long-ayat')||clone.classList.contains('zad-long-morning-dua');
+     const longText=clone.classList.contains('zad-long-ayat')||clone.classList.contains('zad-long-morning-dua')||clone.classList.contains('zad-long-text');
      let size=longText?20:24;
      const minSize=15;
      const lineHeight=longText?'1.5':'1.65';
