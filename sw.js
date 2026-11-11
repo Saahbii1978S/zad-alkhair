@@ -1,4 +1,4 @@
-const CACHE='zad-alkhair-shell-v21';
+const CACHE='zad-alkhair-shell-v22';
 const QURAN_TEXT='zad-quran-text-v1';
 const QURAN_AUDIO='zad-quran-audio-v2';
 const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./supabase-config.js'];
