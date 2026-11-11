@@ -3564,3 +3564,35 @@ header.hero{position:relative!important}
   #prayer-times .prayer-item-name{font-size:18px!important}
 }
 </style>
+
+<style id="zad-prayer-labels-and-location-fix-v5">
+/* أسماء الصلوات كبيرة وواضحة، مع إبقاء أرقام التوقيت كما هي */
+#home #home-prayer-list>div>span:not(.prayer-icon),
+#home .home-prayer-list>div>span:not(.prayer-icon){font-size:19px!important;font-weight:900!important;line-height:1.35!important;white-space:nowrap!important}
+#prayer-times .prayer-item-name{font-size:20px!important;font-weight:900!important;line-height:1.4!important}
+@media(max-width:480px){
+ #home #home-prayer-list>div>span:not(.prayer-icon),#home .home-prayer-list>div>span:not(.prayer-icon){font-size:18px!important}
+ #prayer-times .prayer-item-name{font-size:19px!important}
+}
+/* إخفاء خانات البلد والمدينة من الواجهة؛ تظهر داخل نافذة عند الضغط على أيقونة الموقع */
+.home-prayer-card .home-prayer-city{display:none!important}
+#zad-location-picker{z-index:30!important;pointer-events:auto!important;display:grid!important;place-items:center!important}
+.hero-photo-layer{pointer-events:none!important}
+#zad-location-modal{z-index:10050!important}
+#zad-location-modal.is-open{display:flex!important}
+#zad-location-fields .home-prayer-city{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important;width:100%!important;margin:0!important}
+#zad-location-fields .home-prayer-field,#zad-location-fields .home-prayer-field select{width:100%!important;min-width:0!important}
+</style>
+<script id="zad-location-picker-reliable-v2">
+(()=>{const init=()=>{
+ const button=document.getElementById('zad-location-picker'),modal=document.getElementById('zad-location-modal'),fields=document.getElementById('zad-location-fields'),close=document.getElementById('zad-location-close');
+ const selectors=document.querySelector('.home-prayer-card .home-prayer-city')||document.querySelector('.home-prayer-city');
+ if(!button||!modal||!fields||!close||!selectors)return;
+ if(selectors.parentElement!==fields)fields.appendChild(selectors);
+ const show=()=>{modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'};
+ const hide=()=>{modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow=''};
+ button.addEventListener('click',show);close.addEventListener('click',hide);
+ modal.addEventListener('click',event=>{if(event.target===modal)hide()});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&modal.classList.contains('is-open'))hide()});
+};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init()})();
+</script>
