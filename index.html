@@ -2450,9 +2450,9 @@ async function scheduleNativePrayerAlerts(){
    await Native.schedule({times:JSON.stringify(times.map(x=>({hour:x.hour,minute:x.minute}))),sound:adhanSound.value,timezone:prayerTimezone});
   }else if(Native){await Native.cancel();}
   if(!Local){adhanMessage('الأذان الكامل مضبوط، لكن إشعارات ما قبل الصلاة غير متاحة على هذا الجهاز.');return;}
-  const now=new Date(),alerts=[],lead=Number(adhanBefore.value);
+  const now=new Date(),nowParts=cityClockParts(now),alerts=[],lead=Number(adhanBefore.value);
   times.forEach((x,index)=>{
-   const at=cityLocalToDate(now.getFullYear(),now.getMonth()+1,now.getDate(),x.hour,x.minute);
+   const at=cityLocalToDate(nowParts.year,nowParts.month,nowParts.day,x.hour,x.minute);
    if(adhanMode.value==='notice'&&at>now){
     alerts.push({id:prayerIds[index],title:'حان وقت صلاة '+prayerNames[x.key],body:'حيّ على الصلاة • زاد الخير',schedule:{at,allowWhileIdle:true},channelId:'zad-prayer-alerts',isExactNotification:true,extra:{prayer:x.key,type:'prayer'}});
    }
