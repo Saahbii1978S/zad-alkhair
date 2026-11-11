@@ -3733,32 +3733,43 @@ header.hero{position:relative!important}
 </style>
 
 
-<style id="zad-home-next-prayer-size-final-v12">
-/* توحيد واضح لحجم أسماء الصلوات وعبارة الصلاة القادمة على الهاتف */
-#home #home-prayer-list>div>span:not(.prayer-icon),
+<style id="zad-home-next-prayer-size-final-v13">
+/* تصحيح العنصر الفعلي: أسماء الصلوات نص مباشر داخل كل خانة */
+#home .home-prayer-list>div{
+  font-family:Tajawal,Arial,sans-serif!important;
+  font-size:17px!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+}
+#home .home-prayer-list>div .prayer-icon{
+  font-size:21px!important;
+}
+#home .home-prayer-list>div>b{
+  font-family:Tajawal,Arial,sans-serif!important;
+  font-size:15px!important;
+  line-height:1.35!important;
+  font-weight:800!important;
+}
 #home .home-next-prayer,
 #home .home-next-prayer>span,
 #home .home-next-prayer>span b{
   font-family:Tajawal,Arial,sans-serif!important;
   font-size:17px!important;
-  line-height:1.35!important;
+  line-height:1.4!important;
   font-weight:900!important;
-  letter-spacing:0!important;
 }
-#home #home-prayer-list>div>b,
 #home .home-next-prayer>strong{
   font-family:Tajawal,Arial,sans-serif!important;
-  font-size:15px!important;
+  font-size:16px!important;
   line-height:1.35!important;
   font-weight:900!important;
-  letter-spacing:0!important;
 }
 @media(max-width:390px){
-  #home #home-prayer-list>div>span:not(.prayer-icon),
+  #home .home-prayer-list>div{font-size:16px!important}
+  #home .home-prayer-list>div>b{font-size:14px!important}
   #home .home-next-prayer,
   #home .home-next-prayer>span,
   #home .home-next-prayer>span b{font-size:16px!important}
-  #home #home-prayer-list>div>b,
-  #home .home-next-prayer>strong{font-size:14px!important}
+  #home .home-next-prayer>strong{font-size:15px!important}
 }
 </style>
