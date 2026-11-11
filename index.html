@@ -2140,7 +2140,7 @@ function setupDhikr(id){
  focus.querySelector('.dhikr-focus-back').onclick=closeFocus;focus.querySelector('.dhikr-focus-exit').onclick=closeFocus;
  const finish=document.createElement('div');finish.className='dhikr-finish-message';finish.textContent='ما شاء الله! أتممت أذكارك. تقبّل الله منك 🤲';finish.hidden=true;
  root.querySelector('.dhikr-progress')?.after(finish);
- const required=items.map(el=>{const label=el.querySelector(':scope > .muted:last-of-type')?.textContent||'';if(/مئة مرة/.test(label))return 100;if(/عشر مرات/.test(label))return 10;if(/سبع مرات/.test(label))return 7;if(/أربع مرات/.test(label))return 4;if(/ثلاث مرات/.test(label))return 3;if(/مرتين/.test(label))return 2;return 1});
+ const required=items.map(el=>{const title=el.querySelector(':scope > .muted:first-child')?.textContent?.trim()||'';if(title.includes('آية الكرسي'))return 1;const label=el.querySelector(':scope > .muted:last-of-type')?.textContent||'';if(/مئة مرة/.test(label))return 100;if(/عشر مرات/.test(label))return 10;if(/سبع مرات/.test(label))return 7;if(/أربع مرات/.test(label))return 4;if(/ثلاث مرات/.test(label))return 3;if(/مرتين/.test(label))return 2;return 1});
  totalEl.textContent=items.length;
  function countAt(i){return Math.max(0,Number(counts[itemKey(items[i])]||0))}
  function activeIndex(){return items.findIndex((el,i)=>countAt(i)<required[i])}
