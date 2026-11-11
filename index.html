@@ -407,11 +407,14 @@ body{font-size:20px}
 .quran-actions{justify-content:flex-start;margin:12px 0}
 .quran-audio{padding:14px;background:#eef3f8;border:1px solid #dce6f0;border-radius:14px;margin:12px 0}
 .quran-audio audio{width:100%}
-.quran-verses{margin-top:16px}
-.quran-verse{padding:18px 8px;border-bottom:1px solid #e7eaf0}
-.quran-verse-text{font:30px/2.25 Amiri,serif;text-align:center;color:#244d70}
-.quran-verse-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;color:#738293;font-size:14px}
-.quran-verse-tools button{border:0;border-radius:10px;padding:8px 12px;background:#eaf1f8;color:#315f91;font:700 14px Tajawal}
+.quran-verses{margin-top:16px;padding:22px 18px;border:1px solid #e5dcc8;border-radius:14px;background:#fffdf7;box-shadow:0 3px 14px #6b56300c}
+.quran-page-text{font:29px/2.35 Amiri,serif;text-align:justify;text-align-last:center;color:#263f35;direction:rtl;white-space:normal}
+.quran-basmala{display:block;text-align:center;font:700 27px/2 Amiri,serif;color:#315f4b;margin:0 auto 12px}
+.quran-ayah{display:inline}
+.quran-ayah-mark{display:inline-block;white-space:nowrap;color:#987a43;font:700 17px/1.4 Amiri,serif;margin:0 3px}
+.quran-actions{flex-wrap:wrap}
+.quran-actions button{min-height:44px}
+@media(max-width:480px){.quran-verses{padding:16px 12px}.quran-page-text{font-size:25px;line-height:2.3}.quran-basmala{font-size:24px}.quran-ayah-mark{font-size:15px}}
 .qibla-card{text-align:center}
 .qibla-compass{position:relative;width:min(76vw,280px);height:min(76vw,280px);margin:22px auto;border:9px solid #e4edf4;border-radius:50%;background:radial-gradient(circle,#fff 52%,#eff4f8 53%,#fff 70%);box-shadow:0 5px 20px #315f9112}
 .qibla-compass:before,.qibla-compass:after{content:"";position:absolute;background:#d9e3ec}
@@ -2060,15 +2063,15 @@ main{padding-left:10px!important;padding-right:10px!important}
 <section class="view" id="quran">
  <div class="card">
   <h2>📖 القرآن الكريم</h2>
-  <p class="muted">مصحف بالنص العثماني، مع الاستماع للآيات. يلزم الإنترنت أول مرة لتحميل السورة.</p>
+  <p class="muted">اقرأ السورة كاملة في صفحة واحدة بنصّ المصحف العثماني، واستمع لتلاوة متواصلة بصوت القارئ الذي تختاره.</p>
   <div class="quran-controls">
    <label for="quran-surah">اختار السورة</label><select id="quran-surah"><option value="1">الفاتحة</option></select>
    <label for="quran-reciter">القارئ</label><select id="quran-reciter"><option value="ar.alafasy">مشاري العفاسي</option><option value="ar.abdulbasit">عبد الباسط عبد الصمد</option><option value="ar.husary">محمود خليل الحصري</option><option value="ar.minshawi">محمد صديق المنشاوي</option></select>
   </div>
-  <div class="quran-actions actions"><button id="quran-load" type="button">فتح السورة</button><button id="quran-save" type="button">حفظ نص السورة على الجهاز</button></div>
+  <div class="quran-actions actions"><button id="quran-load" type="button">فتح السورة</button><button id="quran-play-surah" type="button">▶ استمع للسورة كاملة</button><button id="quran-stop-surah" type="button">■ إيقاف</button><button id="quran-save" type="button">حفظ نص السورة على الجهاز</button></div>
   <p class="muted">الحفظ يشمل نصّ السورة فقط. الاستماع الصوتي قد يحتاج إلى الإنترنت.</p>
   <p id="quran-status" class="muted" role="status">جاري تحضير فهرس السور...</p>
-  <div id="quran-audio-box" class="quran-audio" hidden><p id="quran-now-playing" role="status" aria-live="polite">اختار آية للاستماع</p><audio id="quran-audio" controls preload="none" aria-label="مشغل تلاوة القرآن"></audio></div>
+  <div id="quran-audio-box" class="quran-audio" hidden><p id="quran-now-playing" role="status" aria-live="polite">استمع للسورة كاملة بصوت القارئ المختار</p><audio id="quran-audio" controls preload="none" aria-label="مشغل تلاوة السورة كاملة"></audio></div>
   <div id="quran-verses" class="quran-verses"><p class="muted">اختار سورة ثم اضغط «فتح السورة».</p></div>
  </div>
 </section>
@@ -2499,9 +2502,10 @@ setInterval(checkAdhanSchedule,12000);
 $('#prayer-location').onclick=()=>{if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(pos=>loadPrayerTimes(pos.coords.latitude,pos.coords.longitude),()=>{},{enableHighAccuracy:true,timeout:15000,maximumAge:60000})};
 $('#prayer-refresh').onclick=loadPrayerTimes;document.querySelector('[data-page="prayer-times"]').addEventListener('click',loadPrayerTimes);
 
-/* القرآن الكريم: نص عثماني واستماع حسب القارئ */
+/* القرآن الكريم: صفحة متصلة لكل سورة وتشغيل التلاوة كاملة بالتتابع */
 const quranSurah=$('#quran-surah'),quranReciter=$('#quran-reciter'),quranStatus=$('#quran-status'),quranVerses=$('#quran-verses'),quranAudio=$('#quran-audio');
 let currentSurahData=null;
+let quranAudioRequest=0;
 const quranCacheName='zad-quran-text-v1';
 async function quranFetch(url){
  try{const cache=await caches.open(quranCacheName);const saved=await cache.match(url);if(saved)return await saved.json()}catch(e){}
@@ -2521,70 +2525,79 @@ async function loadSurahIndex(){
 }
 async function openSurah(){
  const number=Number(quranSurah.value);if(!number)return;
- quranStatus.textContent='جاري تحميل السورة...';quranVerses.innerHTML='';
+ ++quranAudioRequest;quranAudio.pause();quranAudio.removeAttribute('src');quranAudio.load();
+ $('#quran-audio-box').hidden=true;
+ quranStatus.textContent='جاري تحميل السورة كاملة...';quranVerses.innerHTML='';
  try{
   const url='https://api.alquran.cloud/v1/surah/'+number+'/quran-uthmani';
   const json=await quranFetch(url);if(json.code!==200||!json.data?.ayahs)throw new Error('السورة غير متاحة');
   currentSurahData=json.data;localStorage.setItem('zad-quran-last-surah',String(number));
   quranStatus.textContent=json.data.name+' • '+json.data.numberOfAyahs+' آية • '+json.data.revelationType;
-  quranVerses.innerHTML=json.data.ayahs.map(a=>'<article class="quran-verse"><div class="quran-verse-text">'+a.text+' ﴿'+a.numberInSurah+'﴾</div><div class="quran-verse-tools"><span>الآية '+a.numberInSurah+'</span><button type="button" data-quran-audio="'+a.number+'" aria-label="استمع إلى الآية رقم '+a.numberInSurah+'">▶ استمع</button></div></article>').join('');
+  const basmala=(number!==1&&number!==9)?'<div class="quran-basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>':'';
+  quranVerses.innerHTML='<div class="quran-page-text">'+basmala+json.data.ayahs.map(a=>'<span class="quran-ayah">'+a.text+' <span class="quran-ayah-mark">۞'+a.numberInSurah+'۞</span> </span>').join('')+'</div>';
+  $('#quran-now-playing').textContent='جاهز للاستماع إلى سورة '+json.data.name+' كاملة.';
  }catch(e){quranStatus.textContent='تعذّر تحميل السورة. إذا ما كانتش محفوظة، يلزم اتصال بالإنترنت.'}
 }
 quranSurah.onchange=()=>openSurah();
 $('#quran-load').onclick=openSurah;
- window.zadOpenQuranSurah=async function(number){
-  show('quran');
-  if(quranSurah.options.length<114)await loadSurahIndex();
-  quranSurah.value=String(number);
-  await openSurah();
- };
- document.getElementById('sleep-open-sajdah')?.addEventListener('click',()=>window.zadOpenQuranSurah(32));
- document.getElementById('sleep-open-mulk')?.addEventListener('click',()=>window.zadOpenQuranSurah(67));
+window.zadOpenQuranSurah=async function(number){
+ show('quran');
+ if(quranSurah.options.length<114)await loadSurahIndex();
+ quranSurah.value=String(number);
+ await openSurah();
+};
+document.getElementById('sleep-open-sajdah')?.addEventListener('click',()=>window.zadOpenQuranSurah(32));
+document.getElementById('sleep-open-mulk')?.addEventListener('click',()=>window.zadOpenQuranSurah(67));
 $('#quran-save').onclick=async()=>{
  if(!currentSurahData){quranStatus.textContent='افتح السورة أولاً قبل حفظها.';return}
  try{const url='https://api.alquran.cloud/v1/surah/'+currentSurahData.number+'/quran-uthmani';const cache=await caches.open(quranCacheName);await cache.put(url,new Response(JSON.stringify({code:200,status:'OK',data:currentSurahData}),{headers:{'Content-Type':'application/json'}}));quranStatus.textContent='تم حفظ نص '+currentSurahData.name+' على هذا الجهاز للقراءة دون إنترنت.'}
  catch(e){quranStatus.textContent='المتصفح ما سمحش بالحفظ. جرّب تحديث المتصفح.'}
 };
-let quranAudioRequest=0;
-quranVerses.addEventListener('click',async e=>{
- const b=e.target.closest('[data-quran-audio]');if(!b)return;
- const ayah=Number(b.dataset.quranAudio),edition=quranReciter.value;
- if(!Number.isInteger(ayah)||ayah<1||ayah>6236){quranStatus.textContent='رقم الآية غير صحيح.';return}
+function playQuranAyahInSequence(index,request,sourceIndex=0){
+ if(request!==quranAudioRequest||!currentSurahData)return;
+ const ayahs=currentSurahData.ayahs;
+ if(index>=ayahs.length){
+  $('#quran-now-playing').textContent='تمّت تلاوة سورة '+currentSurahData.name+' كاملة.';
+  return;
+ }
+ const ayah=ayahs[index],edition=quranReciter.value;
+ const sources=[
+  'https://cdn.islamic.network/quran/audio/128/'+encodeURIComponent(edition)+'/'+ayah.number+'.mp3',
+  'https://cdn.islamic.network/quran/audio/64/'+encodeURIComponent(edition)+'/'+ayah.number+'.mp3',
+  'https://cdn.alquran.cloud/media/audio/ayah/'+encodeURIComponent(edition)+'/'+ayah.number
+ ];
+ if(sourceIndex>=sources.length){
+  $('#quran-now-playing').textContent='توقفت التلاوة عند الآية '+ayah.numberInSurah+' بسبب تعذّر تحميل صوتها.';
+  quranStatus.textContent='تعذّر تحميل إحدى الآيات. تثبّت من الإنترنت ثم أعد تشغيل السورة.';
+  return;
+ }
+ quranAudio.onended=()=>{
+  if(request!==quranAudioRequest)return;
+  playQuranAyahInSequence(index+1,request,0);
+ };
+ quranAudio.onerror=()=>{
+  if(request===quranAudioRequest)playQuranAyahInSequence(index,request,sourceIndex+1);
+ };
+ quranAudio.src=sources[sourceIndex];quranAudio.load();
+ const playPromise=quranAudio.play();
+ if(playPromise&&typeof playPromise.catch==='function'){
+  playPromise.catch(()=>{
+   if(request===quranAudioRequest)playQuranAyahInSequence(index,request,sourceIndex+1);
+  });
+ }
+ $('#quran-now-playing').textContent='القارئ: '+quranReciter.options[quranReciter.selectedIndex].text+' • سورة '+currentSurahData.name+' • الآية '+ayah.numberInSurah+' من '+ayahs.length;
+}
+$('#quran-play-surah').onclick=()=>{
+ if(!currentSurahData){quranStatus.textContent='افتح السورة أولاً، ثم اضغط استمع للسورة كاملة.';return}
  const request=++quranAudioRequest;
  $('#quran-audio-box').hidden=false;
- $('#quran-now-playing').textContent='جاري تجهيز التلاوة...';
  quranStatus.textContent='';
- quranAudio.pause();quranAudio.removeAttribute('src');quranAudio.load();
- b.disabled=true;
- const sources=[
-  'https://cdn.islamic.network/quran/audio/128/'+encodeURIComponent(edition)+'/'+ayah+'.mp3',
-  'https://cdn.islamic.network/quran/audio/64/'+encodeURIComponent(edition)+'/'+ayah+'.mp3',
-  'https://cdn.alquran.cloud/media/audio/ayah/'+encodeURIComponent(edition)+'/'+ayah
- ];
- let sourceIndex=0;
- const tryNextSource=async()=>{
-  if(request!==quranAudioRequest)return;
-  if(sourceIndex>=sources.length){
-   $('#quran-now-playing').textContent='تعذّر تحميل التلاوة.';
-   quranStatus.textContent='خادم التلاوة لم يستجب. تثبّت من الإنترنت وحاول من جديد.';
-   b.disabled=false;return;
-  }
-  quranAudio.src=sources[sourceIndex++];
-  quranAudio.load();
-  try{
-   await quranAudio.play();
-   if(request!==quranAudioRequest)return;
-   $('#quran-now-playing').textContent='القارئ: '+quranReciter.options[quranReciter.selectedIndex].text+' • الآية '+ayah;
-   b.disabled=false;
-  }catch(error){
-   if(request!==quranAudioRequest)return;
-   tryNextSource();
-  }
- };
- quranAudio.onended=()=>{if(request===quranAudioRequest)$('#quran-now-playing').textContent='انتهت تلاوة الآية.'};
- quranAudio.onerror=()=>{if(request===quranAudioRequest&&sourceIndex<sources.length)tryNextSource();else if(request===quranAudioRequest){$('#quran-now-playing').textContent='تعذّر تحميل التلاوة.';quranStatus.textContent='جرّب الاتصال بالإنترنت أو قارئاً آخر.';b.disabled=false}};
- tryNextSource();
-});
+ playQuranAyahInSequence(0,request,0);
+};
+$('#quran-stop-surah').onclick=()=>{
+ ++quranAudioRequest;quranAudio.pause();quranAudio.currentTime=0;
+ $('#quran-now-playing').textContent='تم إيقاف التلاوة.';
+};
 loadSurahIndex();
 
 /* اتجاه القبلة بالحساب الجغرافي وبوصلة الهاتف مع دعم أفضل لأجهزة Android */
