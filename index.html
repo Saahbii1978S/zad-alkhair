@@ -2156,7 +2156,7 @@ function setupDhikr(id){
    const prev=focus.querySelector('.dhikr-focus-prev'),next=focus.querySelector('.dhikr-focus-next');prev.disabled=current<=0;next.disabled=current>=items.length;prev.onclick=()=>{selectedIndex=Math.max(0,selectedIndex-1);render()};next.onclick=()=>{selectedIndex=Math.min(items.length,selectedIndex+1);render()};
   }else{focus.hidden=true;document.body.classList.remove('dhikr-focus-open')}
  }
- function increment(el){const i=items.indexOf(el);if(i<0||Number(counts[i]||0)>=required[i])return;try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));showDone=false;if(Number(counts[i])>=required[i]){const next=activeIndex();selectedIndex=next<0?items.length:next}render()}
+ function increment(el){const i=items.indexOf(el);if(i<0)return;showDone=false;if(Number(counts[i]||0)>=required[i]){if(focusMode){const next=activeIndex();selectedIndex=next<0?items.length:next;render()}return}try{if('vibrate' in navigator)navigator.vibrate(25)}catch(e){}counts[i]=Math.min(required[i],Number(counts[i]||0)+1);localStorage.setItem(key,JSON.stringify(counts));if(Number(counts[i])>=required[i]){const next=activeIndex();selectedIndex=next<0?items.length:next}render()}
  items.forEach(el=>{el.addEventListener('click',()=>increment(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}})});
  startBtn.onclick=()=>{showDone=false;selectedIndex=0;focusMode=true;render()};
  showBtn.onclick=()=>{showDone=!showDone;render()};
