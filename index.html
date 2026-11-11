@@ -3965,13 +3965,24 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
 </style>
 
 <style id="zad-long-dhikr-readable-v29">
-/* نصوص آية الكرسي ودعاء الصباح أصغر ومضبوطة داخل البطاقة */
+/* نصوص الأذكار الطويلة: حجم مقروء مع تمرير داخل مساحة القراءة دون قصّ */
+.dhikr-focus-content{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ justify-content:flex-start!important;overflow-y:auto!important;overscroll-behavior:contain!important;
+}
+.dhikr-focus-card.zad-long-ayat,
+.dhikr-focus-card.zad-long-morning-dua{
+ flex:0 0 auto!important;height:auto!important;min-height:0!important;
+ justify-content:flex-start!important;padding:20px 15px!important;
+}
 .dhikr-focus-card.zad-long-ayat .arabic{
- font-size:14px!important;line-height:1.48!important;letter-spacing:0!important;
- overflow-wrap:anywhere!important;word-break:normal!important
+ font-size:20px!important;line-height:1.85!important;letter-spacing:0!important;
+ overflow:visible!important;overflow-wrap:normal!important;word-break:normal!important;
 }
 .dhikr-focus-card.zad-long-morning-dua .arabic{
- font-size:15px!important;line-height:1.5!important;letter-spacing:0!important;
- overflow-wrap:anywhere!important;word-break:normal!important
+ font-size:18px!important;line-height:1.75!important;letter-spacing:0!important;
+ overflow:visible!important;overflow-wrap:normal!important;word-break:normal!important;
 }
+.dhikr-focus-card.zad-long-ayat .muted,
+.dhikr-focus-card.zad-long-morning-dua .muted{flex:0 0 auto!important}
 </style>
