@@ -2247,7 +2247,7 @@ async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
   const prayerIcons={Fajr:'🌅',Dhuhr:'☀️',Asr:'🌤️',Maghrib:'🌇',Isha:'🌙'};
   $('#prayer-list').innerHTML=keys.map(k=>'<div class="prayer-item" data-prayer-key="'+k+'"><span class="prayer-item-name"><span class="prayer-icon" aria-hidden="true">'+prayerIcons[k]+'</span>'+prayerNames[k]+'</span><b>'+cleanTime(k)+'</b></div>').join('');
   const homeKeys=[['Fajr','الفجر','🌅'],['Sunrise','الشروق','🌄'],['Dhuhr','الظهر','☀️'],['Asr','العصر','🌤️'],['Maghrib','المغرب','🌇'],['Isha','العشاء','🌙']];
-  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block!important;font-family:Tajawal,Arial,sans-serif!important;font-size:18px!important;line-height:1.3!important;font-weight:900!important;white-space:nowrap!important">'+label+'</span><b style="font-family:Tajawal,Arial,sans-serif!important;font-size:13px!important;line-height:1.3!important;font-weight:800!important">'+cleanTime(k)+'</b></div>').join('');
+  $('#home-prayer-list').innerHTML=homeKeys.map(([k,label,icon])=>'<div data-prayer-key="'+k+'" style="text-align:center"><span class="prayer-icon" aria-hidden="true">'+icon+'</span><span style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:18px;line-height:1.35;font-weight:900;white-space:nowrap">'+label+'</span><b style="display:block;font-family:Tajawal,Arial,sans-serif;font-size:13px;line-height:1.35;font-weight:800">'+cleanTime(k)+'</b></div>').join('');
   tickPrayer();if(prayerTicker)clearInterval(prayerTicker);prayerTicker=setInterval(tickPrayer,1000);
  }catch(e){
   if(requestId!==prayerRequestId)return;
@@ -3712,102 +3712,11 @@ header.hero{position:relative!important}
 </style>
 
 
-<style id="zad-home-next-prayer-size-v10">
-/* توحيد حجم عبارة الصلاة القادمة واسم الصلاة مع أسماء المواقيت */
-#home .home-next-prayer{
-  font-family:Tajawal,Arial,sans-serif!important;
-  font-size:14px!important;
-  line-height:1.4!important;
-  font-weight:900!important;
-}
-#home .home-next-prayer b{
-  font-size:14px!important;
-  line-height:1.4!important;
-  font-weight:900!important;
-}
-#home .home-next-prayer strong{
-  font-size:16px!important;
-  line-height:1.4!important;
-  font-weight:900!important;
-}
-</style>
 
-
-<style id="zad-home-next-prayer-size-final-v13">
-/* تصحيح العنصر الفعلي: أسماء الصلوات نص مباشر داخل كل خانة */
-#home .home-prayer-list>div{
-  font-family:Tajawal,Arial,sans-serif!important;
-  font-size:17px!important;
-  line-height:1.35!important;
-  font-weight:900!important;
-}
-#home .home-prayer-list>div .prayer-icon{
+<style id="zad-adhkar-text-size-adjust-v1">
+#morning .dhikr .arabic,
+#evening .dhikr .arabic{
   font-size:21px!important;
-}
-#home .home-prayer-list>div>b{
-  font-family:Tajawal,Arial,sans-serif!important;
-  font-size:15px!important;
-  line-height:1.35!important;
-  font-weight:800!important;
-}
-#home .home-next-prayer,
-#home .home-next-prayer>span,
-#home .home-next-prayer>span b{
-  font-family:Tajawal,Arial,sans-serif!important;
-  font-size:17px!important;
-  line-height:1.4!important;
-  font-weight:900!important;
-}
-#home .home-next-prayer>strong{
-  font-family:Tajawal,Arial,sans-serif!important;
-  font-size:16px!important;
-  line-height:1.35!important;
-  font-weight:900!important;
-}
-@media(max-width:390px){
-  #home .home-prayer-list>div{font-size:16px!important}
-  #home .home-prayer-list>div>b{font-size:14px!important}
-  #home .home-next-prayer,
-  #home .home-next-prayer>span,
-  #home .home-next-prayer>span b{font-size:16px!important}
-  #home .home-next-prayer>strong{font-size:15px!important}
-}
-</style>
-
-
-<style id="zad-home-next-prayer-size-final-v14">
-/* استهداف اسم الصلاة الحقيقي: span الثاني بعد أيقونة الصلاة */
-#home #home-prayer-list>div>span:nth-of-type(2){
-  display:block!important;
-  font-family:Tajawal,Arial,sans-serif!important;
-  font-size:17px!important;
-  line-height:1.35!important;
-  font-weight:900!important;
-  color:inherit!important;
-  white-space:nowrap!important;
-}
-#home #home-prayer-list>div>b{
-  font-size:13px!important;
-  line-height:1.35!important;
-  font-weight:800!important;
-}
-#home .home-next-prayer,
-#home .home-next-prayer>span,
-#home .home-next-prayer>span>b{
-  font-family:Tajawal,Arial,sans-serif!important;
-  font-size:17px!important;
-  line-height:1.4!important;
-  font-weight:900!important;
-}
-#home .home-next-prayer>strong{
-  font-size:16px!important;
-  font-weight:900!important;
-}
-@media(max-width:390px){
-  #home #home-prayer-list>div>span:nth-of-type(2){font-size:16px!important}
-  #home .home-next-prayer,
-  #home .home-next-prayer>span,
-  #home .home-next-prayer>span>b{font-size:16px!important}
-  #home .home-next-prayer>strong{font-size:15px!important}
+  line-height:1.9!important;
 }
 </style>
