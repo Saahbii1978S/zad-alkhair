@@ -2189,7 +2189,7 @@ function setupDhikr(id){
   render();
  }
  items.forEach(el=>{el.addEventListener('click',()=>increment(el));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();increment(el)}})});
- startBtn.onclick=()=>{showDone=false;const next=activeIndex();selectedIndex=next<0?0:next;focusMode=true;render()};
+ startBtn.onclick=()=>{showDone=false;if(activeIndex()<0){counts={};localStorage.removeItem(key)}const next=activeIndex();selectedIndex=next<0?0:next;focusMode=true;render()};
  showBtn.onclick=()=>{showDone=!showDone;render()};
  document.getElementById(id+'-reset').onclick=()=>{counts={};localStorage.removeItem(key);showDone=false;selectedIndex=0;render()};
  render();
