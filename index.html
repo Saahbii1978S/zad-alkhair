@@ -1948,7 +1948,7 @@ main{padding-left:10px!important;padding-right:10px!important}
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
-<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p><button type="button" id="zad-theme-toggle" class="zad-theme-toggle" aria-label="تفعيل الوضع الليلي" aria-pressed="false">🌙 ليلي</button>
+<header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p>
 <button type="button" id="zad-location-picker" class="zad-location-picker" aria-label="اختيار البلد والمدينة" title="اختيار البلد والمدينة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.7"/></svg></button></header>
 <div class="zad-share-bar" aria-label="مشاركة زاد الخير">
  <button type="button" id="zad-share-button">مشاركة التطبيق</button>
@@ -1958,6 +1958,7 @@ main{padding-left:10px!important;padding-right:10px!important}
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div></div>
  <div class="home-prayer-city"><div class="home-prayer-field"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select></div><div class="home-prayer-field"><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div></div>
  <button type="button" id="zad-use-location" class="zad-use-location">📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً</button>
+ <button type="button" id="zad-theme-toggle" class="zad-theme-toggle" aria-label="تفعيل الوضع الليلي" aria-pressed="false">🌙 ليلي</button>
  <p id="zad-location-status" class="home-prayer-note" role="status" aria-live="polite"></p>
  <div id="home-prayer-list" class="home-prayer-list"><span>الفجر</span><span>الظهر</span><span>العصر</span><span>المغرب</span><span>العشاء</span></div>
  <div class="home-next-prayer"><span style="font-family:Tajawal,Arial,sans-serif!important;font-size:17px!important;font-weight:900!important">الصلاة القادمة <b id="home-next-name" style="font-size:17px!important;font-weight:900!important">—</b></span><strong id="home-next-countdown" style="font-size:16px!important;font-weight:900!important">—</strong></div>
@@ -3985,10 +3986,12 @@ header.hero{position:relative!important}
 
 <style id="zad-theme-toggle-v1">
 .zad-theme-toggle{
- position:absolute!important;top:15px!important;left:15px!important;z-index:9!important;
- min-height:39px!important;padding:7px 12px!important;border:1px solid #ffffff75!important;
- border-radius:22px!important;background:rgba(255,255,255,.92)!important;color:#315f91!important;
- box-shadow:0 3px 12px #102f2830!important;font:700 13px Tajawal,Arial,sans-serif!important;cursor:pointer!important
+ position:relative!important;top:auto!important;left:auto!important;z-index:1!important;
+ display:block!important;width:max-content!important;max-width:100%!important;
+ min-height:38px!important;margin:9px auto 0!important;padding:7px 15px!important;
+ border:1px solid #d7e2ed!important;border-radius:22px!important;
+ background:#edf3f9!important;color:#315f91!important;
+ box-shadow:0 2px 8px #315f9112!important;font:700 13px Tajawal,Arial,sans-serif!important;cursor:pointer!important
 }
 html[data-theme="dark"] body{background:#111820!important;color:#e7edf2!important}
 html[data-theme="dark"] .nav{background:#1b2630!important;border-color:#34424d!important;box-shadow:0 5px 20px #0005!important}
@@ -4037,7 +4040,7 @@ html[data-theme="dark"] .verse,
 html[data-theme="dark"] .arabic{color:#f0e7d5!important}
 html[data-theme="dark"] .dhikr{border-color:#394752!important}
 html[data-theme="dark"] .zad-theme-toggle{background:#263746!important;color:#f5d98e!important;border-color:#536575!important}
-@media(max-width:390px){.zad-theme-toggle{top:13px!important;left:12px!important;padding:6px 9px!important;font-size:12px!important}}
+
 </style>
 <script id="zad-theme-toggle-script-v1">
 (()=>{const button=document.getElementById('zad-theme-toggle');if(!button)return;
