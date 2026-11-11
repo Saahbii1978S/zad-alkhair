@@ -1888,6 +1888,28 @@ main{padding-left:10px!important;padding-right:10px!important}
 #home #home-prayer-list>div>b{font-size:clamp(15px,4.4vw,19px)!important;line-height:1.3!important;font-weight:900!important;white-space:nowrap!important}
 @media(max-width:390px){#home #home-prayer-list>div>span:not(.prayer-icon){font-size:14px!important}#home #home-prayer-list>div>b{font-size:15.5px!important}}
 </style>
+<style id="zad-location-gps-visible-v2">
+/* زر GPS صغير وواضح، لا نخفيه مع ملاحظات الواجهة */
+.home-prayer-card .zad-use-location{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:auto!important;max-width:100%!important;min-height:34px!important;
+ margin:7px auto 8px!important;padding:6px 11px!important;
+ border:1px solid #c9dfef!important;border-radius:10px!important;
+ background:#fff!important;color:#28688f!important;
+ font:800 12px/1.5 Tajawal,Arial,sans-serif!important;
+ box-shadow:0 2px 7px #376d9410!important;
+}
+.home-prayer-card #zad-location-status:empty{display:none!important}
+.home-prayer-card #zad-location-status:not(:empty){
+ display:block!important;width:100%!important;min-height:0!important;
+ margin:5px 0 8px!important;padding:5px 8px!important;
+ border-radius:8px!important;background:#fff!important;color:#185b45!important;
+ font:700 12px/1.6 Tajawal,Arial,sans-serif!important;text-align:center!important;
+}
+@media(max-width:390px){
+ .home-prayer-card .zad-use-location{font-size:11px!important;padding:5px 9px!important}
+}
+</style>
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
@@ -2837,7 +2859,7 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
    return;
   }
   if(navigator.share){await navigator.share(data);return;}
-  const message=(data.text||'زاد الخير')+'\\n'+data.url;
+  const message=(data.text||'زاد الخير')+'\n'+data.url;
   window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank','noopener');
  };
  if(shareBtn)shareBtn.addEventListener('click',async function(){
@@ -3582,9 +3604,7 @@ header.hero{position:relative!important}
 #zad-location-fields .home-prayer-field select{width:100%!important;min-width:0!important;padding:12px!important;border:1px solid #dce6ee!important;border-radius:12px!important;background:#f8fafc!important;color:#294d68!important;font:700 16px Tajawal,Arial,sans-serif!important}
 .zad-location-hint{margin:14px 0 0;color:#778895;font-size:12px;text-align:center}
 @media(max-width:480px){.zad-location-picker{top:12px!important;right:12px!important;width:36px!important;height:36px!important}}
-</style><script id="zad-location-picker-behavior-v1">
-(()=>{const init=()=>{const modal=document.getElementById('zad-location-modal'),open=document.getElementById('zad-location-picker'),close=document.getElementById('zad-location-close'),fields=document.getElementById('zad-location-fields'),selectors=document.querySelector('.home-prayer-card .home-prayer-city');if(!modal||!open||!close||!fields||!selectors)return;fields.appendChild(selectors);const show=()=>{modal.classList.add('is-open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';};const hide=()=>{modal.classList.remove('is-open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';};open.addEventListener('click',show);close.addEventListener('click',hide);modal.addEventListener('click',e=>{if(e.target===modal)hide();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('is-open'))hide();});};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();})();
-</script>
+</style>
 <style id="zad-asma-style">
 #allah-names-grid .allah-name{width:100%;border:1px solid #e7e4d9;background:#fff;border-radius:13px;padding:12px 9px;text-align:center;color:var(--green);font-family:Tajawal,Arial,sans-serif;cursor:pointer;min-height:86px}
 #allah-names-grid .allah-name .num{display:block;color:#9a865d;font-size:11px;margin-bottom:4px}
