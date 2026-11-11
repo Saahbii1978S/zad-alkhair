@@ -2274,7 +2274,7 @@ function setupDhikr(id){
      const textNode=clone.querySelector('.arabic');if(!textNode)return;
      const longText=clone.classList.contains('zad-long-ayat')||clone.classList.contains('zad-long-morning-dua')||clone.classList.contains('zad-long-text');
      let size=longText?20:24;
-     const minSize=15;
+     const minSize=14;
      const lineHeight=longText?'1.5':'1.65';
      const applyFit=()=>{
       textNode.style.setProperty('font-size',size+'px','important');
@@ -4118,4 +4118,41 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
 }
 .dhikr-focus-card.zad-long-ayat .muted,
 .dhikr-focus-card.zad-long-morning-dua .muted{flex:0 0 auto!important}
+</style>
+
+<style id="zad-long-dhikr-final-fit-v2">
+/* القواعد الأخيرة بعد جميع أنماط الواجهة: الذكر الطويل كامل في شاشة واحدة */
+.dhikr-focus{overflow:hidden!important}
+.dhikr-focus-content{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ justify-content:center!important;flex:1 1 0!important;min-height:0!important;
+ max-height:100%!important;overflow:hidden!important;overscroll-behavior:none!important;
+ margin:0 auto!important;padding:4px 0!important;gap:5px!important;
+}
+.dhikr-focus-card.zad-long-ayat,
+.dhikr-focus-card.zad-long-morning-dua,
+.dhikr-focus-card.zad-long-text{
+ flex:1 1 0!important;width:100%!important;height:auto!important;
+ min-height:0!important;max-height:100%!important;overflow:hidden!important;
+ margin:0!important;padding:7px 9px!important;gap:3px!important;
+ justify-content:center!important;box-sizing:border-box!important;
+}
+.dhikr-focus-card.zad-long-ayat .arabic,
+.dhikr-focus-card.zad-long-morning-dua .arabic,
+.dhikr-focus-card.zad-long-text .arabic{
+ flex:1 1 auto!important;min-height:0!important;max-height:100%!important;
+ width:100%!important;overflow:hidden!important;overflow-wrap:anywhere!important;
+ word-break:normal!important;letter-spacing:0!important;
+}
+.dhikr-focus-card.zad-long-ayat>.muted:first-child,
+.dhikr-focus-card.zad-long-morning-dua>.muted:first-child,
+.dhikr-focus-card.zad-long-text>.muted:first-child{
+ flex:0 0 auto!important;margin:0!important;padding:3px 10px!important;font-size:12px!important;
+}
+@media(max-height:650px){
+ .dhikr-focus-content{padding:2px 0!important;gap:2px!important}
+ .dhikr-focus-card.zad-long-ayat,
+ .dhikr-focus-card.zad-long-morning-dua,
+ .dhikr-focus-card.zad-long-text{padding:4px 7px!important;gap:2px!important}
+}
 </style>
