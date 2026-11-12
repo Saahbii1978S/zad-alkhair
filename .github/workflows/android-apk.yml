@@ -285,6 +285,12 @@ jobs:
         if: ${{ steps.signing_check.outputs.enabled == 'true' }}
         run: cp android/app/build/outputs/apk/release/app-release.apk zad-alkhair.apk
 
+      - name: Move android-latest tag to this build
+        if: ${{ steps.signing_check.outputs.enabled == 'true' }}
+        run: |
+          git tag --force android-latest "$GITHUB_SHA"
+          git push --force origin refs/tags/android-latest
+
       - name: Publish signed APK as the direct download
         if: ${{ steps.signing_check.outputs.enabled == 'true' }}
         uses: softprops/action-gh-release@v2
