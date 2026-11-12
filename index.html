@@ -2434,8 +2434,14 @@ function adhanMessage(t){adhanStatus.textContent=t}
 async function scheduleNativePrayerAlerts(){
  const Local=window.ZadLocalNotifications,Native=window.ZadPrayerAlarm;
  if(!prayerTimes)return;
- const prayerIds=[81001,81002,81003,81004,81005],beforeIds=[81101,81102,81103,81104,81105];
- const keys=Object.keys(prayerNames);
+ const keys=Object.keys(prayerNames),daysToSchedule=2;
+ const prayerIds=[],beforeIds=[];
+ for(let day=0;day<daysToSchedule;day++){
+  for(let index=0;index<keys.length;index++){
+   prayerIds.push(81001+day*10+index);
+   beforeIds.push(81101+day*10+index);
+  }
+ }
  try{
   const times=keys.map(key=>{
    const hm=String(prayerTimes[key]||'').slice(0,5).split(':').map(Number);
@@ -2457,21 +2463,27 @@ async function scheduleNativePrayerAlerts(){
   }else if(Native){await Native.cancel();}
   if(!Local){adhanMessage('الأذان الكامل مضبوط، لكن إشعارات ما قبل الصلاة غير متاحة على هذا الجهاز.');return;}
   const now=new Date(),nowParts=cityClockParts(now),alerts=[],lead=Number(adhanBefore.value);
-  times.forEach((x,index)=>{
-   const at=cityLocalToDate(nowParts.year,nowParts.month,nowParts.day,x.hour,x.minute);
-   if(adhanMode.value==='notice'&&at>now){
-    alerts.push({id:prayerIds[index],title:'حان وقت صلاة '+prayerNames[x.key],body:'حيّ على الصلاة • زاد الخير',schedule:{at,allowWhileIdle:true},channelId:'zad-prayer-alerts',isExactNotification:true,extra:{prayer:x.key,type:'prayer'}});
-   }
-   if(lead>0){
-    const beforeAt=new Date(at.getTime()-lead*60000);
-    if(beforeAt>now){
-     alerts.push({id:beforeIds[index],title:'باقي '+lead+' دقائق على صلاة '+prayerNames[x.key],body:'استعدّ للصلاة • زاد الخير',schedule:{at:beforeAt,allowWhileIdle:true},channelId:'zad-prayer-alerts',isExactNotification:true,extra:{prayer:x.key,type:'before'}});
+  times.forEach(x=>{
+   const prayerIndex=keys.indexOf(x.key);
+   for(let dayOffset=0;dayOffset<daysToSchedule;dayOffset++){
+    const day=new Date(Date.UTC(nowParts.year,nowParts.month-1,nowParts.day+dayOffset));
+    const at=cityLocalToDate(day.getUTCFullYear(),day.getUTCMonth()+1,day.getUTCDate(),x.hour,x.minute);
+    const prayerId=81001+dayOffset*10+prayerIndex;
+    const beforeId=81101+dayOffset*10+prayerIndex;
+    if(adhanMode.value==='notice'&&at>now){
+     alerts.push({id:prayerId,title:'حان وقت صلاة '+prayerNames[x.key],body:'حيّ على الصلاة • زاد الخير',schedule:{at,allowWhileIdle:true},channelId:'zad-prayer-alerts',isExactNotification:true,extra:{prayer:x.key,type:'prayer'}});
+    }
+    if(lead>0){
+     const beforeAt=new Date(at.getTime()-lead*60000);
+     if(beforeAt>now){
+      alerts.push({id:beforeId,title:'باقي '+lead+' دقائق على صلاة '+prayerNames[x.key],body:'استعدّ للصلاة • زاد الخير',schedule:{at:beforeAt,allowWhileIdle:true},channelId:'zad-prayer-alerts',isExactNotification:true,extra:{prayer:x.key,type:'before'}});
+     }
     }
    }
   });
   if(alerts.length)await Local.schedule({notifications:alerts});
-  const beforeCount=alerts.filter(x=>beforeIds.includes(x.id)).length;
-  adhanMessage('تم ضبط '+(adhanMode.value==='audio'?'الأذان الكامل':'إشعارات الصلاة')+'، مع '+(lead?('تنبيه مسبق قبل الصلاة بـ '+lead+' دقائق'):'إلغاء التنبيه المسبق')+'. '+beforeCount+' تنبيهات مسبقة مجدولة لبقية اليوم.');
+  const beforeCount=alerts.filter(x=>x.extra?.type==='before').length;
+  adhanMessage('تم ضبط '+(adhanMode.value==='audio'?'الأذان الكامل':'إشعارات الصلاة')+'، مع '+(lead?('تنبيه مسبق قبل الصلاة بـ '+lead+' دقائق'):'إلغاء التنبيه المسبق')+'. '+beforeCount+' تنبيهات مسبقة مجدولة لليوم والغد.');
  }catch(e){adhanMessage('تعذّر ضبط الأذان أو التنبيهات. تثبّت من إذن الإشعارات والمنبّهات الدقيقة.');}
 }
 $('#adhan-permission').onclick=async()=>{
