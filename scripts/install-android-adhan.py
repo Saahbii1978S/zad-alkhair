@@ -7,6 +7,9 @@ java.mkdir(parents=True,exist_ok=True)
 import android.app.AlarmManager;
 import android.content.Context;
 import android.os.Build;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import com.getcapacitor.*;
 import com.getcapacitor.annotation.*;
 import org.json.JSONArray;
@@ -25,6 +28,23 @@ public class PrayerAlarmPlugin extends Plugin {
    PrayerAlarmReceiver.scheduleAll(getContext(),arr,timezone);
    call.resolve();
   } catch(Exception e) { call.reject("تعذّر ضبط أوقات الأذان: "+e.getMessage()); }
+ }
+ @PluginMethod public void checkExactAlarmPermission(PluginCall call) {
+  AlarmManager manager=(AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+  boolean granted=Build.VERSION.SDK_INT<31 || (manager!=null && manager.canScheduleExactAlarms());
+  JSObject result=new JSObject();
+  result.put("granted",granted);
+  call.resolve(result);
+ }
+ @PluginMethod public void openExactAlarmSettings(PluginCall call) {
+  try {
+   if(Build.VERSION.SDK_INT>=31) {
+    Intent intent=new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,Uri.parse("package:"+getContext().getPackageName()));
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    getContext().startActivity(intent);
+   }
+   call.resolve();
+  } catch(Exception e) { call.reject("تعذّر فتح إعداد المنبّهات الدقيقة: "+e.getMessage()); }
  }
  @PluginMethod public void cancel(PluginCall call) {
   getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().remove("times").remove("timezone").apply();
