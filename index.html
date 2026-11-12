@@ -2478,10 +2478,18 @@ $('#adhan-permission').onclick=async()=>{
    let p=await Local.checkPermissions();
    if(p.display!=='granted')p=await Local.requestPermissions();
    if(p.display!=='granted'){adhanMessage('يلزم السماح بإشعارات زاد الخير من إعدادات الهاتف.');return}
-   let exact=await Local.checkExactNotificationSetting();
-   if(exact.exactAlarm!=='granted'){
-    adhanMessage('فعّل إذن «المنبّهات والتذكيرات» من إعدادات أندرويد ثم ارجع للتطبيق.');
-    await Local.changeExactNotificationSetting();
+   let exactGranted=false;
+   if(window.ZadPrayerAlarm?.checkExactAlarmPermission){
+    const exact=await window.ZadPrayerAlarm.checkExactAlarmPermission();
+    exactGranted=!!exact.granted;
+   }else{
+    const exact=await Local.checkExactNotificationSetting();
+    exactGranted=exact.exactAlarm==='granted';
+   }
+   if(!exactGranted){
+    adhanMessage('باش نفتحلك مباشرة إعداد السماح بالمنبّهات الدقيقة لزاد الخير. فعّل السماح وارجع للتطبيق.');
+    if(window.ZadPrayerAlarm?.openExactAlarmSettings)await window.ZadPrayerAlarm.openExactAlarmSettings();
+    else await Local.changeExactNotificationSetting();
     return;
    }
    await scheduleNativePrayerAlerts();
@@ -2493,6 +2501,13 @@ $('#adhan-permission').onclick=async()=>{
  }catch(e){adhanMessage('تعذّر تفعيل الإشعارات.');}
 };
 $('#adhan-test').onclick=async()=>{try{adhanAudio.src=adhanSounds[adhanSound.value];adhanAudio.currentTime=0;await adhanAudio.play();adhanMessage('صوت المؤذّن المختار يشتغل الآن للتجربة.')}catch(e){adhanMessage('تعذّر تشغيل الصوت. تثبّت من الإنترنت واضغط تجربة مرة أخرى.')}};
+document.addEventListener('visibilitychange',async()=>{
+ if(document.visibilityState!=='visible'||!window.Capacitor?.isNativePlatform?.()||!window.ZadPrayerAlarm||!window.ZadLocalNotifications||!prayerTimes)return;
+ try{
+  const exact=await window.ZadPrayerAlarm.checkExactAlarmPermission();
+  if(exact.granted)await scheduleNativePrayerAlerts();
+ }catch(error){console.warn('تعذّرت إعادة ضبط أذان زاد الخير بعد الرجوع من الإعدادات',error);}
+});
 function cityClockParts(date){const parts=new Intl.DateTimeFormat('en-GB',{timeZone:prayerTimezone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(date);const o={};parts.forEach(p=>{if(p.type!=='literal')o[p.type]=Number(p.value)});return o}
 function cityLocalToDate(y,mo,d,h,mi){const desired=Date.UTC(y,mo-1,d,h,mi,0);let guess=desired;for(let i=0;i<3;i++){const p=cityClockParts(new Date(guess));const represented=Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second);guess+=desired-represented}return new Date(guess)}
 function fireAdhan(prayer,key){const label=prayerNames[prayer];if('Notification' in window&&Notification.permission==='granted'){try{new Notification('حان وقت صلاة '+label,{body:'حيّ على الصلاة • زاد الخير',tag:'zad-'+key,renotify:false})}catch(e){}}
