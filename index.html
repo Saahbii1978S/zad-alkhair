@@ -2332,7 +2332,7 @@ const countries={
 };
 const citySel=$('#prayer-city'),countrySel=$('#prayer-country'),homeCity=$('#home-prayer-city'),homeCountry=$('#home-prayer-country');
 const prayerNames={Fajr:'الفجر',Dhuhr:'الظهر',Asr:'العصر',Maghrib:'المغرب',Isha:'العشاء'};
-let prayerTimes=null,prayerTicker=null,prayerTimezone='Africa/Tunis',prayerRequestId=0;
+let prayerTimes=null,prayerTicker=null,prayerTimezone='Africa/Tunis',prayerRequestId=0,prayerCoordinates=null;
 function fillCountries(){const o=Object.entries(countries).map(([k,v])=>'<option value="'+k+'">'+v[0]+'</option>').join('');countrySel.innerHTML=o;homeCountry.innerHTML=o}
 function fillCities(country,city){const list=countries[country][1],o=list.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');citySel.innerHTML=o;homeCity.innerHTML=o;const value=list.some(x=>x[0]===city)?city:list[0][0];citySel.value=value;homeCity.value=value}
 fillCountries();let savedCountry=localStorage.getItem('zad-prayer-country')||'Tunisia',savedCity=localStorage.getItem('zad-prayer-city')||'Sfax';if(!countries[savedCountry])savedCountry='Tunisia';countrySel.value=savedCountry;homeCountry.value=savedCountry;fillCities(savedCountry,savedCity);
@@ -2380,6 +2380,7 @@ async function loadPrayerTimes(latitude=null,longitude=null,accuracy=null){
   if(requestId!==prayerRequestId)return;
   prayerTimes=json.data.timings;
   prayerTimezone=json.data.meta?.timezone||'Africa/Tunis';
+  prayerCoordinates=byLocation?{latitude,longitude}:null;
   scheduleNativePrayerAlerts();
   let locationLabel=citySel.options[citySel.selectedIndex].text+'، '+countries[country][0];
   if(byLocation){
@@ -2446,7 +2447,7 @@ async function scheduleNativePrayerAlerts(){
   const times=keys.map(key=>{
    const hm=String(prayerTimes[key]||'').slice(0,5).split(':').map(Number);
    return {key,hour:hm[0],minute:hm[1],enabled:!!adhanEnabled[key]};
-  }).filter(x=>x.enabled&&Number.isInteger(x.hour)&&Number.isInteger(x.minute)&&x.hour>=0&&x.hour<24&&x.minute>=0&&x.minute<60);
+  }).filter(x=>x.enabled&&Number.isInteger(x.hour)&&x.hour>=0&&x.hour<24&&Number.isInteger(x.minute)&&x.minute>=0&&x.minute<60);
   if(!window.Capacitor?.isNativePlatform?.()){adhanMessage('التنبيهات المسبقة والأذان في الخلفية يتطلبان نسخة أندرويد المثبّتة.');return;}
   const permission=Local?await Local.checkPermissions():{display:'denied'};
   if(permission.display!=='granted'){
@@ -2463,11 +2464,28 @@ async function scheduleNativePrayerAlerts(){
   }else if(Native){await Native.cancel();}
   if(!Local){adhanMessage('الأذان الكامل مضبوط، لكن إشعارات ما قبل الصلاة غير متاحة على هذا الجهاز.');return;}
   const now=new Date(),nowParts=cityClockParts(now),alerts=[],lead=Number(adhanBefore.value);
+  let tomorrowTimings=null;
+  try{
+   const nextDay=new Date(Date.UTC(nowParts.year,nowParts.month-1,nowParts.day+1));
+   const datePath=String(nextDay.getUTCDate()).padStart(2,'0')+'-'+String(nextDay.getUTCMonth()+1).padStart(2,'0')+'-'+nextDay.getUTCFullYear();
+   const tomorrowUrl=prayerCoordinates
+    ?'https://api.aladhan.com/v1/timings/'+datePath+'?latitude='+encodeURIComponent(prayerCoordinates.latitude)+'&longitude='+encodeURIComponent(prayerCoordinates.longitude)+'&method=18&timezonestring='+encodeURIComponent(prayerTimezone)
+    :'https://api.aladhan.com/v1/timingsByCity/'+datePath+'?city='+encodeURIComponent(citySel.value)+'&country='+encodeURIComponent(countrySel.value)+'&method=18';
+   const response=await fetch(tomorrowUrl,{cache:'no-store'});
+   if(response.ok){
+    const result=await response.json();
+    if(result.code===200&&result.data?.timings)tomorrowTimings=result.data.timings;
+   }
+  }catch(error){console.warn('تعذّر جلب مواقيت الغد لجدولة التنبيهات',error);}
   times.forEach(x=>{
    const prayerIndex=keys.indexOf(x.key);
    for(let dayOffset=0;dayOffset<daysToSchedule;dayOffset++){
+    const source=dayOffset===0?prayerTimes:tomorrowTimings;
+    if(!source)continue;
+    const hm=String(source[x.key]||'').slice(0,5).split(':').map(Number);
+    if(!Number.isInteger(hm[0])||hm[0]<0||hm[0]>23||!Number.isInteger(hm[1])||hm[1]<0||hm[1]>59)continue;
     const day=new Date(Date.UTC(nowParts.year,nowParts.month-1,nowParts.day+dayOffset));
-    const at=cityLocalToDate(day.getUTCFullYear(),day.getUTCMonth()+1,day.getUTCDate(),x.hour,x.minute);
+    const at=cityLocalToDate(day.getUTCFullYear(),day.getUTCMonth()+1,day.getUTCDate(),hm[0],hm[1]);
     const prayerId=81001+dayOffset*10+prayerIndex;
     const beforeId=81101+dayOffset*10+prayerIndex;
     if(adhanMode.value==='notice'&&at>now){
@@ -2483,7 +2501,8 @@ async function scheduleNativePrayerAlerts(){
   });
   if(alerts.length)await Local.schedule({notifications:alerts});
   const beforeCount=alerts.filter(x=>x.extra?.type==='before').length;
-  adhanMessage('تم ضبط '+(adhanMode.value==='audio'?'الأذان الكامل':'إشعارات الصلاة')+'، مع '+(lead?('تنبيه مسبق قبل الصلاة بـ '+lead+' دقائق'):'إلغاء التنبيه المسبق')+'. '+beforeCount+' تنبيهات مسبقة مجدولة لليوم والغد.');
+  const tomorrowNote=tomorrowTimings?'لليوم والغد':'لليوم فقط؛ تعذّر جلب مواقيت الغد';
+  adhanMessage('تم ضبط '+(adhanMode.value==='audio'?'الأذان الكامل':'إشعارات الصلاة')+'، مع '+(lead?('تنبيه مسبق قبل الصلاة بـ '+lead+' دقائق'):'إلغاء التنبيه المسبق')+'. '+beforeCount+' تنبيهات مسبقة مجدولة '+tomorrowNote+'.');
  }catch(e){adhanMessage('تعذّر ضبط الأذان أو التنبيهات. تثبّت من إذن الإشعارات والمنبّهات الدقيقة.');}
 }
 $('#adhan-permission').onclick=async()=>{
