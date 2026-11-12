@@ -262,7 +262,13 @@ jobs:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/zad-alkhair-release.jks
         run: |
           cd android
-          ./gradlew assembleRelease bundleRelease --no-daemon
+          if ./gradlew assembleRelease bundleRelease --no-daemon; then
+            echo "Release APK and bundle built using the configured key password."
+          else
+            echo "Initial release signing failed. Retrying once with the keystore password as the private-key password (without printing either secret)."
+            export ANDROID_KEY_PASSWORD="$ANDROID_KEYSTORE_PASSWORD"
+            ./gradlew clean assembleRelease bundleRelease --no-daemon
+          fi
 
       - name: Upload signed release APK and AAB
         if: ${{ steps.signing_check.outputs.enabled == 'true' }}
