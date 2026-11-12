@@ -109,9 +109,14 @@ public class PrayerAlarmReceiver extends BroadcastReceiver {
   else am.setExact(AlarmManager.RTC_WAKEUP,when,pi);
  }
  static void scheduleAll(Context c,JSONArray a,String timezone) throws Exception {
-  cancelAll(c);
   AlarmManager am=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
   if(Build.VERSION.SDK_INT>=31 && am!=null && !am.canScheduleExactAlarms())throw new IllegalStateException("فعّل إذن المنبّهات الدقيقة من إعدادات الهاتف");
+  for(int i=0;i<a.length();i++){
+   JSONObject o=a.getJSONObject(i);
+   int hour=o.getInt("hour"),minute=o.getInt("minute");
+   if(hour<0||hour>23||minute<0||minute>59)throw new IllegalArgumentException("وقت صلاة غير صالح");
+  }
+  cancelAll(c);
   for(int i=0;i<a.length();i++){JSONObject o=a.getJSONObject(i);set(c,i,o.getInt("hour"),o.getInt("minute"),timezone);}
  }
  static void cancelAll(Context c) {
