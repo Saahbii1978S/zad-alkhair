@@ -2465,7 +2465,10 @@ async function scheduleNativePrayerAlerts(){
    return;
   }
   if(Local){
-   const alertStyle=adhanBeforeStyle.value;\n   const channelId='zad-prayer-'+alertStyle;\n   await Local.createChannel({id:channelId,name:'تنبيهات الصلاة - '+({sound:'صوت الهاتف',vibrate:'اهتزاز',silent:'صامت',both:'صوت واهتزاز'}[alertStyle]||'عادية'),description:'تنبيهات قبل الصلاة',importance:5,sound:(alertStyle==='sound'||alertStyle==='both')?'default':null,vibration:(alertStyle==='vibrate'||alertStyle==='both')});
+   const alertStyle=adhanBeforeStyle.value;
+   const channelId='zad-prayer-'+alertStyle;
+   await Local.createChannel({id:'zad-prayer-alerts',name:'تنبيهات الصلاة عند دخول الوقت',description:'إشعار عند دخول وقت الصلاة',importance:5});
+   await Local.createChannel({id:channelId,name:'تنبيهات الصلاة - '+({sound:'صوت الهاتف',vibrate:'اهتزاز',silent:'صامت',both:'صوت واهتزاز'}[alertStyle]||'عادية'),description:'تنبيهات قبل الصلاة',importance:5,sound:(alertStyle==='sound'||alertStyle==='both')?'default':null,vibration:(alertStyle==='vibrate'||alertStyle==='both')});
    await Local.cancel({notifications:[...prayerIds,...beforeIds].map(id=>({id}))});
   }
   if(!Local){adhanMessage('تم ضبط الأذان الكامل، لكن إشعارات ما قبل الصلاة غير متاحة على هذا الجهاز.');return;}
