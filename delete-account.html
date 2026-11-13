@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow">
+<meta name="description" content="طلب حذف حساب الختمة الجماعية والبيانات المرتبطة به في تطبيق زاد الخير.">
+<title>طلب حذف الحساب والبيانات | زاد الخير</title>
+<style>
+:root{color-scheme:light;--ink:#20354a;--blue:#315f91;--paper:#f5f7fa;--line:#e0e8ef}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.9 system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+main{max-width:760px;margin:28px auto;padding:26px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 28px #20354a0b}
+h1,h2{color:var(--blue);line-height:1.5}h1{margin-top:0;font-size:27px}h2{font-size:20px;margin-top:24px}
+p,li{overflow-wrap:anywhere}label{display:block;font-weight:650;margin:14px 0 5px}
+input,textarea{width:100%;font:inherit;padding:11px 12px;border:1px solid #cbd7e2;border-radius:10px;background:#fff;color:var(--ink)}
+button,.button{display:inline-block;margin-top:18px;padding:11px 18px;border:0;border-radius:10px;background:var(--blue);color:#fff;font:inherit;text-decoration:none;cursor:pointer}
+.notice{background:#eef4f9;border:1px solid var(--line);padding:13px 16px;border-radius:12px}
+.meta{color:#66798a;font-size:14px}
+@media(max-width:600px){main{margin:0;padding:20px 16px;border:0;border-radius:0}}
+</style>
+</head>
+<body><main>
+<h1>طلب حذف حسابك وبياناتك — زاد الخير</h1>
+<p>هذه الصفحة مخصّصة لطلب حذف الحساب المجهول الذي تستعمله ميزة «الختمة الجماعية» في تطبيق زاد الخير، والبيانات المرتبطة به.</p>
+<div class="notice"><strong>شنوّة يصير بعد الطلب؟</strong><br>نراجع الطلب للتأكد من الحساب المقصود، ثم نحذف معرّف الحساب وعضوياته والبيانات الشخصية المرتبطة به. إذا كان حذف عضويتك سيؤثر على ختمة فيها مشاركون آخرون، نحافظ على بيانات المجموعة اللازمة لبقية المشاركين ونحذف بياناتك الشخصية منها. حذف التطبيق أو مسح بيانات الهاتف وحده لا يحذف بيانات الختمة من الخادم.</div>
+<h2>إرسال طلب الحذف</h2>
+<p>عمّر المعلومات اللي تعرفها. معرّف الحساب اختياري، لكنه يساعدنا على تحديد الحساب بدقة. إذا ما تعرفوش، اكتب اسم العرض واسم الختمة أو أي تفاصيل تساعد على التعرّف على مشاركتك.</p>
+<form id="request-form">
+<label for="account-id">معرّف حساب الختمة (اختياري)</label>
+<input id="account-id" name="account-id" autocomplete="off" placeholder="UUID إذا كان متوفراً">
+<label for="display-name">اسم العرض داخل الختمة</label>
+<input id="display-name" name="display-name" maxlength="80" placeholder="الاسم الذي يظهر للمشاركين">
+<label for="group-name">اسم الختمة أو المجموعة</label>
+<input id="group-name" name="group-name" maxlength="100" placeholder="اسم المجموعة إن كنت تتذكره">
+<label for="contact">بريد إلكتروني للرد عليك (اختياري)</label>
+<input id="contact" name="contact" type="email" autocomplete="email" placeholder="بريدك الإلكتروني">
+<label for="details">تفاصيل إضافية (اختياري)</label>
+<textarea id="details" name="details" rows="4" maxlength="1000" placeholder="أي معلومة تساعد على تحديد المشاركة"></textarea>
+<button type="submit">إرسال طلب الحذف بالبريد</button>
+</form>
+<p class="meta">سيفتح تطبيق البريد الإلكتروني عندك برسالة جاهزة إلى فريق زاد الخير. راجعها واضغط «إرسال». إذا لم يفتح البريد، راسلنا مباشرة على <a href="mailto:97976262sa@gmail.com">97976262sa@gmail.com</a> واكتب «طلب حذف حساب زاد الخير» في عنوان الرسالة.</p>
+<h2>ماذا نحذف؟</h2>
+<ul>
+<li>معرّف حساب الختمة المجهول وعضوياتك المرتبطة به.</li>
+<li>اسم العرض والبيانات الخاصة بمشاركتك والأجزاء التي حجزتها أو أكملتها.</li>
+<li>أي بيانات أخرى مرتبطة مباشرة بالحساب ويمكن حذفها دون إتلاف بيانات المشاركين الآخرين.</li>
+</ul>
+<p>لا نطلب منك كلمة مرور أو رمز دعوة أو معلومات دفع. لا ترسل أي كلمة سر أو بيانات حساسة.</p>
+<p><a href="./privacy-policy.html">العودة إلى سياسة الخصوصية</a> · <a href="./">العودة إلى زاد الخير</a></p>
+</main>
+<script>
+(function(){
+ const params=new URLSearchParams(location.search);
+ const candidate=params.get('uid')||'';
+ if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(candidate)){
+  document.getElementById('account-id').value=candidate;
+ }
+ document.getElementById('request-form').addEventListener('submit',function(event){
+  event.preventDefault();
+  const fields=[
+   ['معرّف الحساب',document.getElementById('account-id').value.trim()],
+   ['اسم العرض',document.getElementById('display-name').value.trim()],
+   ['اسم المجموعة',document.getElementById('group-name').value.trim()],
+   ['بريد الرد',document.getElementById('contact').value.trim()],
+   ['تفاصيل إضافية',document.getElementById('details').value.trim()]
+  ];
+  const body='السلام عليكم،\nأطلب حذف حسابي وبياناتي المرتبطة بميزة الختمة الجماعية في تطبيق زاد الخير.\n\n'+fields.map(([k,v])=>k+': '+(v||'غير متوفر')).join('\n')+'\n\nأؤكد أن هذا طلب حذف بياناتي.';
+  location.href='mailto:97976262sa@gmail.com?subject='+encodeURIComponent('طلب حذف حساب وبيانات زاد الخير')+'&body='+encodeURIComponent(body);
+ });
+})();
+</script>
+</body></html>
