@@ -2010,7 +2010,13 @@ body.zad-dark .zad-personal-photo-change{background:#263640;color:#d7eafa;border
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
 <header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p>
 <button type="button" id="zad-location-picker" class="zad-location-picker" aria-label="اختيار البلد والمدينة" title="اختيار البلد والمدينة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.7"/></svg></button></header>
-<section class="zad-personal-photo" aria-label="صورتك العزيزة">
+
+<div class="zad-share-bar" aria-label="مشاركة زاد الخير">
+ <button type="button" id="zad-share-button">مشاركة التطبيق</button>
+ <button type="button" id="zad-copy-link">نسخ الرابط</button>
+</div><div id="zad-location-modal" class="zad-location-modal" aria-hidden="true"><div class="zad-location-dialog" role="dialog" aria-modal="true" aria-labelledby="zad-location-title"><div class="zad-location-dialog-head"><div><span>الموقع</span><h3 id="zad-location-title">اختار البلد والمدينة</h3></div><button type="button" id="zad-location-close" class="zad-location-close" aria-label="إغلاق">×</button></div><div id="zad-location-fields"></div><p class="zad-location-hint">تتبدّل مواقيت الصلاة آلياً حسب اختيارك.</p></div></div>
+<div class="home-prayer-card">
+ <section class="zad-personal-photo" aria-label="صورتك العزيزة">
  <div class="zad-personal-photo-frame" id="zad-personal-photo-frame">
   <img id="zad-personal-photo" alt="الصورة التي اختارها المستخدم" hidden>
   <div id="zad-personal-photo-empty" class="zad-personal-photo-empty" aria-label="اختار صورة من هاتفك"><span aria-hidden="true">♡</span></div>
@@ -2018,11 +2024,6 @@ body.zad-dark .zad-personal-photo-change{background:#263640;color:#d7eafa;border
  <p class="zad-personal-photo-dua">اللهم احفظ من نحب، وارحم من اشتقنا إليهم</p>
  <button type="button" class="zad-personal-photo-change" id="zad-personal-photo-home">اختيار صورة</button>
 </section>
-<div class="zad-share-bar" aria-label="مشاركة زاد الخير">
- <button type="button" id="zad-share-button">مشاركة التطبيق</button>
- <button type="button" id="zad-copy-link">نسخ الرابط</button>
-</div><div id="zad-location-modal" class="zad-location-modal" aria-hidden="true"><div class="zad-location-dialog" role="dialog" aria-modal="true" aria-labelledby="zad-location-title"><div class="zad-location-dialog-head"><div><span>الموقع</span><h3 id="zad-location-title">اختار البلد والمدينة</h3></div><button type="button" id="zad-location-close" class="zad-location-close" aria-label="إغلاق">×</button></div><div id="zad-location-fields"></div><p class="zad-location-hint">تتبدّل مواقيت الصلاة آلياً حسب اختيارك.</p></div></div>
-<div class="home-prayer-card">
  <div class="home-prayer-head"><div><span class="home-eyebrow">مواقيت الصلاة — تونس</span><h2>صلاتك نور يومك</h2><p id="home-prayer-date">جاري تحميل المواقيت...</p></div></div>
  <div class="home-prayer-city"><div class="home-prayer-field"><label for="home-prayer-country">البلد</label><select id="home-prayer-country"></select></div><div class="home-prayer-field"><label for="home-prayer-city">المدينة</label><select id="home-prayer-city"></select></div></div>
  <button type="button" id="zad-use-location" class="zad-use-location">📍 حدّد موقعي واضبط مواقيت الصلاة تلقائياً</button>
