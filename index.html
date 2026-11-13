@@ -1983,8 +1983,11 @@ main{padding-left:10px!important;padding-right:10px!important}
 
 <style id="zad-personal-photo-style">
 .zad-personal-photo{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 12px 15px;margin:0 auto 12px;width:min(100% - 24px,560px);box-sizing:border-box;text-align:center;background:linear-gradient(145deg,#fff,#f4f7f8);border:1px solid #e4ebef;border-radius:20px;box-shadow:0 5px 18px #183b550d}
-.zad-personal-photo-frame{width:min(100%,300px);height:clamp(112px,32vw,190px);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:16px;background:#eaf0f2;border:1px solid #dce6e9;box-sizing:border-box}
-.zad-personal-photo-frame img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:#eaf0f2}
+.zad-personal-photo-frame{width:fit-content;max-width:100%;height:auto;min-height:120px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:16px;background:#eaf0f2;border:1px solid #dce6e9;box-sizing:border-box}
+.zad-personal-photo-frame.has-photo{min-height:0;width:fit-content;height:auto;background:transparent}
+.zad-personal-photo-frame img{display:block;width:auto;height:auto;max-width:100%;max-height:240px;object-fit:contain;object-position:center;background:transparent}
+.zad-personal-photo-frame:not(.has-photo){width:min(100%,260px)}
+.zad-personal-photo-frame:not(.has-photo) .zad-personal-photo-empty{min-height:120px}
 .zad-personal-photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px;color:#456276}
 .zad-personal-photo-empty span{font-size:32px;line-height:1;color:#b18b50}
 .zad-personal-photo-empty strong{font-size:15px}
@@ -4313,8 +4316,8 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
  const key='zad-personal-photo-v1';
  if(!input||!photo||!empty)return;
  function display(data){
-  if(data){photo.src=data;photo.hidden=false;empty.hidden=true;if(homeChoose)homeChoose.textContent='تغيير الصورة';}
-  else{photo.removeAttribute('src');photo.hidden=true;empty.hidden=false;if(homeChoose)homeChoose.textContent='اختيار صورة';}
+  if(data){photo.src=data;photo.hidden=false;empty.hidden=true;const frame=document.getElementById('zad-personal-photo-frame');if(frame)frame.classList.add('has-photo');if(homeChoose)homeChoose.textContent='تغيير الصورة';}
+  else{photo.removeAttribute('src');photo.hidden=true;empty.hidden=false;const frame=document.getElementById('zad-personal-photo-frame');if(frame)frame.classList.remove('has-photo');if(homeChoose)homeChoose.textContent='اختيار صورة';}
  }
  try{display(localStorage.getItem(key));}catch(e){display(null);}
  function openPicker(){input.click();}
