@@ -3159,8 +3159,8 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
  window.zadOpenShare=async function(data){
   if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()){
    try{
-    const plugin=await import('https://esm.sh/@capacitor/share@8.0.0');
-    await plugin.Share.share({title:data.title,text:data.text,url:data.url,dialogTitle:'مشاركة زاد الخير'});
+    if(!window.ZadNativeShare)throw new Error('Native share bridge is not ready');
+    await window.ZadNativeShare.share({title:data.title,text:data.text,url:data.url,dialogTitle:'مشاركة زاد الخير'});
     return;
    }catch(error){
     if(error&&error.name==='AbortError')throw error;
