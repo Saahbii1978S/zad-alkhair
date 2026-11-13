@@ -2770,10 +2770,10 @@ $('#quran-stop-surah').onclick=()=>{
 };
 loadSurahIndex();
 
-/* اتجاه القبلة بالحساب الجغرافي وبوصلة الهاتف مع دعم أفضل لأجهزة Android */
+/* اتجاه القبلة بالحساب الجغرافي وبوصلة الهاتف */
 const kaabaLat=21.4225,kaabaLon=39.8262;
-let qiblaBearing=null,deviceHeading=null,qiblaSensorActive=false,qiblaSensorAttempt=0;
-let qiblaSensorMessage='اضغط على الزر لتحديد اتجاه القبلة.';
+let qiblaBearing=null,deviceHeading=null,qiblaSensorActive=false,qiblaSensorAttempt=0,qiblaAbsoluteSensor=null;
+let qiblaSensorMessage='اضغط على الزر لتحديد موقعك وتشغيل البوصلة.';
 function bearingToKaaba(lat,lon){
  const r=Math.PI/180,p1=lat*r,p2=kaabaLat*r,dl=(kaabaLon-lon)*r;
  const y=Math.sin(dl),x=Math.cos(p1)*Math.tan(p2)-Math.sin(p1)*Math.cos(dl);
@@ -2783,64 +2783,92 @@ function renderQibla(){
  if(qiblaBearing!==null){
   const angle=deviceHeading===null?qiblaBearing:(qiblaBearing-deviceHeading+360)%360;
   $('#qibla-arrow').style.transform='translate(-50%,-50%) rotate('+(angle-90)+'deg)';
-  const hint=deviceHeading!==null?' • وجّه السهم نحو الكعبة':(qiblaSensorMessage.startsWith('لم تصل')?' • '+qiblaSensorMessage:' • فعّل البوصلة لتوجيه السهم حسب الهاتف');
+  const hint=deviceHeading!==null?' • البوصلة تعمل، وجّه السهم نحو الكعبة':(qiblaSensorMessage.startsWith('لم تصل')?' • '+qiblaSensorMessage:' • اتجاه القبلة محسوب من الشمال؛ فعّل البوصلة لتحريك السهم مع الهاتف');
   $('#qibla-result').textContent='اتجاه القبلة: '+Math.round(qiblaBearing)+'° من الشمال'+hint;
  }else{
   $('#qibla-result').textContent=qiblaSensorMessage;
  }
 }
 $('#qibla-locate').onclick=()=>{
- if(!navigator.geolocation){$('#qibla-result').textContent='المتصفح لا يدعم تحديد الموقع.';return}
- $('#qibla-result').textContent='جاري تحديد موقعك...';
+ if(!navigator.geolocation){qiblaSensorMessage='المتصفح لا يدعم تحديد الموقع.';renderQibla();return}
+ qiblaSensorMessage='جاري تحديد موقعك...';renderQibla();
  navigator.geolocation.getCurrentPosition(pos=>{
-  qiblaBearing=bearingToKaaba(pos.coords.latitude,pos.coords.longitude);renderQibla();
- },err=>{$('#qibla-result').textContent=err.code===1?'يلزم السماح للموقع باستعمال موقعك من إعدادات المتصفح.':'تعذّر تحديد الموقع. فعّل GPS وعاود المحاولة.'},{enableHighAccuracy:true,timeout:20000,maximumAge:60000});
-};
-function readQiblaHeading(e,isAbsoluteEvent){
- let heading=null;
- if(typeof e.webkitCompassHeading==='number'&&Number.isFinite(e.webkitCompassHeading)){
-  heading=e.webkitCompassHeading;
- }else if(typeof e.alpha==='number'&&Number.isFinite(e.alpha)&&(isAbsoluteEvent||e.absolute===true)){
-  heading=(360-e.alpha+360)%360;
- }
- if(heading!==null){
-  deviceHeading=heading;
-  qiblaSensorMessage='البوصلة تعمل. حرّك الهاتف ببطء لتحديد اتجاه القبلة.';
+  qiblaBearing=bearingToKaaba(pos.coords.latitude,pos.coords.longitude);
+  qiblaSensorMessage='تم تحديد موقعك وحساب اتجاه القبلة.';
   renderQibla();
+ },err=>{
+  qiblaSensorMessage=err.code===1?'يلزم السماح لزاد الخير باستعمال موقعك من إعدادات الهاتف.':'تعذّر تحديد الموقع. فعّل GPS وتأكد من إذن الموقع ثم أعد المحاولة.';
+  renderQibla();
+ },{enableHighAccuracy:true,timeout:25000,maximumAge:60000});
+};
+function acceptQiblaHeading(heading){
+ if(!Number.isFinite(heading))return;
+ deviceHeading=((heading%360)+360)%360;
+ qiblaSensorActive=true;
+ qiblaSensorMessage='البوصلة تعمل. حرّك الهاتف ببطء لتحديد اتجاه القبلة.';
+ renderQibla();
+}
+function readQiblaHeading(e,isAbsoluteEvent){
+ if(typeof e.webkitCompassHeading==='number'&&Number.isFinite(e.webkitCompassHeading)){
+  acceptQiblaHeading(e.webkitCompassHeading);return;
+ }
+ if(typeof e.alpha==='number'&&Number.isFinite(e.alpha)&&(isAbsoluteEvent||e.absolute===true)){
+  const screenAngle=(screen.orientation&&typeof screen.orientation.angle==='number')?screen.orientation.angle:0;
+  acceptQiblaHeading(360-e.alpha+screenAngle);
  }
 }
 function onQiblaAbsoluteOrientation(e){readQiblaHeading(e,true)}
 function onQiblaOrientation(e){readQiblaHeading(e,false)}
+function stopQiblaAbsoluteSensor(){
+ if(qiblaAbsoluteSensor){try{qiblaAbsoluteSensor.stop();qiblaAbsoluteSensor.onreading=null;qiblaAbsoluteSensor.onerror=null}catch(e){}qiblaAbsoluteSensor=null;}
+}
 $('#qibla-sensor').onclick=async()=>{
  const attempt=++qiblaSensorAttempt;
+ stopQiblaAbsoluteSensor();
+ window.removeEventListener('deviceorientationabsolute',onQiblaAbsoluteOrientation,true);
+ window.removeEventListener('deviceorientation',onQiblaOrientation,true);
+ deviceHeading=null;qiblaSensorActive=false;
+ qiblaSensorMessage='جاري تشغيل بوصلة الهاتف...';renderQibla();
  try{
-  if(!('DeviceOrientationEvent' in window))throw new Error('unsupported');
   if(!window.isSecureContext)throw new Error('https');
-  if(typeof DeviceOrientationEvent.requestPermission==='function'){
-   const permission=await DeviceOrientationEvent.requestPermission();
-   if(permission!=='granted')throw new Error('permission');
+  if(typeof window.AbsoluteOrientationSensor==='function'){
+   try{
+    qiblaAbsoluteSensor=new AbsoluteOrientationSensor({frequency:12,referenceFrame:'device'});
+    qiblaAbsoluteSensor.addEventListener('reading',()=>{
+     if(attempt!==qiblaSensorAttempt||!qiblaAbsoluteSensor)return;
+     const q=qiblaAbsoluteSensor.quaternion;
+     if(!q||q.length<4)return;
+     const x=q[0],y=q[1],z=q[2],w=q[3];
+     const yaw=Math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))*180/Math.PI;
+     acceptQiblaHeading(360-yaw);
+    });
+    qiblaAbsoluteSensor.addEventListener('error',()=>{
+     if(attempt===qiblaSensorAttempt){stopQiblaAbsoluteSensor();window.addEventListener('deviceorientationabsolute',onQiblaAbsoluteOrientation,true);window.addEventListener('deviceorientation',onQiblaOrientation,true);}
+    });
+    qiblaAbsoluteSensor.start();
+   }catch(sensorError){stopQiblaAbsoluteSensor();}
   }
-  window.removeEventListener('deviceorientationabsolute',onQiblaAbsoluteOrientation,true);
-  window.removeEventListener('deviceorientation',onQiblaOrientation,true);
-  deviceHeading=null;
-  qiblaSensorActive=true;
-  qiblaSensorMessage='تم طلب تشغيل البوصلة. حرّك الهاتف ببطء وبعيداً عن المعادن والمغناطيس...';
-  window.addEventListener('deviceorientationabsolute',onQiblaAbsoluteOrientation,true);
-  window.addEventListener('deviceorientation',onQiblaOrientation,true);
-  renderQibla();
+  if(!qiblaAbsoluteSensor){
+   if(!('DeviceOrientationEvent' in window))throw new Error('unsupported');
+   if(typeof DeviceOrientationEvent.requestPermission==='function'){
+    const permission=await DeviceOrientationEvent.requestPermission();
+    if(permission!=='granted')throw new Error('permission');
+   }
+   window.addEventListener('deviceorientationabsolute',onQiblaAbsoluteOrientation,true);
+   window.addEventListener('deviceorientation',onQiblaOrientation,true);
+  }
   setTimeout(()=>{
    if(attempt===qiblaSensorAttempt&&deviceHeading===null){
-    qiblaSensorMessage='لم تصل قراءة من بوصلة الهاتف. تأكد من دعم الهاتف للحساس، وجرّب تحريك الهاتف على شكل رقم 8 ثم أعد المحاولة.';
+    qiblaSensorMessage='لم تصل قراءة من بوصلة الهاتف. فعّل مستشعرات الهاتف، أوقف وضع توفير الطاقة إن لزم، وحرّك الهاتف على شكل رقم 8 بعيداً عن المغناطيس.';
     renderQibla();
    }
-  },6000);
+  },7000);
  }catch(e){
   qiblaSensorActive=false;
-  qiblaSensorMessage=e.message==='https'?'يلزم فتح التطبيق عبر اتصال آمن HTTPS.':'تعذّر تشغيل حساس البوصلة أو لم يتم السماح له. يمكنك استعمال اتجاه القبلة بالدرجات.';
+  qiblaSensorMessage=e.message==='https'?'يلزم فتح زاد الخير عبر اتصال HTTPS آمن.':e.message==='permission'?'لم تسمح للهاتف باستعمال حساس الاتجاه. راجع أذونات الموقع والحساسات.':'هذا الهاتف أو المتصفح لا يوفّر حساس بوصلة متوافقاً. يمكنك استعمال اتجاه القبلة بالدرجات الظاهرة.';
   renderQibla();
  }
 };
-
 /* ختمة شخصية: تقدم محلي على الجهاز */
 const khatmaKey='zad-khatma-juz-v1';
 let khatmaDone=[];try{khatmaDone=JSON.parse(localStorage.getItem(khatmaKey)||'[]')}catch(e){khatmaDone=[]}
