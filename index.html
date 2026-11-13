@@ -3095,7 +3095,7 @@ function requestPrayerLocation(showMessage=true){
 }
 const zadLocationButton=document.getElementById('zad-use-location');
 if(zadLocationButton)zadLocationButton.onclick=()=>requestPrayerLocation(true);
-if(localStorage.getItem('zad-prayer-location-mode')==='auto')requestPrayerLocation(false);else window.zadLoadPrayerTimes();
+requestPrayerLocation(false);
 
 let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))show(initial);paint()})();
 </script>
@@ -4353,3 +4353,12 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
  });
 })();
 </script>
+
+
+<style id="zad-auto-location-clean-home-v1">
+/* واجهة هادئة: الموقع تلقائي دون مستطيلات أو زر ظاهر */
+.home-prayer-card .home-prayer-head,
+.home-prayer-card .zad-use-location,
+.home-prayer-card #zad-location-status,
+.home-prayer-city{display:none!important}
+</style>
