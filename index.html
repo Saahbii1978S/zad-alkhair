@@ -4599,3 +4599,60 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
 }
 </style>
 
+
+
+<style id="zad-prayer-six-columns-absolute-final-v3">
+/* تصحيح نهائي: ستة مواقيت في صف واحد، وإلغاء كل توزيعات 3×2 السابقة */
+.home-prayer-card{
+ display:block!important;
+ direction:rtl!important;
+ grid-template-columns:none!important;
+ grid-template-rows:none!important;
+ column-gap:0!important;
+ row-gap:0!important;
+}
+.home-prayer-card .zad-personal-photo{display:none!important}
+.home-prayer-card #home-prayer-list{
+ display:grid!important;
+ grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ grid-auto-flow:row!important;
+ grid-auto-columns:auto!important;
+ gap:3px!important;
+ width:100%!important;
+ min-width:0!important;
+ align-items:stretch!important;
+}
+.home-prayer-card #home-prayer-list>div,
+.home-prayer-card #home-prayer-list>.home-prayer-time-item{
+ display:flex!important;
+ grid-column:auto!important;
+ grid-row:auto!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ min-width:0!important;
+ width:auto!important;
+ margin:0!important;
+ padding:7px 1px!important;
+ text-align:center!important;
+}
+.home-prayer-card #home-prayer-list .home-prayer-time-name,
+.home-prayer-card #home-prayer-list .home-prayer-time-value{
+ display:block!important;
+ white-space:nowrap!important;
+ max-width:100%!important;
+}
+.home-prayer-card .home-next-prayer{
+ display:flex!important;
+ width:100%!important;
+ margin-top:8px!important;
+}
+@media(max-width:390px){
+ .home-prayer-card{padding:8px 5px!important}
+ .home-prayer-card #home-prayer-list{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:2px!important}
+ .home-prayer-card #home-prayer-list>div,
+ .home-prayer-card #home-prayer-list>.home-prayer-time-item{padding:6px 0!important}
+ .home-prayer-card #home-prayer-list .home-prayer-time-name{font-size:clamp(11px,3.2vw,14px)!important}
+ .home-prayer-card #home-prayer-list .home-prayer-time-value{font-size:clamp(13px,3.7vw,16px)!important}
+}
+</style>
