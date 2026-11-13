@@ -85,6 +85,59 @@ public class WelcomeVoicePlugin extends Plugin {
  @Override protected void handleOnDestroy(){if(tts!=null){tts.stop();tts.shutdown();tts=null;}super.handleOnDestroy();}
 }
 ''',encoding="utf-8")
+(java/"CompassPlugin.java").write_text(r'''package org.zadalkhair.app;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.view.Surface;
+import android.view.WindowManager;
+import com.getcapacitor.*;
+import com.getcapacitor.annotation.*;
+@CapacitorPlugin(name="Compass")
+public class CompassPlugin extends Plugin implements SensorEventListener {
+ private SensorManager manager;
+ private Sensor sensor;
+ private boolean running=false;
+ @PluginMethod public void start(PluginCall call) {
+  try {
+   manager=(SensorManager)getContext().getSystemService(Context.SENSOR_SERVICE);
+   sensor=manager==null?null:manager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+   if(sensor==null){call.reject("هذا الهاتف لا يحتوي على حساس اتجاه مناسب للبوصلة.");return;}
+   if(!running){running=manager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_UI);}
+   if(!running){call.reject("تعذّر تشغيل حساس البوصلة.");return;}
+   call.resolve();
+  } catch(Exception e){call.reject("تعذّر تشغيل البوصلة: "+e.getMessage());}
+ }
+ @PluginMethod public void stop(PluginCall call) {
+  if(manager!=null)manager.unregisterListener(this);
+  running=false;call.resolve();
+ }
+ @Override public void onSensorChanged(SensorEvent event) {
+  if(event.sensor.getType()!=Sensor.TYPE_ROTATION_VECTOR)return;
+  float[] matrix=new float[9],orientation=new float[3];
+  SensorManager.getRotationMatrixFromVector(matrix,event.values);
+  int rotation=Surface.ROTATION_0;
+  try {
+   WindowManager wm=(WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+   if(wm!=null)rotation=wm.getDefaultDisplay().getRotation();
+  } catch(Exception ignored){}
+  int axisX=SensorManager.AXIS_X,axisY=SensorManager.AXIS_Y;
+  if(rotation==Surface.ROTATION_90){axisX=SensorManager.AXIS_Y;axisY=SensorManager.AXIS_MINUS_X;}
+  else if(rotation==Surface.ROTATION_180){axisX=SensorManager.AXIS_MINUS_X;axisY=SensorManager.AXIS_MINUS_Y;}
+  else if(rotation==Surface.ROTATION_270){axisX=SensorManager.AXIS_MINUS_Y;axisY=SensorManager.AXIS_X;}
+  float[] remapped=new float[9];
+  if(!SensorManager.remapCoordinateSystem(matrix,axisX,axisY,remapped))return;
+  SensorManager.getOrientation(remapped,orientation);
+  double heading=(Math.toDegrees(orientation[0])+360.0)%360.0;
+  JSObject data=new JSObject();data.put("heading",heading);
+  notifyListeners("heading",data);
+ }
+ @Override public void onAccuracyChanged(Sensor sensor,int accuracy){}
+ @Override protected void handleOnDestroy(){if(manager!=null)manager.unregisterListener(this);running=false;super.handleOnDestroy();}
+}
+''',encoding="utf-8")
 (java/"PrayerAlarmReceiver.java").write_text(r'''package org.zadalkhair.app;
 import android.app.*;
 import android.content.*;
@@ -203,7 +256,7 @@ if "PrayerAlarmPlugin.class" not in ms:
     @Override
     public void onCreate(android.os.Bundle savedInstanceState) {
         registerPlugin(PrayerAlarmPlugin.class);
-        registerPlugin(WelcomeVoicePlugin.class);
+        registerPlugin(WelcomeVoicePlugin.class);\n        registerPlugin(CompassPlugin.class);
         super.onCreate(savedInstanceState);
     }"""
     ms=ms.replace("public class MainActivity extends BridgeActivity {", insertion)
