@@ -1981,11 +1981,40 @@ main{padding-left:10px!important;padding-right:10px!important}
 }
 </style>
 
+<style id="zad-personal-photo-style">
+.zad-personal-photo{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 12px 15px;margin:0 auto 12px;width:min(100% - 24px,560px);box-sizing:border-box;text-align:center;background:linear-gradient(145deg,#fff,#f4f7f8);border:1px solid #e4ebef;border-radius:20px;box-shadow:0 5px 18px #183b550d}
+.zad-personal-photo-frame{width:min(100%,300px);height:clamp(112px,32vw,190px);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:16px;background:#eaf0f2;border:1px solid #dce6e9;box-sizing:border-box}
+.zad-personal-photo-frame img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:#eaf0f2}
+.zad-personal-photo-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px;color:#456276}
+.zad-personal-photo-empty span{font-size:32px;line-height:1;color:#b18b50}
+.zad-personal-photo-empty strong{font-size:15px}
+.zad-personal-photo-empty small{font-size:12px;color:#718392}
+.zad-personal-photo-dua{margin:0;color:#456276;font-size:13px;font-weight:700}
+.zad-personal-photo-change{border:1px solid #cbdde7;border-radius:999px;background:#fff;color:#28688f;padding:7px 18px;font:700 13px Tajawal,Arial,sans-serif}
+.zad-photo-setting{align-items:center;gap:12px}
+.zad-photo-setting-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.zad-photo-setting-actions .smallbtn{white-space:nowrap}
+body.zad-dark .zad-personal-photo{background:#192630;border-color:#344652}
+body.zad-dark .zad-personal-photo-frame,body.zad-dark .zad-personal-photo-frame img{background:#263640;border-color:#40535e}
+body.zad-dark .zad-personal-photo-empty,body.zad-dark .zad-personal-photo-dua{color:#e1eaf0}
+body.zad-dark .zad-personal-photo-empty small{color:#b3c1ca}
+body.zad-dark .zad-personal-photo-change{background:#263640;color:#d7eafa;border-color:#526775}
+@media(max-width:420px){.zad-personal-photo{padding:10px;margin-left:8px;margin-right:8px;width:calc(100% - 16px)}.zad-personal-photo-frame{height:clamp(100px,34vw,150px)}.zad-photo-setting{align-items:flex-start;flex-direction:column}.zad-photo-setting-actions{justify-content:flex-start}}
+</style>
+
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
 <header class="hero"><div class="hero-photo-layer" aria-hidden="true"><img id="hero-photo-a" class="is-active" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kaaba%2C_Masjid_Al-Haram%2C_Mecca%2C_Saudi_Arabia_-_panoramio.jpg?width=1600" alt=""><img id="hero-photo-b" src="" alt=""></div><div class="brand">زاد الخير</div><p class="tag">ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله</p><p class="dua-request" id="saudi-dua-request" hidden>من فضلكم، دعوة خير في ظهر الغيب لأخي عايض، ولكم بالمثل</p>
 <button type="button" id="zad-location-picker" class="zad-location-picker" aria-label="اختيار البلد والمدينة" title="اختيار البلد والمدينة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.7"/></svg></button></header>
+<section class="zad-personal-photo" aria-label="صورتك العزيزة">
+ <div class="zad-personal-photo-frame" id="zad-personal-photo-frame">
+  <img id="zad-personal-photo" alt="الصورة التي اختارها المستخدم" hidden>
+  <div id="zad-personal-photo-empty" class="zad-personal-photo-empty"><span aria-hidden="true">♡</span><strong>صورة عزيزة على قلبي</strong><small>أضف صورة شخص تحبّه لتظهر هنا</small></div>
+ </div>
+ <p class="zad-personal-photo-dua">اللهم احفظ من نحب، وارحم من اشتقنا إليهم</p>
+ <button type="button" class="zad-personal-photo-change" id="zad-personal-photo-home">اختيار صورة</button>
+</section>
 <div class="zad-share-bar" aria-label="مشاركة زاد الخير">
  <button type="button" id="zad-share-button">مشاركة التطبيق</button>
  <button type="button" id="zad-copy-link">نسخ الرابط</button>
@@ -2174,6 +2203,7 @@ main{padding-left:10px!important;padding-right:10px!important}
   <div class="setting-row"><div><strong>حجم الكتابة</strong><p class="muted">صغير أو متوسط أو كبير</p></div><select id="zad-font-size" aria-label="حجم الكتابة"><option value="small">صغير</option><option value="medium">متوسط</option><option value="large">كبير</option></select></div>
   <div class="setting-row"><div><strong>الوضع الليلي 🌙</strong><p class="muted">ألوان مريحة للقراءة في الليل</p></div><label class="setting-switch"><input type="checkbox" id="zad-dark-mode"><span>تشغيل</span></label></div>
   <div class="setting-row"><div><strong>اهتزاز السبحة</strong><p class="muted">اهتزاز خفيف عند التسبيح إذا هاتفك يدعم ذلك</p></div><label class="setting-switch"><input type="checkbox" id="zad-vibration"><span>تشغيل</span></label></div>
+  <div class="setting-row zad-photo-setting"><div><strong>صورة عزيزة على قلبي ❤️</strong><p class="muted">اختار صورة من هاتفك، وتبقى خاصة على جهازك</p></div><div class="zad-photo-setting-actions"><button class="smallbtn" type="button" id="zad-personal-photo-choose">اختيار صورة</button><button class="smallbtn" type="button" id="zad-personal-photo-remove">حذف الصورة</button><input type="file" id="zad-personal-photo-input" accept="image/*" hidden></div></div>
   <div class="setting-row"><div><strong>مشاركة زاد الخير</strong><p class="muted">ابعث التطبيق لأهلك وأصحابك</p></div><button class="smallbtn" type="button" id="zad-settings-share">مشاركة</button></div>
   <div class="setting-row"><div><strong>نسخ رابط التطبيق</strong><p class="muted">ابعث الرابط في واتساب أو ماسنجر</p></div><button class="smallbtn" type="button" id="zad-settings-copy">نسخ الرابط</button></div>
   <div class="setting-row"><div><strong>حذف الحساب والبيانات</strong><p class="muted">طلب حذف حساب الختمة الجماعية والبيانات المرتبطة به</p></div><a class="smallbtn" id="zad-delete-account-link" href="./delete-account.html">طلب الحذف</a></div>
@@ -4271,3 +4301,55 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
  #home-prayer-list .prayer-icon{width:28px!important;height:28px!important;font-size:15px!important}
 }
 </style>
+
+<script id="zad-personal-photo-script">
+(function(){
+ const input=document.getElementById('zad-personal-photo-input');
+ const photo=document.getElementById('zad-personal-photo');
+ const empty=document.getElementById('zad-personal-photo-empty');
+ const choose=document.getElementById('zad-personal-photo-choose');
+ const homeChoose=document.getElementById('zad-personal-photo-home');
+ const remove=document.getElementById('zad-personal-photo-remove');
+ const key='zad-personal-photo-v1';
+ if(!input||!photo||!empty)return;
+ function display(data){
+  if(data){photo.src=data;photo.hidden=false;empty.hidden=true;if(homeChoose)homeChoose.textContent='تغيير الصورة';}
+  else{photo.removeAttribute('src');photo.hidden=true;empty.hidden=false;if(homeChoose)homeChoose.textContent='اختيار صورة';}
+ }
+ try{display(localStorage.getItem(key));}catch(e){display(null);}
+ function openPicker(){input.click();}
+ if(choose)choose.addEventListener('click',openPicker);
+ if(homeChoose)homeChoose.addEventListener('click',openPicker);
+ if(remove)remove.addEventListener('click',function(){
+  try{localStorage.removeItem(key);display(null);const s=document.getElementById('zad-settings-status');if(s)s.textContent='تم حذف الصورة من هذا الجهاز.';}
+  catch(e){alert('تعذّر حذف الصورة.');}
+ });
+ input.addEventListener('change',function(){
+  const file=input.files&&input.files[0];if(!file)return;
+  if(!file.type||!file.type.startsWith('image/')){alert('اختار ملف صورة من هاتفك.');input.value='';return;}
+  const reader=new FileReader();
+  reader.onerror=function(){alert('ما نجّمش نقرا الصورة. جرّب صورة أخرى.');input.value='';};
+  reader.onload=function(){
+   const source=new Image();
+   source.onerror=function(){alert('صيغة الصورة هاذي ما يدعمهاش عارض الصور في هاتفك. جرّب JPG أو PNG أو WebP.');input.value='';};
+   source.onload=function(){
+    try{
+     const maxSide=1440,scale=Math.min(1,maxSide/Math.max(source.naturalWidth,source.naturalHeight));
+     const canvas=document.createElement('canvas');
+     canvas.width=Math.max(1,Math.round(source.naturalWidth*scale));
+     canvas.height=Math.max(1,Math.round(source.naturalHeight*scale));
+     const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);
+     ctx.drawImage(source,0,0,canvas.width,canvas.height);
+     const data=canvas.toDataURL('image/jpeg',0.82);
+     if(data.length>4500000){alert('حجم الصورة مازال كبير. اختار صورة أصغر.');input.value='';return;}
+     localStorage.setItem(key,data);display(data);
+     const s=document.getElementById('zad-settings-status');if(s)s.textContent='تحفظت صورتك على هذا الجهاز فقط ❤️';
+    }catch(e){alert('مساحة التخزين في الهاتف غير كافية لحفظ الصورة.');}
+    input.value='';
+   };
+   source.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
+})();
+</script>
