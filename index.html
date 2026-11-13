@@ -4365,3 +4365,69 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
 .home-prayer-card #zad-location-status,
 .home-prayer-city{display:none!important}
 </style>
+
+
+<style id="zad-compact-photo-and-prayer-v2">
+/* صورة أصغر وبطاقة خفيفة حتى تبقى المواقيت ظاهرة */
+.zad-personal-photo{
+ width:calc(100% - 24px)!important;
+ max-width:320px!important;
+ gap:5px!important;
+ padding:7px 8px!important;
+ margin:0 auto 6px!important;
+ border-radius:14px!important;
+ box-shadow:0 2px 8px #183b550a!important;
+}
+.zad-personal-photo-frame,
+.zad-personal-photo-frame.has-photo{
+ min-height:0!important;
+ max-width:100%!important;
+ width:fit-content!important;
+ height:auto!important;
+ border-radius:10px!important;
+}
+.zad-personal-photo-frame img{
+ display:block!important;
+ width:auto!important;
+ height:auto!important;
+ max-width:min(100%,210px)!important;
+ max-height:135px!important;
+ object-fit:contain!important;
+}
+.zad-personal-photo-frame:not(.has-photo){width:min(100%,190px)!important}
+.zad-personal-photo-frame:not(.has-photo) .zad-personal-photo-empty{min-height:76px!important;padding:6px!important}
+.zad-personal-photo-empty span{font-size:24px!important}
+.zad-personal-photo-empty strong{font-size:13px!important}
+.zad-personal-photo-empty small{font-size:10px!important}
+.zad-personal-photo-dua{font-size:11px!important}
+.zad-personal-photo-change{padding:5px 13px!important;font-size:11px!important}
+.home-prayer-card{
+ display:block!important;
+ margin:0 0 8px!important;
+ padding:10px 9px!important;
+}
+.home-prayer-card .home-prayer-head,
+.home-prayer-card .home-prayer-city,
+.home-prayer-card .zad-use-location,
+.home-prayer-card #zad-location-status{display:none!important}
+.home-prayer-card #home-prayer-list{
+ display:grid!important;
+ grid-template-columns:repeat(5,minmax(0,1fr))!important;
+ gap:4px!important;
+ width:100%!important;
+}
+.home-prayer-card #home-prayer-list>div{
+ min-width:0!important;
+ padding:7px 2px!important;
+}
+.home-prayer-card #home-prayer-list>div>span:not(.prayer-icon){font-size:11px!important}
+.home-prayer-card #home-prayer-list>div>b{font-size:14px!important}
+.home-prayer-card .home-next-prayer{margin-top:7px!important;padding:7px 9px!important}
+@media(max-width:390px){
+ .zad-personal-photo{max-width:290px!important;padding:6px!important}
+ .zad-personal-photo-frame img{max-width:180px!important;max-height:120px!important}
+ .home-prayer-card{padding:8px 6px!important}
+ .home-prayer-card #home-prayer-list{gap:2px!important}
+ .home-prayer-card #home-prayer-list>div{padding:6px 1px!important}
+}
+</style>
