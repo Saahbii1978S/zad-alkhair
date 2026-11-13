@@ -4493,3 +4493,27 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
 .home-prayer-card .home-prayer-head,.home-prayer-card .home-prayer-city,.home-prayer-card .zad-use-location,.home-prayer-card #zad-location-status{display:none!important}
 @media(max-width:360px){.home-prayer-card{column-gap:3px!important;padding:8px 4px!important}.home-prayer-card .zad-personal-photo-frame img{max-height:145px!important}.home-prayer-card #home-prayer-list .home-prayer-time-item{min-height:48px!important}.home-prayer-card #home-prayer-list .home-prayer-time-name{font-size:10px!important}.home-prayer-card #home-prayer-list .home-prayer-time-value{font-size:12px!important}}
 </style>
+
+
+<style id="zad-home-gps-hide-and-prayer-font-restore-v1">
+/* إزالة سطر تحديد GPS وحالة الموقع من الواجهة الرئيسية */
+.home-prayer-card .zad-use-location,
+.home-prayer-card #zad-location-status{display:none!important}
+/* استرجاع حجم أسماء الصلوات وأوقاتها كما كان قبل إضافة الصورة */
+.home-prayer-card #home-prayer-list .home-prayer-time-name{
+ font-size:clamp(14px,4vw,17px)!important;
+ line-height:1.3!important;font-weight:900!important;
+}
+.home-prayer-card #home-prayer-list .home-prayer-time-value{
+ font-size:clamp(15px,4.4vw,19px)!important;
+ line-height:1.3!important;font-weight:900!important;
+ white-space:nowrap!important;
+}
+@media(max-width:390px){
+ .home-prayer-card #home-prayer-list .home-prayer-time-name{font-size:14px!important}
+ .home-prayer-card #home-prayer-list .home-prayer-time-value{font-size:15.5px!important}
+}
+/* تقليل الفراغ أسفل بطاقة المواقيت حتى تطلع الأقسام */
+.home-prayer-card{margin-bottom:8px!important;padding-bottom:7px!important}
+.home-prayer-card .home-next-prayer{margin-bottom:0!important}
+</style>
