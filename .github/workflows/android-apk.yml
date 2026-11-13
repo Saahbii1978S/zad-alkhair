@@ -98,18 +98,12 @@ jobs:
           p.write_text(s, encoding='utf-8')
           PY
 
-      - name: Install audio conversion tool
+      - name: Install audio conversion and probing tools
         run: |
-          if command -v ffmpeg >/dev/null 2>&1; then
-            echo "FFmpeg is already available on the GitHub runner."
-          else
-            python3 -m pip install --quiet --break-system-packages imageio-ffmpeg
-            FFMPEG_BIN="$(python3 -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')"
-            ln -sf "$FFMPEG_BIN" "$RUNNER_TEMP/ffmpeg"
-            echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
-            export PATH="$RUNNER_TEMP:$PATH"
-          fi
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
           ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
           ffmpeg -hide_banner -encoders | grep -q libvorbis
 
       - name: Install native full adhan service
