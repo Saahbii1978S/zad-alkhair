@@ -2524,9 +2524,9 @@ async function scheduleNativePrayerAlerts(){
   }
  }
  try{
-  const times=keys.map(key=>{
+  const times=keys.map((key,index)=>{
    const hm=String(prayerTimes[key]||'').slice(0,5).split(':').map(Number);
-   return {key,hour:hm[0],minute:hm[1],enabled:!!adhanEnabled[key]};
+   return {key,prayerId:index,hour:hm[0],minute:hm[1],enabled:!!adhanEnabled[key]};
   }).filter(x=>x.enabled&&Number.isInteger(x.hour)&&x.hour>=0&&x.hour<24&&Number.isInteger(x.minute)&&x.minute>=0&&x.minute<60);
   if(!window.Capacitor?.isNativePlatform?.()){adhanMessage('التنبيهات المسبقة والأذان في الخلفية يتطلبان نسخة أندرويد المثبّتة.');return;}
   // Schedule the native full adhan independently of notification permission.
