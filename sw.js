@@ -1,7 +1,7 @@
-const CACHE='zad-alkhair-shell-v61';
+const CACHE='zad-alkhair-shell-v62';
 const QURAN_TEXT='zad-quran-text-v1';
 const QURAN_AUDIO='zad-quran-audio-v2';
-const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./supabase-config.js'];
+const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./supabase-config.js','./native-notifications.js'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
 });
