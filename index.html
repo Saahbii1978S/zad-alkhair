@@ -2449,20 +2449,25 @@ async function scheduleNativePrayerAlerts(){
    return {key,hour:hm[0],minute:hm[1],enabled:!!adhanEnabled[key]};
   }).filter(x=>x.enabled&&Number.isInteger(x.hour)&&x.hour>=0&&x.hour<24&&Number.isInteger(x.minute)&&x.minute>=0&&x.minute<60);
   if(!window.Capacitor?.isNativePlatform?.()){adhanMessage('التنبيهات المسبقة والأذان في الخلفية يتطلبان نسخة أندرويد المثبّتة.');return;}
-  const permission=Local?await Local.checkPermissions():{display:'denied'};
+  // Schedule the native full adhan independently of notification permission.
+  // Android exact alarms + the foreground playback service must not be blocked
+  // by the optional local-notification permission/channel.
+  if(adhanMode.value==='audio'&&Native){
+   await Native.schedule({times:JSON.stringify(times.map(x=>({hour:x.hour,minute:x.minute}))),sound:adhanSound.value,timezone:prayerTimezone});
+  }else if(Native){await Native.cancel();}
+  let permission={display:'denied'};
+  try{if(Local)permission=await Local.checkPermissions();}catch(permissionError){console.warn('تعذّر التحقق من إذن إشعارات زاد الخير',permissionError);}
   if(permission.display!=='granted'){
-   if(Native)await Native.cancel();
-   adhanMessage('اسمح بإشعارات زاد الخير أولاً حتى نضبط التنبيه قبل الصلاة.');
+   adhanMessage(adhanMode.value==='audio'&&Native
+    ?'تم ضبط الأذان الكامل في الخلفية. فعّل الإشعارات فقط إذا تحب تنبيهات ما قبل الصلاة.'
+    :'اسمح بإشعارات زاد الخير أولاً حتى نضبط التنبيه قبل الصلاة.');
    return;
   }
   if(Local){
    await Local.createChannel({id:'zad-prayer-alerts',name:'تنبيهات مواقيت الصلاة',description:'تنبيهات قبل الصلاة وعند دخول وقتها',importance:5});
    await Local.cancel({notifications:[...prayerIds,...beforeIds].map(id=>({id}))});
   }
-  if(adhanMode.value==='audio'&&Native){
-   await Native.schedule({times:JSON.stringify(times.map(x=>({hour:x.hour,minute:x.minute}))),sound:adhanSound.value,timezone:prayerTimezone});
-  }else if(Native){await Native.cancel();}
-  if(!Local){adhanMessage('الأذان الكامل مضبوط، لكن إشعارات ما قبل الصلاة غير متاحة على هذا الجهاز.');return;}
+  if(!Local){adhanMessage('تم ضبط الأذان الكامل، لكن إشعارات ما قبل الصلاة غير متاحة على هذا الجهاز.');return;}
   const now=new Date(),nowParts=cityClockParts(now),alerts=[],lead=Number(adhanBefore.value);
   let tomorrowTimings=null;
   try{
