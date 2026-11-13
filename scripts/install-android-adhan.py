@@ -213,7 +213,6 @@ sources={
  "adhan_default.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Beautiful_adhan.ogg",
  "adhan_madinah.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg",
  "adhan_general2.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Muslim_calling_to_prayer.ogg",
- "adhan_tunisia.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Oraci%C3%B3n_Al-Azzan.ogg",
  "adhan_syria.mp3":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3",
 }
 mecca_webm=raw/"adhan_mecca.webm"
@@ -229,6 +228,13 @@ for filename,url in sources.items():
  data=target.read_bytes()
  if filename.endswith(".ogg") and (len(data)<10000 or not data.startswith(b"OggS")):
   raise SystemExit("Downloaded audio failed OGG validation: "+filename)
+tunisia_mp3=raw/"adhan_tunisia.mp3"
+subprocess.run(["curl","-fL","--retry","5","--retry-all-errors","--retry-delay","2","--connect-timeout","20","https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3","-o",str(tunisia_mp3)],check=True)
+subprocess.run(["ffmpeg","-y","-i",str(tunisia_mp3),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_tunisia.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+tunisia_mp3.unlink()
+probe=subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","default=noprint_wrappers=1:nokey=1",str(raw/"adhan_tunisia.ogg")],check=True,capture_output=True,text=True)
+if float(probe.stdout.strip()) < 120:
+ raise SystemExit("Replacement full adhan is too short; refusing to package it.")
 syria_mp3=raw/"adhan_syria.mp3"
 subprocess.run(["ffmpeg","-y","-i",str(syria_mp3),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_syria.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 syria_mp3.unlink()
