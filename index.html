@@ -2340,7 +2340,7 @@ function setupDhikr(id){
     requestAnimationFrame(()=>{
      const textNode=clone.querySelector('.arabic');if(!textNode)return;
      const longText=clone.classList.contains('zad-long-ayat')||clone.classList.contains('zad-long-morning-dua')||clone.classList.contains('zad-long-text');
-     let size=longText?20:24;
+     let size=(longText?20:24)+Number(localStorage.getItem('zad-reading-font-step')||0);
      const minSize=14;
      const lineHeight=longText?'1.5':'1.65';
      const applyFit=()=>{
@@ -4648,3 +4648,45 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
  .home-prayer-card #home-prayer-list .prayer-icon{width:32px!important;height:32px!important;font-size:18px!important}
 }
 </style>
+
+
+<style id="zad-reading-accessibility-v1">
+.zad-reading-size-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:10px 0 14px;direction:rtl}
+.zad-reading-size-tools .zad-reading-size-label{font-size:13px;font-weight:800;color:var(--muted,#64748b);margin-inline-end:auto}
+.zad-reading-size-tools button{min-width:42px;min-height:40px;padding:5px 12px;border:1px solid #cbd8e4;border-radius:12px;background:#fff;color:#24445d;font-size:19px;font-weight:900;line-height:1}
+.zad-reading-size-tools button:focus-visible{outline:3px solid #d9b66d;outline-offset:2px}
+#morning .dhikr .arabic,#evening .dhikr .arabic{font-size:calc(18px + var(--zad-reading-size-adjust,0px))!important}
+#quran .quran-page-text{font-size:calc(1em + var(--zad-reading-size-adjust,0px))!important}
+</style>
+<script id="zad-reading-accessibility-v1">
+(()=>{
+ const KEY='zad-reading-font-step';
+ const getStep=()=>Math.max(-4,Math.min(10,Number(localStorage.getItem(KEY)||0)));
+ const apply=()=>document.documentElement.style.setProperty('--zad-reading-size-adjust',getStep()+'px');
+ const makeTools=(target,kind)=>{
+  if(!target||target.querySelector(':scope > .zad-reading-size-tools'))return;
+  const box=document.createElement('div');box.className='zad-reading-size-tools';box.setAttribute('role','group');box.setAttribute('aria-label','التحكم في حجم الخط');
+  const label=document.createElement('span');label.className='zad-reading-size-label';label.textContent='حجم الكتابة';
+  const smaller=document.createElement('button');smaller.type='button';smaller.textContent='A−';smaller.setAttribute('aria-label','تصغير الخط');
+  const larger=document.createElement('button');larger.type='button';larger.textContent='A+';larger.setAttribute('aria-label','تكبير الخط');
+  box.append(label,smaller,larger);
+  const change=delta=>{
+   const next=Math.max(-4,Math.min(10,getStep()+delta));
+   localStorage.setItem(KEY,String(next));apply();
+   const focused=document.querySelector('.dhikr-focus-card .arabic');
+   if(focused){const base=focused.closest('.dhikr-focus-card')?.classList.contains('zad-long-ayat')||focused.closest('.dhikr-focus-card')?.classList.contains('zad-long-morning-dua')||focused.closest('.dhikr-focus-card')?.classList.contains('zad-long-text')?20:24;focused.style.setProperty('font-size',Math.max(14,Math.min(34,base+next))+'px','important')}
+  };
+  smaller.addEventListener('click',()=>change(-2));larger.addEventListener('click',()=>change(2));target.insertBefore(box,target.firstChild);
+ };
+ const setup=()=>{
+  apply();
+  ['morning','evening'].forEach(id=>{const root=document.getElementById(id);if(root){const card=root.querySelector('.card');if(card)makeTools(card,'adhkar')}});
+  const quran=document.querySelector('#quran .card');if(quran)makeTools(quran,'quran');
+  const focusTop=document.querySelector('.dhikr-focus-top');if(focusTop)makeTools(focusTop,'focus');
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
+ const observer=new MutationObserver(()=>{setup()});
+ observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
