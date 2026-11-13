@@ -281,9 +281,11 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Prepare signed direct APK download
+      - name: Prepare signed Play Store bundle and direct APK download
         if: ${{ steps.signing_check.outputs.enabled == 'true' }}
-        run: cp android/app/build/outputs/apk/release/app-release.apk zad-alkhair.apk
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk zad-alkhair.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab zad-alkhair.aab
 
       - name: Move android-latest tag to this build
         if: ${{ steps.signing_check.outputs.enabled == 'true' }}
@@ -298,7 +300,9 @@ jobs:
           tag_name: android-latest
           name: Zad Alkhair - Latest APK
           body: "آخر نسخة APK موقعة من تطبيق زاد الخير. حمّل الملف وثبّته على هاتف Android."
-          files: zad-alkhair.apk
+          files: |
+            zad-alkhair.apk
+            zad-alkhair.aab
           overwrite_files: true
           make_latest: true
 
