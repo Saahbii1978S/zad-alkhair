@@ -22,7 +22,7 @@ public class PrayerAlarmPlugin extends Plugin {
    JSONArray arr=new JSONArray(times);
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("times",arr.toString()).apply();
    String sound=call.getString("sound","syria");
-   if(!"default".equals(sound)&&!"mecca".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound)&&!"tunisia".equals(sound)&&!"morocco".equals(sound)&&!"syria".equals(sound))sound="syria";
+   if(!"default".equals(sound)&&!"mecca".equals(sound)&&!"madinah".equals(sound)&&!"general2".equals(sound)&&!"tunisia".equals(sound)&&!"morocco".equals(sound)&&!"syria".equals(sound)&&!"doha".equals(sound))sound="syria";
    String timezone=call.getString("timezone","Africa/Tunis");
    getContext().getSharedPreferences("zad_prayer_alarms",Context.MODE_PRIVATE).edit().putString("sound",sound).putString("timezone",timezone).apply();
    PrayerAlarmReceiver.scheduleAll(getContext(),arr,timezone);
@@ -181,7 +181,7 @@ public class PrayerAlarmReceiver extends BroadcastReceiver {
   String timezone=i.getStringExtra("timezone");if(timezone==null)timezone="Africa/Tunis";
   if(h<0||m<0)return;
   set(c,id,h,m,timezone);
-  Intent service=new Intent(c,AdhanPlaybackService.class);
+  Intent service=new Intent(c,AdhanPlaybackService.class).putExtra("prayerId",id);
   if(Build.VERSION.SDK_INT>=26)c.startForegroundService(service);else c.startService(service);
  }
  static void restore(Context c) {
@@ -217,7 +217,18 @@ public class AdhanPlaybackService extends Service {
    if(player!=null){player.release();player=null;}
    String selected=getSharedPreferences("zad_prayer_alarms",MODE_PRIVATE).getString("sound","syria");
    int audio=R.raw.adhan_syria;
-   if("default".equals(selected))audio=R.raw.adhan_default;
+   if("doha".equals(selected)){
+    int prayerId=intent==null?1:intent.getIntExtra("prayerId",1);
+    switch(prayerId){
+     case 0: audio=R.raw.adhan_doha_fajr; break;
+     case 1: audio=R.raw.adhan_doha_dhuhr; break;
+     case 2: audio=R.raw.adhan_doha_asr; break;
+     case 3: audio=R.raw.adhan_doha_maghrib; break;
+     case 4: audio=R.raw.adhan_doha_isha; break;
+     default: audio=R.raw.adhan_doha_dhuhr;
+    }
+   }
+   else if("default".equals(selected))audio=R.raw.adhan_default;
    else if("mecca".equals(selected))audio=R.raw.adhan_mecca;
    else if("madinah".equals(selected))audio=R.raw.adhan_madinah;
    else if("general2".equals(selected))audio=R.raw.adhan_general2;
@@ -267,6 +278,11 @@ sources={
  "adhan_madinah.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg",
  "adhan_general2.ogg":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Muslim_calling_to_prayer.ogg",
  "adhan_syria.mp3":"https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3",
+ "adhan_doha_fajr.ogg":"https://archive.org/download/adhan.recordings.from.doha.qatar/Adhan_Doha_Qatar_01_Fajr_Adhan.ogg",
+ "adhan_doha_dhuhr.ogg":"https://archive.org/download/adhan.recordings.from.doha.qatar/Adhan_Doha_Qatar_02_Dhuhr_Adhan.ogg",
+ "adhan_doha_asr.ogg":"https://archive.org/download/adhan.recordings.from.doha.qatar/Adhan_Doha_Qatar_03_Asr_Adhan.ogg",
+ "adhan_doha_maghrib.ogg":"https://archive.org/download/adhan.recordings.from.doha.qatar/Adhan_Doha_Qatar_04_Maghrib_Adhan.ogg",
+ "adhan_doha_isha.ogg":"https://archive.org/download/adhan.recordings.from.doha.qatar/Adhan_Doha_Qatar_05_Isha_Adhan.ogg",
 }
 mecca_webm=raw/"adhan_mecca.webm"
 subprocess.run(["curl","-fL","--retry","5","--retry-all-errors","--retry-delay","2","--connect-timeout","20","https://commons.wikimedia.org/wiki/Special:Redirect/file/Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm","-o",str(mecca_webm)],check=True)
@@ -281,6 +297,10 @@ for filename,url in sources.items():
  data=target.read_bytes()
  if filename.endswith(".ogg") and (len(data)<10000 or not data.startswith(b"OggS")):
   raise SystemExit("Downloaded audio failed OGG validation: "+filename)
+for filename in ("adhan_doha_fajr.ogg","adhan_doha_dhuhr.ogg","adhan_doha_asr.ogg","adhan_doha_maghrib.ogg","adhan_doha_isha.ogg"):
+ probe=subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","default=noprint_wrappers=1:nokey=1",str(raw/filename)],check=True,capture_output=True,text=True)
+ if float(probe.stdout.strip())<60:
+  raise SystemExit("Doha prayer-specific adhan failed duration validation: "+filename)
 tunisia_mp3=raw/"adhan_tunisia.mp3"
 subprocess.run(["curl","-fL","--retry","5","--retry-all-errors","--retry-delay","2","--connect-timeout","20","https://commons.wikimedia.org/wiki/Special:Redirect/file/Call_to_prayer_by_Sabah_Fakhry.mp3","-o",str(tunisia_mp3)],check=True)
 subprocess.run(["ffmpeg","-y","-i",str(tunisia_mp3),"-vn","-acodec","libvorbis","-q:a","5",str(raw/"adhan_tunisia.ogg")],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
