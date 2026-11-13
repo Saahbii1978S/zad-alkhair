@@ -1948,6 +1948,39 @@ main{padding-left:10px!important;padding-right:10px!important}
  #home-prayer-list .prayer-icon{width:30px!important;height:30px!important;font-size:16px!important}
 }
 </style>
+
+<style id="zad-fix-home-title-location-overlap-v1">
+/* فصل عنوان الصلاة عن زر تحديد الموقع ومنع أي تراكب على الهاتف */
+.home-prayer-card .home-prayer-head{
+ position:relative!important;display:block!important;
+ width:100%!important;height:auto!important;min-height:0!important;
+ margin:0 0 14px!important;padding:0 4px!important;
+ overflow:visible!important;transform:none!important;
+}
+.home-prayer-card .home-prayer-head>div{position:static!important;display:block!important}
+.home-prayer-card .home-prayer-head h2{
+ position:static!important;display:block!important;
+ width:100%!important;height:auto!important;
+ margin:4px 0 8px!important;padding:0!important;
+ line-height:1.55!important;white-space:normal!important;
+ overflow:visible!important;transform:none!important;
+}
+.home-prayer-card .home-prayer-city{
+ position:relative!important;display:grid!important;
+ width:100%!important;height:auto!important;
+ margin:10px 0 12px!important;clear:both!important;
+}
+.home-prayer-card .zad-use-location{
+ position:relative!important;inset:auto!important;
+ display:flex!important;float:none!important;clear:both!important;
+ transform:none!important; width:fit-content!important;
+ max-width:100%!important;height:auto!important;
+ min-height:36px!important;margin:12px auto 10px!important;
+ padding:7px 12px!important;white-space:normal!important;
+ line-height:1.6!important;box-sizing:border-box!important;
+}
+</style>
+
 </head>
 <body>
 <div class="live-clock-bar" role="timer" aria-label="الساعة والتاريخ بتوقيت تونس"><span class="live-clock-label">الوقت الآن</span><span class="live-clock-time" id="zad-live-clock">--:--:--</span><span class="live-clock-date" id="zad-live-date">جاري تحديث التاريخ</span></div>
