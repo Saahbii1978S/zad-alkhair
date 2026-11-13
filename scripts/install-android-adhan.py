@@ -170,7 +170,7 @@ public class PrayerAlarmReceiver extends BroadcastReceiver {
    if(hour<0||hour>23||minute<0||minute>59)throw new IllegalArgumentException("وقت صلاة غير صالح");
   }
   cancelAll(c);
-  for(int i=0;i<a.length();i++){JSONObject o=a.getJSONObject(i);set(c,i,o.getInt("hour"),o.getInt("minute"),timezone);}
+  for(int i=0;i<a.length();i++){JSONObject o=a.getJSONObject(i);set(c,o.optInt("prayerId",i),o.getInt("hour"),o.getInt("minute"),timezone);}
  }
  static void cancelAll(Context c) {
   AlarmManager am=(AlarmManager)c.getSystemService(Context.ALARM_SERVICE);
