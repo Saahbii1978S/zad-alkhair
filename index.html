@@ -1150,6 +1150,16 @@ body{font-size:17px!important}
  #prayer-list .prayer-item b{font-size:11px!important}
 }
 
+
+/* تثبيت زاد الخير على الهاتف */
+.zad-pwa-install-wrap{max-width:760px;margin:8px auto 12px;padding:0 12px;text-align:center}
+.zad-pwa-install-wrap[hidden],.zad-pwa-install-help[hidden]{display:none!important}
+.zad-pwa-install-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:8px 16px;border:1px solid #d7e3ee;border-radius:12px;background:#eef4f9;color:#315f91;font:800 14px Tajawal,Arial,sans-serif;cursor:pointer}
+.zad-pwa-install-button:active{transform:scale(.98)}
+.zad-pwa-install-help{max-width:520px;margin:8px auto 0;padding:9px 12px;border-radius:10px;background:#f5f7f9;color:#34495a;font:600 13px/1.8 Tajawal,Arial,sans-serif}
+body.zad-dark .zad-pwa-install-button{background:#263640;color:#d7eafa;border-color:#526775}
+body.zad-dark .zad-pwa-install-help{background:#263640;color:#d7eafa}
+@media(max-width:480px){.zad-pwa-install-wrap{margin:6px auto 10px;padding:0 8px}.zad-pwa-install-button{min-height:38px;padding:7px 13px;font-size:13px}}
 </style>
 <style>
 .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e7ebef}
@@ -2025,6 +2035,14 @@ body.zad-dark .zad-personal-photo-change{background:#263640;color:#d7eafa;border
  <div class="home-next-prayer"><span style="font-family:Tajawal,Arial,sans-serif!important;font-size:17px!important;font-weight:900!important">الصلاة القادمة <b id="home-next-name" style="font-size:17px!important;font-weight:900!important">—</b></span><strong id="home-next-countdown" style="font-size:16px!important;font-weight:900!important">—</strong></div>
 
  </div>
+
+
+<div id="zad-pwa-install-wrap" class="zad-pwa-install-wrap" hidden>
+ <button type="button" id="zad-pwa-install-button" class="zad-pwa-install-button">
+  <span aria-hidden="true">⬇</span> ثبّت تطبيق زاد الخير على هاتفك
+ </button>
+ <p id="zad-pwa-install-help" class="zad-pwa-install-help" role="status" aria-live="polite" hidden></p>
+</div>
 
 <nav class="nav" aria-label="أقسام الموقع">
 <button class="active" data-page="home">الرئيسية</button><button data-page="morning">أذكار الصباح</button><button data-page="evening">أذكار المساء</button><button data-page="parents">برّ الوالدين</button><button data-page="prayer">بعد الصلاة</button><button data-page="sleep">قبل النوم</button><button data-page="duas">الأدعية</button><button data-page="names">الأسماء الحسنى</button><button data-page="tasbeeh">التسبيح</button><button data-page="tracker">متابعتي</button><button data-page="prayer-times">مواقيت الصلاة</button><button data-page="quran">القرآن الكريم</button><button data-page="qibla">القبلة</button><button data-page="khatma">الختمة</button><button data-page="calendar">الرزنامة</button><button data-page="settings">⚙️ الإعدادات</button>
@@ -4690,3 +4708,50 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
 })();
 </script>
 
+
+<script>
+/* تثبيت زاد الخير PWA */
+(()=>{
+ const wrap=document.getElementById('zad-pwa-install-wrap');
+ const button=document.getElementById('zad-pwa-install-button');
+ const help=document.getElementById('zad-pwa-install-help');
+ if(!wrap||!button||!help)return;
+ let deferredPrompt=null;
+ const standalone=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true||window.Capacitor?.isNativePlatform?.()===true;
+ const hide=()=>{wrap.hidden=true;help.hidden=true};
+ const showHelp=()=>{
+  const ua=navigator.userAgent||'';
+  const isApple=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  help.textContent=isApple
+   ?'من Safari اضغط على زر المشاركة، ثم اختر «إضافة إلى الشاشة الرئيسية».'
+   :'من Chrome اضغط على القائمة ⋮ ثم اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية» حسب ما يظهر عندك.';
+  help.hidden=!help.hidden;
+ };
+ if(standalone()){hide();return}
+ wrap.hidden=false;
+ window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredPrompt=event;
+  wrap.hidden=false;
+  help.hidden=true;
+ });
+ button.addEventListener('click',async()=>{
+  if(standalone()){hide();return}
+  if(!deferredPrompt){showHelp();return}
+  const promptEvent=deferredPrompt;
+  deferredPrompt=null;
+  try{
+   await promptEvent.prompt();
+   const choice=await promptEvent.userChoice;
+   if(choice&&choice.outcome==='accepted')hide();
+   else wrap.hidden=false;
+  }catch(error){
+   showHelp();
+  }
+ });
+ window.addEventListener('appinstalled',()=>{
+  deferredPrompt=null;
+  hide();
+ });
+})();
+</script>
