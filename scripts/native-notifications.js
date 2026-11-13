@@ -7,5 +7,6 @@ import { Share } from '@capacitor/share';
 if (window.Capacitor?.isNativePlatform?.()) {
   window.ZadLocalNotifications = LocalNotifications;
   window.ZadPrayerAlarm = registerPlugin('PrayerAlarm');
+  window.ZadCompass = registerPlugin('Compass');
   window.ZadNativeShare = Share;
 }
