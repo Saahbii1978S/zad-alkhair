@@ -4,7 +4,7 @@
   "private": true,
   "description": "Android wrapper for the Zad Alkhair Islamic app",
   "scripts": {
-    "build:web": "node -e \"require('fs').mkdirSync('www',{recursive:true})\" && cp index.html sw.js manifest.webmanifest icon.svg supabase-config.js privacy-policy.html delete-account.html www/"
+    "build:web": "node -e \"require('fs').mkdirSync('www',{recursive:true})\" && cp index.html sw.js manifest.webmanifest icon.svg supabase-config.js privacy-policy.html delete-account.html www/ && esbuild scripts/native-notifications.js --bundle --format=iife --platform=browser --target=es2020 --outfile=www/native-notifications.js"
   },
   "dependencies": {
     "@capacitor/android": "8.6.0",
@@ -13,6 +13,7 @@
     "@capacitor/share": "8.0.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "8.6.0"
+    "@capacitor/cli": "8.6.0",
+    "esbuild": "^0.25.0"
   }
 }
