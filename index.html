@@ -4440,3 +4440,31 @@ html[data-theme="dark"] .dhikr-focus-card .arabic{color:#f0e7d5!important}
  .home-prayer-card #home-prayer-list>div{padding:6px 1px!important}
 }
 </style>
+
+
+<style id="zad-home-layout-recovery-v3">
+/* استرجاع مواقيت الصلاة وتصغير الصورة حتى تظهر الشاشة الرئيسية كاملة */
+.zad-personal-photo{width:calc(100% - 20px)!important;max-width:260px!important;gap:4px!important;padding:5px 7px!important;margin:0 auto 5px!important}
+.zad-personal-photo-frame,.zad-personal-photo-frame.has-photo{width:fit-content!important;max-width:210px!important;max-height:112px!important;min-height:0!important;height:auto!important;overflow:hidden!important;margin:0 auto!important}
+.zad-personal-photo-frame img,.zad-personal-photo-frame.has-photo img{display:block!important;width:auto!important;height:auto!important;max-width:210px!important;max-height:108px!important;object-fit:contain!important}
+.zad-personal-photo-dua{font-size:10px!important;line-height:1.35!important;margin:2px 0!important}
+.zad-personal-photo-change{font-size:10px!important;padding:3px 10px!important}
+.home-prayer-card{display:block!important;position:relative!important;visibility:visible!important;opacity:1!important;margin:4px 0 8px!important;padding:9px 8px!important;height:auto!important;max-height:none!important;overflow:visible!important}
+.home-prayer-card .home-prayer-head{display:block!important;visibility:visible!important;margin:0 0 6px!important}
+.home-prayer-card .home-prayer-head h2{display:block!important;font-size:18px!important;margin:0!important}
+.home-prayer-card .home-prayer-head p{display:block!important;font-size:10px!important;margin:2px 0!important}
+.home-prayer-card .home-prayer-city,.home-prayer-card .zad-use-location,.home-prayer-card #zad-location-status{display:none!important}
+.home-prayer-card #home-prayer-list{display:grid!important;visibility:visible!important;opacity:1!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:3px!important;width:100%!important;min-height:48px!important}
+.home-prayer-card #home-prayer-list>div{display:block!important;visibility:visible!important;min-width:0!important;padding:6px 1px!important}
+.home-prayer-card #home-prayer-list>span{display:block!important;visibility:visible!important;text-align:center!important;font-size:11px!important}
+.home-prayer-card #home-prayer-list>div>span:not(.prayer-icon){font-size:10px!important}
+.home-prayer-card #home-prayer-list>div>b{font-size:13px!important}
+.home-prayer-card .home-next-prayer{display:flex!important;visibility:visible!important;margin-top:6px!important;padding:6px 8px!important}
+@media(max-width:390px){
+.zad-personal-photo{max-width:235px!important;padding:4px 6px!important}
+.zad-personal-photo-frame,.zad-personal-photo-frame.has-photo{max-width:185px!important;max-height:100px!important}
+.zad-personal-photo-frame img,.zad-personal-photo-frame.has-photo img{max-width:185px!important;max-height:96px!important}
+.home-prayer-card{padding:7px 5px!important}
+.home-prayer-card .home-prayer-head h2{font-size:17px!important}
+}
+</style>
