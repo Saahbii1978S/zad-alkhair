@@ -2214,37 +2214,6 @@ body.zad-dark .zad-personal-photo-change{background:#263640;color:#d7eafa;border
   <p id="zad-settings-status" class="muted" role="status">إعداداتك محفوظة على هذا الجهاز.</p>
  
   <div class="setting-row"><div><strong>السماح بالإشعارات 🔔</strong><p class="muted">اضغط لطلب إذن الإشعارات وضبط تنبيهات الصلاة.</p></div><button class="smallbtn" type="button" id="adhan-permission">السماح بالإشعارات</button></div>
- <script>
- (() => {
-  const permissionButton = document.getElementById('adhan-permission');
-  if (!permissionButton) return;
-  permissionButton.addEventListener('click', async event => {
-   if (window.Capacitor?.isNativePlatform?.()) return;
-   event.preventDefault();
-   event.stopImmediatePropagation();
-   const status = document.getElementById('adhan-status');
-   const message = text => { if (status) status.textContent = text; };
-   message('جاري التحقق من إذن الإشعارات...');
-   try {
-    if (!('Notification' in window)) {
-     message('الإشعارات غير مدعومة في هذا المتصفح. افتح زاد الخير من Google Chrome وحدّثه.');
-     return;
-    }
-    let permission = Notification.permission;
-    if (permission === 'default') permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-     message('تم السماح بإشعارات زاد الخير ✅ في نسخة المتصفح، يلزم بقاء التطبيق مفتوحاً حتى تصلك تنبيهات الصلاة.');
-    } else if (permission === 'denied') {
-     message('الإشعارات مرفوضة. من إعدادات الهاتف: التطبيقات ← Chrome ← الإشعارات، واسمح بها لموقع زاد الخير.');
-    } else {
-     message('ما تمّش تفعيل الإشعارات. اضغط السماح من النافذة إذا ظهرت.');
-    }
-   } catch (error) {
-    message('تعذّر طلب الإذن. افتح زاد الخير من Chrome وتثبّت من إعدادات إشعارات الموقع.');
-   }
-  }, true);
- })();
- </script>
  </div>
  <div class="card adhan-card"><h2>🔔 إعدادات الأذان والتنبيهات</h2><p class="muted">اختار الصلوات اللي تحب تسمع فيها الأذان أو يوصلك تنبيه.</p><div class="adhan-options"><label><input type="checkbox" data-adhan-prayer="Fajr" checked> الفجر</label><label><input type="checkbox" data-adhan-prayer="Dhuhr" checked> الظهر</label><label><input type="checkbox" data-adhan-prayer="Asr" checked> العصر</label><label><input type="checkbox" data-adhan-prayer="Maghrib" checked> المغرب</label><label><input type="checkbox" data-adhan-prayer="Isha" checked> العشاء</label></div><label class="adhan-mode-label" for="adhan-mode">نوع التنبيه عند دخول وقت الصلاة</label><select id="adhan-mode" class="adhan-mode"><option value="audio">الأذان الكامل في الخلفية (أندرويد)</option><option value="notice">إشعار فقط بدون صوت</option></select><label class="adhan-mode-label" for="adhan-before">تنبيه قبل الصلاة</label><select id="adhan-before" class="adhan-mode"><option value="0">بدون تنبيه مسبق</option><option value="5">قبل الصلاة بـ 5 دقائق</option><option value="10" selected>قبل الصلاة بـ 10 دقائق</option><option value="15">قبل الصلاة بـ 15 دقيقة</option><option value="30">قبل الصلاة بـ 30 دقيقة</option></select><label class="adhan-mode-label" for="adhan-before-style">طريقة التنبيه قبل الصلاة</label><select id="adhan-before-style" class="adhan-mode"><option value="sound">إشعار بصوت الهاتف</option><option value="vibrate">اهتزاز مع الإشعار</option><option value="silent">إشعار صامت</option><option value="both" selected>صوت واهتزاز</option></select><p class="muted">قبل الصلاة يوصلك اسم الصلاة مع تذكير بالتسبيح: «سبحان الله، والحمد لله، ولا إله إلا الله، والله أكبر».</p><label class="adhan-mode-label" for="adhan-sound">اختار صوت المؤذّن للأذان الكامل</label><select id="adhan-sound" class="adhan-mode"><option value="syria">صباح فخري — سوريا</option><option value="mecca">الحرم المكي — مكة</option><option value="madinah">أذان المدينة المنورة</option><option value="tunisia">أذان كامل بديل — صباح فخري</option><option value="morocco">مسجد الحسن الثاني — المغرب</option><option value="default">أذان جميل — تسجيل عام</option><option value="general2">نداء للصلاة — تسجيل عام آخر</option></select><p class="muted">تنجم تسمع معاينة للصوت قبل ما تختارو. اختيارك يتحفظ على تلفونك.</p><div class="adhan-preview-list"><button type="button" class="smallbtn" id="adhan-preview">▶️ معاينة صوت المؤذّن المختار</button></div><div class="actions adhan-actions"><button type="button" id="adhan-test">تجربة صوت الأذان</button></div><p id="adhan-status" class="muted" role="status">فعّل الإشعارات والمنبّهات الدقيقة. التنبيه المسبق إشعار قبل الصلاة، والأذان الكامل يعمل في الخلفية في نسخة أندرويد.</p><p class="muted">ملاحظة: يلزم السماح بإشعارات زاد الخير والمنبّهات الدقيقة، وعدم تقييد البطارية حتى تعمل التنبيهات في أوقاتها. في نسخة المتصفح، يلزم بقاء الصفحة مفتوحة للتنبيهات الصوتية.</p><details class="muted"><summary>مصادر تسجيلات الأذان</summary><p><a href="https://commons.wikimedia.org/wiki/File:Call_to_prayer_by_Sabah_Fakhry.mp3" target="_blank" rel="noopener">صباح فخري</a> · <a href="https://commons.wikimedia.org/wiki/File:Adhan,_Great_Mosque_of_Mecca_-_Jan_21,_2013.webm" target="_blank" rel="noopener">الحرم المكي</a> · <a href="https://commons.wikimedia.org/wiki/File:33937_ejaz215_call-to-prayer-from-the-prophet-s-mo.ogg" target="_blank" rel="noopener">المدينة المنورة</a> · <a href="https://commons.wikimedia.org/wiki/File:Llamada_a_oraci%C3%B3n_Mezquita_Hassan_II.wav" target="_blank" rel="noopener">المغرب</a> · <a href="https://commons.wikimedia.org/wiki/File:Oraci%C3%B3n_Al-Azzan.ogg" target="_blank" rel="noopener">تسجيل آخر</a></p></details><audio id="adhan-audio" preload="none"></audio></div>
  <div class="card"><h2>عن زاد الخير</h2><p>ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله.</p><p class="muted">نسأل الله أن ينفع به ويتقبّل من كل من ساهم فيه.</p><p class="muted" style="font-size:11px">مصدر صور الأماكن المقدسة: الكعبة — GusJuned (CC BY-SA 3.0)؛ المسجد النبوي — Wadie Al-Houh (CC0)؛ المسجد الأقصى — Nikeman916 (ملكية عامة).</p><p class="muted" style="font-size:11px"><a href="https://commons.wikimedia.org/wiki/File:Kaaba,_Masjid_Al-Haram,_Mecca,_Saudi_Arabia_-_panoramio.jpg" target="_blank" rel="noopener">ترخيص صورة الكعبة</a> · <a href="https://commons.wikimedia.org/wiki/File:Green_Dome,_Masjid_Al_Nabawi.jpg" target="_blank" rel="noopener">صورة المسجد النبوي</a> · <a href="https://commons.wikimedia.org/wiki/File:Al_Aqsa.jpg" target="_blank" rel="noopener">صورة المسجد الأقصى</a></p></div>
@@ -2615,8 +2584,14 @@ async function scheduleNativePrayerAlerts(){
  }catch(e){adhanMessage('تعذّر ضبط الأذان أو التنبيهات. تثبّت من إذن الإشعارات والمنبّهات الدقيقة.');}
 }
 $('#adhan-permission').onclick=async()=>{
+ adhanMessage('وصلت الضغطة ✅ جاري التحقق من إذن الإشعارات...');
  try{
-  if(window.ZadLocalNotifications&&window.Capacitor?.isNativePlatform?.()){
+  const isNative=!!window.Capacitor?.isNativePlatform?.();
+  if(isNative&&!window.ZadLocalNotifications){
+   adhanMessage('نسخة أندرويد لم تحمّل مكوّن الإشعارات. أعد فتح التطبيق، وإذا تكررت المشكلة يلزم إصلاح حزمة Android.');
+   return;
+  }
+  if(isNative&&window.ZadLocalNotifications){
    const Local=window.ZadLocalNotifications;
    let p=await Local.checkPermissions();
    if(p.display!=='granted')p=await Local.requestPermissions();
@@ -2641,7 +2616,7 @@ $('#adhan-permission').onclick=async()=>{
   if(!('Notification' in window)){adhanMessage('الإشعارات غير مدعومة في هذا المتصفح.');return}
   const p=await Notification.requestPermission();
   adhanMessage(p==='granted'?'تم السماح بإشعارات المتصفح. يلزم إبقاء الموقع مفتوحاً.':p==='denied'?'الإشعارات مرفوضة من إعدادات المتصفح.':'ما تمّش تفعيل الإشعارات.');
- }catch(e){adhanMessage('تعذّر تفعيل الإشعارات.');}
+ }catch(e){console.error('Zad notification permission error:',e);adhanMessage('تعذّر تفعيل الإشعارات: '+(e?.message||'خطأ غير معروف')+'.');}
 };
 $('#adhan-test').onclick=async()=>{try{adhanAudio.src=adhanSounds[adhanSound.value];adhanAudio.currentTime=0;await adhanAudio.play();adhanMessage('صوت المؤذّن المختار يشتغل الآن للتجربة.')}catch(e){adhanMessage('تعذّر تشغيل الصوت. تثبّت من الإنترنت واضغط تجربة مرة أخرى.')}};
 document.addEventListener('visibilitychange',async()=>{
