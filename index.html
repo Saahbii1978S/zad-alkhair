@@ -3187,8 +3187,11 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
 /* مشاركة زاد الخير ونسخ رابطه */
 (function(){
  const appUrl='https://saahbii1978s.github.io/zad-alkhair/';
- const shareBtn=document.getElementById('zad-share-button');
- const copyBtn=document.getElementById('zad-copy-link');
+ const shareButtons=['zad-share-button','zad-settings-share']
+  .map(id=>document.getElementById(id)).filter(Boolean);
+ const copyButtons=['zad-copy-link','zad-settings-copy']
+  .map(id=>document.getElementById(id)).filter(Boolean);
+ const shareData={title:'زاد الخير',text:'زاد الخير — ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله',url:appUrl};
  window.zadOpenShare=async function(data){
   if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()){
    try{
@@ -3204,17 +3207,16 @@ let initial=location.hash.slice(1);if(initial&&document.getElementById(initial))
   const message=(data.text||'زاد الخير')+'\\n'+data.url;
   window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank','noopener');
  };
- if(shareBtn)shareBtn.addEventListener('click',async function(){
-  const data={title:'زاد الخير',text:'زاد الخير — ذكرٌ يطمئنّ به القلب، وخيرٌ نرجو به رضا الله',url:appUrl};
-  try{await window.zadOpenShare(data)}
+ shareButtons.forEach(button=>button.addEventListener('click',async function(){
+  try{await window.zadOpenShare(shareData)}
   catch(e){if(e&&e.name!=='AbortError')alert('تعذّرت فتح قائمة المشاركة. جرّب مرة أخرى.')}
- });
- if(copyBtn)copyBtn.addEventListener('click',async function(){
+ }));
+ copyButtons.forEach(button=>button.addEventListener('click',async function(){
   try{
    if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(appUrl);alert('تم نسخ رابط زاد الخير بنجاح ❤️')}
    else{window.prompt('انسخ رابط زاد الخير:',appUrl)}
   }catch(e){window.prompt('انسخ رابط زاد الخير:',appUrl)}
- });
+ }));
 })();
 </script>
 
