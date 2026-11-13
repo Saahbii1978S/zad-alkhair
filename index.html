@@ -2804,6 +2804,26 @@ $('#qibla-sensor').onclick=async()=>{
  window.removeEventListener('deviceorientation',onQiblaOrientation,true);
  deviceHeading=null;qiblaSensorActive=false;
  qiblaSensorMessage='جاري تشغيل بوصلة الهاتف...';renderQibla();
+ // Native Android uses SensorManager's rotation-vector sensor, not WebView orientation events.
+ if(window.Capacitor?.isNativePlatform?.()){
+  try{
+   if(!window.ZadCompass)throw new Error('native-missing');
+   if(window.zadCompassListener){try{await window.zadCompassListener.remove()}catch(e){}}
+   window.zadCompassListener=await window.ZadCompass.addListener('heading',event=>acceptQiblaHeading(Number(event.heading)));
+   await window.ZadCompass.start();
+   setTimeout(()=>{
+    if(attempt===qiblaSensorAttempt&&deviceHeading===null){
+     qiblaSensorMessage='حساس البوصلة لم يرسل قراءة. حرّك الهاتف ببطء على شكل رقم 8 ثم أعد المحاولة.';
+     renderQibla();
+    }
+   },5000);
+   return;
+  }catch(nativeError){
+   qiblaSensorActive=false;
+   qiblaSensorMessage=nativeError.message==='native-missing'?'نسخة التطبيق لا تحتوي على مكوّن البوصلة الجديد. حدّث التطبيق.':'تعذّر تشغيل حساس البوصلة: '+(nativeError.message||'خطأ غير معروف');
+   renderQibla();return;
+  }
+ }
  try{
   if(!window.isSecureContext)throw new Error('https');
   if(typeof window.AbsoluteOrientationSensor==='function'){
