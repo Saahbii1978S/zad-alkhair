@@ -19,6 +19,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install web dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build web app with bundled notification bridge
+        run: npm run build:web
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
@@ -39,7 +47,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .
+          path: www
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
